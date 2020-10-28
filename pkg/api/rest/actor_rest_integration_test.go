@@ -198,7 +198,7 @@ func Test_RestApi_Get_Actor(t *testing.T) {
 		Name:        fakeExistentActor.Name,
 		Email:       fakeExistentActor.Email,
 		Description: fakeExistentActor.Description,
-		CreatedAt:   fakeExistentActor.CreatAt(),
+		CreatedAt:   fakeExistentActor.CreatedAt,
 	}
 	fakeURL := func(id string) string {
 		return fmt.Sprintf("%s/%s/%s", srv.URL, "actors", id)

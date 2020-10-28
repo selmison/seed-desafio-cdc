@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
@@ -12,5 +10,5 @@ type ActorDTO struct {
 	Name        Name      `json:"name"`
 	Email       Email     `json:"e-mail"`
 	Description Desc      `json:"description"`
-	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt   Time      `json:"created_at"`
 }

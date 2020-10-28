@@ -34,6 +34,7 @@ func MakeCreateEndpoint(svc service.Service) endpoint.Endpoint {
 			Name:        req.Name,
 			Email:       req.Email,
 			Description: req.Description,
+			CreatedAt:   domain.GenerateTime(),
 		}
 		if err = svc.Create(ctx, actor); err != nil {
 			return CreateResponse{domain.ActorDTO{}, err}, nil
@@ -43,7 +44,7 @@ func MakeCreateEndpoint(svc service.Service) endpoint.Endpoint {
 			Name:        actor.Name,
 			Email:       actor.Email,
 			Description: actor.Description,
-			CreatedAt:   actor.CreatAt(),
+			CreatedAt:   actor.CreatedAt,
 		}, nil}, nil
 	}
 }
@@ -78,7 +79,7 @@ func MakeListEndpoint(svc service.Service) endpoint.Endpoint {
 				Name:        actor.Name,
 				Email:       actor.Email,
 				Description: actor.Description,
-				CreatedAt:   actor.CreatAt(),
+				CreatedAt:   actor.CreatedAt,
 			}
 		}
 		return ListResponse{actorDTOS, nil}, nil
@@ -104,7 +105,7 @@ func MakeShowEndpoint(svc service.Service) endpoint.Endpoint {
 			Name:        actor.Name,
 			Email:       actor.Email,
 			Description: actor.Description,
-			CreatedAt:   actor.CreatAt(),
+			CreatedAt:   actor.CreatedAt,
 		}
 		return ShowResponse{actorDTO, nil}, nil
 	}

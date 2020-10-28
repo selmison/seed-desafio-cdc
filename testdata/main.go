@@ -76,7 +76,7 @@ func generateFakeActors(length int) (
 			Name:        fakeActors[i].Name,
 			Email:       fakeActors[i].Email,
 			Description: fakeActors[i].Description,
-			CreatedAt:   fakeActors[i].CreatAt(),
+			CreatedAt:   fakeActors[i].CreatedAt,
 		})
 	}
 	return fakeActors, fakeNewActors, fakeActorDTOs, nil

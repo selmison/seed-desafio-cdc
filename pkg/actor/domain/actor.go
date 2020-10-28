@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
@@ -12,9 +10,5 @@ type Actor struct {
 	Name        Name
 	Email       Email
 	Description Desc
-	createdAt   time.Time
-}
-
-func (a *Actor) CreatAt() time.Time {
-	return a.createdAt
+	CreatedAt   Time
 }
