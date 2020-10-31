@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Service for Casa do Código
+  description: HTTP service for Casa do Código
+  version: "1.0"
+servers:
+- url: http://localhost:3333/actors
+  description: cdc hosts the Casa do Codigo Service.
+paths:
+  /actors:
+    post:
+      tags:
+      - actors
+      summary: create actors
+      operationId: actors#create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequestBody'
+            example:
+              description: w4k
+              e-mail: Aliquam asperiores iusto.
+              name: Enim itaque quod cupiditate.
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActorPayload'
+              example:
+                created_at: Aut minus.
+                description: 1a8
+                e-mail: Ipsam et suscipit doloribus sunt molestiae.
+                id: Neque quasi id quis itaque in.
+                name: Laudantium explicabo aut ut incidunt.
+  /swagger.json:
+    get:
+      tags:
+      - actors
+      summary: Download ../../gen/http/openapi.json
+      operationId: actors#/swagger.json
+      responses:
+        "200":
+          description: File downloaded
+components:
+  schemas:
+    ActorPayload:
+      type: object
+      properties:
+        created_at:
+          type: string
+          example: Eos non omnis sequi voluptatum ullam.
+        description:
+          type: string
+          example: 9hf
+          maxLength: 400
+        e-mail:
+          type: string
+          example: Similique dolorum.
+        id:
+          type: string
+          example: Et tempora.
+        name:
+          type: string
+          example: Magni et iure.
+      example:
+        created_at: Vel id minus non.
+        description: 0dy
+        e-mail: Voluptatum et corporis.
+        id: Illo ex molestias delectus vel magnam.
+        name: Maiores similique et consequuntur.
+      required:
+      - id
+      - name
+      - e-mail
+      - description
+      - created_at
+    CreateRequestBody:
+      type: object
+      properties:
+        description:
+          type: string
+          example: gzk
+          maxLength: 400
+        e-mail:
+          type: string
+          example: Quia id illum.
+        name:
+          type: string
+          example: Eveniet totam ex optio consectetur.
+      example:
+        description: tdp
+        e-mail: Voluptate soluta numquam aut quidem.
+        name: Repellendus incidunt exercitationem recusandae dolores.
+      required:
+      - name
+      - e-mail
+      - description
