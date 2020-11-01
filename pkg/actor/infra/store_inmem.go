@@ -40,18 +40,18 @@ func (r *actorRepository) init() {
 }
 
 // Store stores an actor.
-func (r *actorRepository) Store(_ context.Context, actor domain.Actor) (res *actors.ActorPayload, err error) {
+func (r *actorRepository) Store(_ context.Context, actor domain.Actor) (res *actors.ActorDTO, err error) {
 	r.init()
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	for _, value := range r.actors {
-		if value.Id == actor.Id {
-			return nil, fmt.Errorf("id '%s' %w", actor.Id.String(), coreDomain.ErrAlreadyExists)
+		if value.ID == actor.ID {
+			return nil, fmt.Errorf("id '%s' %w", actor.ID.String(), coreDomain.ErrAlreadyExists)
 		}
 	}
-	r.actors[actor.Id.String()] = actor
-	return &actors.ActorPayload{
-		ID:          actor.Id.String(),
+	r.actors[actor.ID.String()] = actor
+	return &actors.ActorDTO{
+		ID:          actor.ID.String(),
 		Name:        actor.Name.String(),
 		EMail:       actor.Email.String(),
 		Description: actor.Description.String(),
@@ -74,7 +74,7 @@ func (r *actorRepository) GetMany(_ context.Context, ids []string) ([]domain.Act
 	if length == 0 {
 		length = len(r.actors)
 		for _, k := range r.actors {
-			ids = append(ids, k.Id.String())
+			ids = append(ids, k.ID.String())
 		}
 	}
 	// This makes sure actors are always returned in the same, sorted order
@@ -87,7 +87,7 @@ func (r *actorRepository) GetMany(_ context.Context, ids []string) ([]domain.Act
 	return actors, nil
 }
 
-// GetOne returns a single actor by its Id.
+// GetOne returns a single actor by its ID.
 func (r *actorRepository) GetOne(_ context.Context, id string) (domain.Actor, error) {
 	r.init()
 	r.mu.RLock()
@@ -108,7 +108,7 @@ func (r *actorRepository) DeleteAll(_ context.Context) error {
 	return nil
 }
 
-// DeleteOne deletes a single actor by its Id.
+// DeleteOne deletes a single actor by its ID.
 func (r *actorRepository) DeleteOne(_ context.Context, id string) error {
 	r.init()
 	r.mu.Lock()
@@ -125,7 +125,7 @@ func compare(a, b domain.Actor) bool {
 	if &a == &b {
 		return true
 	}
-	if a.Id != b.Id {
+	if a.ID != b.ID {
 		return false
 	}
 	if a.Name != b.Name {

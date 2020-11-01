@@ -7,4 +7,5 @@ require (
 	github.com/google/uuid v1.1.1
 	goa.design/goa/v3 v3.2.4
 	goa.design/plugins/v3 v3.2.4
+	gorm.io/gorm v1.20.5
 )

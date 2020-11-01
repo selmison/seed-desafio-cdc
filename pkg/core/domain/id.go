@@ -6,37 +6,37 @@ import (
 	"github.com/google/uuid"
 )
 
-type Id struct {
+type ID struct {
 	id string
 }
 
-// GenerateId generates a new valid id
-func GenerateId() (Id, error) {
+// GenerateID generates a new valid id
+func GenerateID() (ID, error) {
 	id := uuid.New().String()
-	return NewId(id)
+	return NewID(id)
 }
 
-// NewId creates a new valid id
-func NewId(id string) (Id, error) {
+// NewID creates a new valid id
+func NewID(id string) (ID, error) {
 	if strings.TrimSpace(id) == "" {
-		return Id{}, ErrIdCouldNotBeEmpty
+		return ID{}, ErrIdCouldNotBeEmpty
 	}
-	return Id{id: id}, nil
+	return ID{id: id}, nil
 }
 
 // String implements the fmt.Stringer interface.
-func (i Id) String() string {
+func (i ID) String() string {
 	return i.id
 }
 
 // MarshalText serializes the object.
-func (i Id) MarshalText() ([]byte, error) {
+func (i ID) MarshalText() ([]byte, error) {
 	return []byte(i.id), nil
 }
 
 // UnmarshalText deserializes the object.
-func (i *Id) UnmarshalText(d []byte) error {
+func (i *ID) UnmarshalText(d []byte) error {
 	var err error
-	*i, err = NewId(string(d))
+	*i, err = NewID(string(d))
 	return err
 }

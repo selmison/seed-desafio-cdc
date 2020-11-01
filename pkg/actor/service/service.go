@@ -23,7 +23,7 @@ func NewService(repo domain.Repository, logger kitLog.Logger) actors.Service {
 
 // Create implements create.
 func (s *service) Create(ctx context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
-	id, err := coreDomain.GenerateId()
+	id, err := coreDomain.GenerateID()
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (s *service) Create(ctx context.Context, dto *actors.CreateActorDTO) (res *
 	}
 	createdAt := domain.GenerateTime()
 	actor := domain.Actor{
-		Id:          id,
+		ID:          id,
 		Name:        name,
 		Email:       email,
 		Description: desc,

@@ -6,7 +6,7 @@ import (
 
 // Actor represents a single actor.
 type Actor struct {
-	Id          domain.Id
+	ID          domain.ID
 	Name        Name
 	Email       Email
 	Description Desc
