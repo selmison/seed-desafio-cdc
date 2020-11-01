@@ -11,5 +11,5 @@ import (
 // Repository persists Actors.
 type Repository interface {
 	// Store stores an Actor.
-	Store(ctx context.Context, Actor Actor) (res *actors.ActorPayload, err error)
+	Store(ctx context.Context, Actor Actor) (res *actors.ActorDTO, err error)
 }

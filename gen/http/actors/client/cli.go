@@ -18,7 +18,7 @@ import (
 
 // BuildCreatePayload builds the payload for the actors create endpoint from
 // CLI flags.
-func BuildCreatePayload(actorsCreateBody string) (*actors.CreatePayload, error) {
+func BuildCreatePayload(actorsCreateBody string) (*actors.CreateActorDTO, error) {
 	var err error
 	var body CreateRequestBody
 	{
@@ -33,7 +33,7 @@ func BuildCreatePayload(actorsCreateBody string) (*actors.CreatePayload, error) 
 			return nil, err
 		}
 	}
-	v := &actors.CreatePayload{
+	v := &actors.CreateActorDTO{
 		Name:        body.Name,
 		EMail:       body.EMail,
 		Description: body.Description,

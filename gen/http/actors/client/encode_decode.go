@@ -37,9 +37,9 @@ func (c *Client) BuildCreateRequest(ctx context.Context, v interface{}) (*http.R
 // create server.
 func EncodeCreateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*actors.CreatePayload)
+		p, ok := v.(*actors.CreateActorDTO)
 		if !ok {
-			return goahttp.ErrInvalidType("actors", "create", "*actors.CreatePayload", v)
+			return goahttp.ErrInvalidType("actors", "create", "*actors.CreateActorDTO", v)
 		}
 		body := NewCreateRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
@@ -80,7 +80,7 @@ func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			if err != nil {
 				return nil, goahttp.ErrValidationError("actors", "create", err)
 			}
-			res := NewCreateActorPayloadCreated(&body)
+			res := NewCreateActorDTOCreated(&body)
 			return res, nil
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)

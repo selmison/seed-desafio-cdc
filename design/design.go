@@ -21,8 +21,8 @@ var _ = API("casa-do-codigo", func() {
 var _ = Service("actors", func() {
 	Description("The actors service performs operations on actors")
 	Method("create", func() {
-		Payload(CreatePayload)
-		Result(ActorPayload)
+		Payload(CreateActorDTO)
+		Result(ActorDTO)
 		HTTP(func() {
 			POST("/actors")
 			Response(StatusCreated)
@@ -31,7 +31,7 @@ var _ = Service("actors", func() {
 	Files("/swagger.json", "../../gen/http/openapi.json")
 })
 
-var ActorPayload = Type("ActorPayload", func() {
+var ActorDTO = Type("ActorDTO", func() {
 	Description("Actor Type")
 	Attribute("id", String)
 	Attribute("name", String)
@@ -43,7 +43,7 @@ var ActorPayload = Type("ActorPayload", func() {
 	Required("id", "name", "e-mail", "description", "created_at")
 })
 
-var CreatePayload = Type("CreatePayload", func() {
+var CreateActorDTO = Type("CreateActorDTO", func() {
 	Description("New Actor Type")
 	Attribute("name", String)
 	Attribute("e-mail", String)

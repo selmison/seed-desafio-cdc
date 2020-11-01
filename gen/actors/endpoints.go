@@ -34,7 +34,7 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 // "create" of service "actors".
 func NewCreateEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*CreatePayload)
+		p := req.(*CreateActorDTO)
 		return s.Create(ctx, p)
 	}
 }

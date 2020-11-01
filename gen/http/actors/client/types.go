@@ -34,7 +34,7 @@ type CreateResponseBody struct {
 
 // NewCreateRequestBody builds the HTTP request body from the payload of the
 // "create" endpoint of the "actors" service.
-func NewCreateRequestBody(p *actors.CreatePayload) *CreateRequestBody {
+func NewCreateRequestBody(p *actors.CreateActorDTO) *CreateRequestBody {
 	body := &CreateRequestBody{
 		Name:        p.Name,
 		EMail:       p.EMail,
@@ -43,10 +43,10 @@ func NewCreateRequestBody(p *actors.CreatePayload) *CreateRequestBody {
 	return body
 }
 
-// NewCreateActorPayloadCreated builds a "actors" service "create" endpoint
-// result from a HTTP "Created" response.
-func NewCreateActorPayloadCreated(body *CreateResponseBody) *actors.ActorPayload {
-	v := &actors.ActorPayload{
+// NewCreateActorDTOCreated builds a "actors" service "create" endpoint result
+// from a HTTP "Created" response.
+func NewCreateActorDTOCreated(body *CreateResponseBody) *actors.ActorDTO {
+	v := &actors.ActorDTO{
 		ID:          *body.ID,
 		Name:        *body.Name,
 		EMail:       *body.EMail,

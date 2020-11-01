@@ -22,20 +22,20 @@ func NewService(repo domain.Repository, logger kitLog.Logger) actors.Service {
 }
 
 // Create implements create.
-func (s *service) Create(ctx context.Context, p *actors.CreatePayload) (res *actors.ActorPayload, err error) {
+func (s *service) Create(ctx context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
 	id, err := coreDomain.GenerateId()
 	if err != nil {
 		return nil, err
 	}
-	name, err := domain.NewName(p.Name)
+	name, err := domain.NewName(dto.Name)
 	if err != nil {
 		return nil, err
 	}
-	email, err := domain.NewEmail(p.EMail)
+	email, err := domain.NewEmail(dto.EMail)
 	if err != nil {
 		return nil, err
 	}
-	desc, err := domain.NewDesc(p.Description)
+	desc, err := domain.NewDesc(dto.Description)
 	if err != nil {
 		return nil, err
 	}

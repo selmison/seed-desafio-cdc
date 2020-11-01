@@ -26,11 +26,11 @@ func NewClient(create endpoint.Endpoint) *Client {
 }
 
 // Create calls the "create" endpoint of the "actors" service.
-func (c *Client) Create(ctx context.Context, p *CreatePayload) (res *ActorPayload, err error) {
+func (c *Client) Create(ctx context.Context, p *CreateActorDTO) (res *ActorDTO, err error) {
 	var ires interface{}
 	ires, err = c.CreateEndpoint(ctx, p)
 	if err != nil {
 		return
 	}
-	return ires.(*ActorPayload), nil
+	return ires.(*ActorDTO), nil
 }

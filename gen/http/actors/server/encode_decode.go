@@ -21,7 +21,7 @@ import (
 // create endpoint.
 func EncodeCreateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(*actors.ActorPayload)
+		res := v.(*actors.ActorDTO)
 		enc := encoder(ctx, w)
 		body := NewCreateResponseBody(res)
 		w.WriteHeader(http.StatusCreated)
@@ -48,7 +48,7 @@ func DecodeCreateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 		if err != nil {
 			return nil, err
 		}
-		payload := NewCreatePayload(&body)
+		payload := NewCreateActorDTO(&body)
 
 		return payload, nil
 	}
