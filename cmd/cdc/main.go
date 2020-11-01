@@ -14,7 +14,7 @@ import (
 	"github.com/go-kit/kit/log"
 
 	"github.com/selmison/seed-desafio-cdc/gen/actors"
-	"github.com/selmison/seed-desafio-cdc/pkg/actor/domain/infra"
+	"github.com/selmison/seed-desafio-cdc/pkg/actor/infra"
 	"github.com/selmison/seed-desafio-cdc/pkg/actor/service"
 )
 
