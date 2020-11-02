@@ -16,16 +16,16 @@ import (
 	goahttp "goa.design/goa/v3/http"
 )
 
-// EncodeCreateResponse returns a go-kit EncodeResponseFunc suitable for
-// encoding actors create responses.
-func EncodeCreateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) kithttp.EncodeResponseFunc {
-	return server.EncodeCreateResponse(encoder)
+// EncodeCreateActorResponse returns a go-kit EncodeResponseFunc suitable for
+// encoding actors create_actor responses.
+func EncodeCreateActorResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) kithttp.EncodeResponseFunc {
+	return server.EncodeCreateActorResponse(encoder)
 }
 
-// DecodeCreateRequest returns a go-kit DecodeRequestFunc suitable for decoding
-// actors create requests.
-func DecodeCreateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) kithttp.DecodeRequestFunc {
-	dec := server.DecodeCreateRequest(mux, decoder)
+// DecodeCreateActorRequest returns a go-kit DecodeRequestFunc suitable for
+// decoding actors create_actor requests.
+func DecodeCreateActorRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) kithttp.DecodeRequestFunc {
+	dec := server.DecodeCreateActorRequest(mux, decoder)
 	return func(ctx context.Context, r *http.Request) (interface{}, error) {
 		r = r.WithContext(ctx)
 		return dec(r)

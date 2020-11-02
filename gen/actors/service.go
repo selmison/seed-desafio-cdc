@@ -13,8 +13,8 @@ import (
 
 // The actors service performs operations on actors
 type Service interface {
-	// Create implements create.
-	Create(context.Context, *CreateActorDTO) (res *ActorDTO, err error)
+	// CreateActor implements create_actor.
+	CreateActor(context.Context, *CreateActorDTO) (res *ActorDTO, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -25,16 +25,16 @@ const ServiceName = "actors"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"create"}
+var MethodNames = [1]string{"create_actor"}
 
-// CreateActorDTO is the payload type of the actors service create method.
+// CreateActorDTO is the payload type of the actors service create_actor method.
 type CreateActorDTO struct {
 	Name        string
 	EMail       string
 	Description string
 }
 
-// ActorDTO is the result type of the actors service create method.
+// ActorDTO is the result type of the actors service create_actor method.
 type ActorDTO struct {
 	ID          string
 	Name        string

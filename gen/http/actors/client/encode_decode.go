@@ -18,13 +18,13 @@ import (
 	goahttp "goa.design/goa/v3/http"
 )
 
-// BuildCreateRequest instantiates a HTTP request object with method and path
-// set to call the "actors" service "create" endpoint
-func (c *Client) BuildCreateRequest(ctx context.Context, v interface{}) (*http.Request, error) {
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateActorsPath()}
+// BuildCreateActorRequest instantiates a HTTP request object with method and
+// path set to call the "actors" service "create_actor" endpoint
+func (c *Client) BuildCreateActorRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateActorActorsPath()}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("actors", "create", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("actors", "create_actor", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -33,26 +33,26 @@ func (c *Client) BuildCreateRequest(ctx context.Context, v interface{}) (*http.R
 	return req, nil
 }
 
-// EncodeCreateRequest returns an encoder for requests sent to the actors
-// create server.
-func EncodeCreateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+// EncodeCreateActorRequest returns an encoder for requests sent to the actors
+// create_actor server.
+func EncodeCreateActorRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
 		p, ok := v.(*actors.CreateActorDTO)
 		if !ok {
-			return goahttp.ErrInvalidType("actors", "create", "*actors.CreateActorDTO", v)
+			return goahttp.ErrInvalidType("actors", "create_actor", "*actors.CreateActorDTO", v)
 		}
-		body := NewCreateRequestBody(p)
+		body := NewCreateActorRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
-			return goahttp.ErrEncodingError("actors", "create", err)
+			return goahttp.ErrEncodingError("actors", "create_actor", err)
 		}
 		return nil
 	}
 }
 
-// DecodeCreateResponse returns a decoder for responses returned by the actors
-// create endpoint. restoreBody controls whether the response body should be
-// restored after having been read.
-func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+// DecodeCreateActorResponse returns a decoder for responses returned by the
+// actors create_actor endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
 			b, err := ioutil.ReadAll(resp.Body)
@@ -69,22 +69,22 @@ func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 		switch resp.StatusCode {
 		case http.StatusCreated:
 			var (
-				body CreateResponseBody
+				body CreateActorResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("actors", "create", err)
+				return nil, goahttp.ErrDecodingError("actors", "create_actor", err)
 			}
-			err = ValidateCreateResponseBody(&body)
+			err = ValidateCreateActorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("actors", "create", err)
+				return nil, goahttp.ErrValidationError("actors", "create_actor", err)
 			}
-			res := NewCreateActorDTOCreated(&body)
+			res := NewCreateActorActorDTOCreated(&body)
 			return res, nil
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("actors", "create", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("actors", "create_actor", resp.StatusCode, string(body))
 		}
 	}
 }

@@ -15,26 +15,26 @@ import (
 
 // Endpoints wraps the "actors" service endpoints.
 type Endpoints struct {
-	Create endpoint.Endpoint
+	CreateActor endpoint.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "actors" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		Create: NewCreateEndpoint(s),
+		CreateActor: NewCreateActorEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "actors" service endpoints.
 func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
-	e.Create = m(e.Create)
+	e.CreateActor = m(e.CreateActor)
 }
 
-// NewCreateEndpoint returns an endpoint function that calls the method
-// "create" of service "actors".
-func NewCreateEndpoint(s Service) endpoint.Endpoint {
+// NewCreateActorEndpoint returns an endpoint function that calls the method
+// "create_actor" of service "actors".
+func NewCreateActorEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateActorDTO)
-		return s.Create(ctx, p)
+		return s.CreateActor(ctx, p)
 	}
 }

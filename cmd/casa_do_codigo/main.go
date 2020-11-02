@@ -16,9 +16,11 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"github.com/selmison/seed-desafio-cdc/gen/actors"
-	"github.com/selmison/seed-desafio-cdc/pkg/actor/domain"
-	"github.com/selmison/seed-desafio-cdc/pkg/actor/service"
+	actorsGen "github.com/selmison/seed-desafio-cdc/gen/actors"
+	categoriesGen "github.com/selmison/seed-desafio-cdc/gen/categories"
+	"github.com/selmison/seed-desafio-cdc/pkg/actors"
+	"github.com/selmison/seed-desafio-cdc/pkg/categories"
+	coreDomain "github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
 func main() {
@@ -42,7 +44,8 @@ func main() {
 	}
 
 	var (
-		actorsSvc actors.Service
+		actorsSvc     actorsGen.Service
+		categoriesSvc categoriesGen.Service
 	)
 	{
 		repo, err := gorm.Open(sqlite.Open(*dsnF), &gorm.Config{
@@ -51,19 +54,25 @@ func main() {
 		if err != nil {
 			panic("failed to connect database")
 		}
-		if err := repo.AutoMigrate(&domain.Actor{}); err != nil {
+		if err := repo.AutoMigrate(
+			&actors.Actor{},
+			&categories.Category{},
+		); err != nil {
 			log.Fatalf("db init: %v", err)
 		}
-		actorsSvc = service.NewService(repo, logger)
+		actorsSvc = actors.NewService(repo, logger)
+		categoriesSvc = categories.NewService(repo, logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		actorsEndpoints *actors.Endpoints
+		actorsEndpoints     *actorsGen.Endpoints
+		categoriesEndpoints *categoriesGen.Endpoints
 	)
 	{
-		actorsEndpoints = actors.NewEndpoints(actorsSvc)
+		actorsEndpoints = actorsGen.NewEndpoints(actorsSvc)
+		categoriesEndpoints = categoriesGen.NewEndpoints(categoriesSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -88,7 +97,9 @@ func main() {
 			addr := "http://localhost:3333/actors"
 			u, err := url.Parse(addr)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
+				if _, err := fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err); err != nil {
+					log.Fatalf(coreDomain.FormatToErrFprintf, err)
+				}
 				os.Exit(1)
 			}
 			if *secureF {
@@ -103,19 +114,25 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host += ":80"
 			}
-			handleHTTPServer(ctx, u, actorsEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, actorsEndpoints, categoriesEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: development)\n", *hostF)
+		if _, err := fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: development)\n", *hostF); err != nil {
+			log.Fatalf(coreDomain.FormatToErrFprintf, err)
+		}
 	}
 
 	// Wait for signal.
-	logger.Log("info", fmt.Sprintf("exiting (%v)", <-errc))
+	if err := logger.Log("info", fmt.Sprintf("exiting (%v)", <-errc)); err != nil {
+		log.Fatalf(coreDomain.FormatToErrKitLog, err)
+	}
 
 	// Send cancellation signal to the goroutines.
 	cancel()
 
 	wg.Wait()
-	logger.Log("info", fmt.Sprintf("exited"))
+	if err := logger.Log("info", fmt.Sprintf("exited")); err != nil {
+		log.Fatalf(coreDomain.FormatToErrKitLog, err)
+	}
 }

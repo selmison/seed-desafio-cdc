@@ -16,15 +16,15 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// BuildCreatePayload builds the payload for the actors create endpoint from
-// CLI flags.
-func BuildCreatePayload(actorsCreateBody string) (*actors.CreateActorDTO, error) {
+// BuildCreateActorPayload builds the payload for the actors create_actor
+// endpoint from CLI flags.
+func BuildCreateActorPayload(actorsCreateActorBody string) (*actors.CreateActorDTO, error) {
 	var err error
-	var body CreateRequestBody
+	var body CreateActorRequestBody
 	{
-		err = json.Unmarshal([]byte(actorsCreateBody), &body)
+		err = json.Unmarshal([]byte(actorsCreateActorBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"w4k\",\n      \"e-mail\": \"Aliquam asperiores iusto.\",\n      \"name\": \"Enim itaque quod cupiditate.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"h7r\",\n      \"e-mail\": \"Dicta rerum nesciunt perspiciatis.\",\n      \"name\": \"Sint atque.\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Description) > 400 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.description", body.Description, utf8.RuneCountInString(body.Description), 400, false))

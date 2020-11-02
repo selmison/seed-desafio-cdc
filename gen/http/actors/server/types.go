@@ -14,17 +14,17 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// CreateRequestBody is the type of the "actors" service "create" endpoint HTTP
-// request body.
-type CreateRequestBody struct {
+// CreateActorRequestBody is the type of the "actors" service "create_actor"
+// endpoint HTTP request body.
+type CreateActorRequestBody struct {
 	Name        *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	EMail       *string `form:"e-mail,omitempty" json:"e-mail,omitempty" xml:"e-mail,omitempty"`
 	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
 }
 
-// CreateResponseBody is the type of the "actors" service "create" endpoint
-// HTTP response body.
-type CreateResponseBody struct {
+// CreateActorResponseBody is the type of the "actors" service "create_actor"
+// endpoint HTTP response body.
+type CreateActorResponseBody struct {
 	ID          string `form:"id" json:"id" xml:"id"`
 	Name        string `form:"name" json:"name" xml:"name"`
 	EMail       string `form:"e-mail" json:"e-mail" xml:"e-mail"`
@@ -32,10 +32,10 @@ type CreateResponseBody struct {
 	CreatedAt   string `form:"created_at" json:"created_at" xml:"created_at"`
 }
 
-// NewCreateResponseBody builds the HTTP response body from the result of the
-// "create" endpoint of the "actors" service.
-func NewCreateResponseBody(res *actors.ActorDTO) *CreateResponseBody {
-	body := &CreateResponseBody{
+// NewCreateActorResponseBody builds the HTTP response body from the result of
+// the "create_actor" endpoint of the "actors" service.
+func NewCreateActorResponseBody(res *actors.ActorDTO) *CreateActorResponseBody {
+	body := &CreateActorResponseBody{
 		ID:          res.ID,
 		Name:        res.Name,
 		EMail:       res.EMail,
@@ -45,8 +45,8 @@ func NewCreateResponseBody(res *actors.ActorDTO) *CreateResponseBody {
 	return body
 }
 
-// NewCreateActorDTO builds a actors service create endpoint payload.
-func NewCreateActorDTO(body *CreateRequestBody) *actors.CreateActorDTO {
+// NewCreateActorDTO builds a actors service create_actor endpoint payload.
+func NewCreateActorDTO(body *CreateActorRequestBody) *actors.CreateActorDTO {
 	v := &actors.CreateActorDTO{
 		Name:        *body.Name,
 		EMail:       *body.EMail,
@@ -56,8 +56,9 @@ func NewCreateActorDTO(body *CreateRequestBody) *actors.CreateActorDTO {
 	return v
 }
 
-// ValidateCreateRequestBody runs the validations defined on CreateRequestBody
-func ValidateCreateRequestBody(body *CreateRequestBody) (err error) {
+// ValidateCreateActorRequestBody runs the validations defined on
+// create_actor_request_body
+func ValidateCreateActorRequestBody(body *CreateActorRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

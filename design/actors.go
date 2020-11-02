@@ -5,22 +5,9 @@ import (
 	_ "goa.design/plugins/v3/goakit"
 )
 
-var _ = API("casa-do-codigo", func() {
-	Title("Service for Casa do Código")
-	Description("HTTP service for Casa do Código")
-	Server("cdc", func() {
-		Description("cdc hosts the Casa do Codigo Service.")
-		Services("actors")
-		Host("development", func() {
-			Description("Development hosts.")
-			URI("http://localhost:3333/actors")
-		})
-	})
-})
-
 var _ = Service("actors", func() {
 	Description("The actors service performs operations on actors")
-	Method("create", func() {
+	Method("create_actor", func() {
 		Payload(CreateActorDTO)
 		Result(ActorDTO)
 		HTTP(func() {
@@ -28,7 +15,6 @@ var _ = Service("actors", func() {
 			Response(StatusCreated)
 		})
 	})
-	Files("/swagger.json", "../../gen/http/openapi.json")
 })
 
 var ActorDTO = Type("ActorDTO", func() {

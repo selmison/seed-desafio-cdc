@@ -13,4 +13,7 @@ var (
 	ErrNotFound            = errors.New("not found")
 	ErrIsNotValidated      = errors.New("is not validated")
 	ErrIdCouldNotBeEmpty   = fmt.Errorf("%s %w", "id", ErrCouldNotBeEmpty)
+
+	FormatToErrFprintf = "fmt.Fprintf fatal: %v\n"
+	FormatToErrKitLog  = "kit/log fatal: %v\n"
 )

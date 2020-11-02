@@ -17,24 +17,24 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// EncodeCreateResponse returns an encoder for responses returned by the actors
-// create endpoint.
-func EncodeCreateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+// EncodeCreateActorResponse returns an encoder for responses returned by the
+// actors create_actor endpoint.
+func EncodeCreateActorResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*actors.ActorDTO)
 		enc := encoder(ctx, w)
-		body := NewCreateResponseBody(res)
+		body := NewCreateActorResponseBody(res)
 		w.WriteHeader(http.StatusCreated)
 		return enc.Encode(body)
 	}
 }
 
-// DecodeCreateRequest returns a decoder for requests sent to the actors create
-// endpoint.
-func DecodeCreateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+// DecodeCreateActorRequest returns a decoder for requests sent to the actors
+// create_actor endpoint.
+func DecodeCreateActorRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			body CreateRequestBody
+			body CreateActorRequestBody
 			err  error
 		)
 		err = decoder(r).Decode(&body)
@@ -44,7 +44,7 @@ func DecodeCreateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
-		err = ValidateCreateRequestBody(&body)
+		err = ValidateCreateActorRequestBody(&body)
 		if err != nil {
 			return nil, err
 		}

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
-  title: Service for Casa do Código
-  description: HTTP service for Casa do Código
+  title: Casa do Código Service
+  description: Casa do Código HTTP service
   version: ""
 host: localhost:3333
 consumes:
@@ -17,14 +17,14 @@ paths:
     post:
       tags:
       - actors
-      summary: create actors
-      operationId: actors#create
+      summary: create_actor actors
+      operationId: actors#create_actor
       parameters:
-      - name: CreateRequestBody
+      - name: create_actor_request_body
         in: body
         required: true
         schema:
-          $ref: '#/definitions/ActorsCreateRequestBody'
+          $ref: '#/definitions/ActorsCreateActorRequestBody'
           required:
           - name
           - e-mail
@@ -33,7 +33,7 @@ paths:
         "201":
           description: Created response.
           schema:
-            $ref: '#/definitions/ActorsCreateResponseBody'
+            $ref: '#/definitions/ActorsCreateActorResponseBody'
             required:
             - id
             - name
@@ -42,12 +42,36 @@ paths:
             - created_at
       schemes:
       - http
+  /categories:
+    post:
+      tags:
+      - categories
+      summary: create_category categories
+      operationId: categories#create_category
+      parameters:
+      - name: create_category_request_body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CategoriesCreateCategoryRequestBody'
+          required:
+          - name
+      responses:
+        "201":
+          description: Created response.
+          schema:
+            $ref: '#/definitions/CategoriesCreateCategoryResponseBody'
+            required:
+            - id
+            - name
+      schemes:
+      - http
   /swagger.json:
     get:
       tags:
-      - actors
+      - swagger
       summary: Download ../../gen/http/openapi.json
-      operationId: actors#/swagger.json
+      operationId: swagger#/swagger.json
       responses:
         "200":
           description: File downloaded
@@ -56,57 +80,84 @@ paths:
       schemes:
       - http
 definitions:
-  ActorsCreateRequestBody:
-    title: ActorsCreateRequestBody
+  ActorsCreateActorRequestBody:
+    title: ActorsCreateActorRequestBody
     type: object
     properties:
       description:
         type: string
-        example: ox9
+        example: qzj
         maxLength: 400
       e-mail:
         type: string
-        example: Et ut recusandae.
+        example: Qui consequuntur ex eum.
       name:
         type: string
-        example: Quisquam hic qui labore nihil iure.
+        example: Voluptatem ipsa aliquam id.
     example:
-      description: 3i3
-      e-mail: Explicabo eum dolores.
-      name: Delectus nulla qui.
+      description: ofa
+      e-mail: Et aperiam laboriosam sed et.
+      name: Vel hic deleniti accusamus debitis dolor.
     required:
     - name
     - e-mail
     - description
-  ActorsCreateResponseBody:
-    title: ActorsCreateResponseBody
+  ActorsCreateActorResponseBody:
+    title: ActorsCreateActorResponseBody
     type: object
     properties:
       created_at:
         type: string
-        example: Id in animi omnis at est.
+        example: Facere sed.
       description:
         type: string
-        example: oo0
+        example: zqu
         maxLength: 400
       e-mail:
         type: string
-        example: Earum odit quas.
+        example: Similique debitis cumque atque consequuntur.
       id:
         type: string
-        example: Nihil libero dolorum laboriosam.
+        example: Ea sit quia qui.
       name:
         type: string
-        example: Et voluptatem et ab.
+        example: Ad repudiandae amet nulla sunt.
     example:
-      created_at: Odio velit.
-      description: yyt
-      e-mail: Suscipit mollitia.
-      id: Assumenda fugit.
-      name: Quia aliquid aut enim voluptas.
+      created_at: Mollitia exercitationem dicta ut.
+      description: lgz
+      e-mail: Delectus voluptas.
+      id: Ea provident.
+      name: Dolorem ipsum sunt possimus ea odio.
     required:
     - id
     - name
     - e-mail
     - description
     - created_at
+  CategoriesCreateCategoryRequestBody:
+    title: CategoriesCreateCategoryRequestBody
+    type: object
+    properties:
+      name:
+        type: string
+        example: Eligendi quibusdam ducimus qui at.
+    example:
+      name: Cum vero optio eum iusto delectus quae.
+    required:
+    - name
+  CategoriesCreateCategoryResponseBody:
+    title: CategoriesCreateCategoryResponseBody
+    type: object
+    properties:
+      id:
+        type: string
+        example: Accusantium voluptas ea quas soluta.
+      name:
+        type: string
+        example: Dolores similique consequuntur et ut esse.
+    example:
+      id: Eum quaerat quas cumque natus voluptatem.
+      name: Assumenda et qui beatae ut quia.
+    required:
+    - id
+    - name

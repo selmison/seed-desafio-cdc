@@ -15,20 +15,20 @@ import (
 
 // Client is the "actors" service client.
 type Client struct {
-	CreateEndpoint endpoint.Endpoint
+	CreateActorEndpoint endpoint.Endpoint
 }
 
 // NewClient initializes a "actors" service client given the endpoints.
-func NewClient(create endpoint.Endpoint) *Client {
+func NewClient(createActor endpoint.Endpoint) *Client {
 	return &Client{
-		CreateEndpoint: create,
+		CreateActorEndpoint: createActor,
 	}
 }
 
-// Create calls the "create" endpoint of the "actors" service.
-func (c *Client) Create(ctx context.Context, p *CreateActorDTO) (res *ActorDTO, err error) {
+// CreateActor calls the "create_actor" endpoint of the "actors" service.
+func (c *Client) CreateActor(ctx context.Context, p *CreateActorDTO) (res *ActorDTO, err error) {
 	var ires interface{}
-	ires, err = c.CreateEndpoint(ctx, p)
+	ires, err = c.CreateActorEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

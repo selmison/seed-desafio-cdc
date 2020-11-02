@@ -7,7 +7,7 @@
 
 package client
 
-// CreateActorsPath returns the URL path to the actors service create HTTP endpoint.
-func CreateActorsPath() string {
+// CreateActorActorsPath returns the URL path to the actors service create_actor HTTP endpoint.
+func CreateActorActorsPath() string {
 	return "/actors"
 }

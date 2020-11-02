@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/endpoint"
-	cli "github.com/selmison/seed-desafio-cdc/gen/http/cli/cdc"
+	cli "github.com/selmison/seed-desafio-cdc/gen/http/cli/casa_do_codigo"
 	goahttp "goa.design/goa/v3/http"
 )
 

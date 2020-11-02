@@ -1,4 +1,4 @@
-package domain
+package actors
 
 import (
 	"fmt"
@@ -18,8 +18,8 @@ type Actor struct {
 	Description string `validate:"required,not_blank,max=400"`
 }
 
-func (v *Actor) Validate() error {
-	err := coreDomain.Validate.Struct(v)
+func (a *Actor) Validate() error {
+	err := coreDomain.Validate.Struct(a)
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValidated)

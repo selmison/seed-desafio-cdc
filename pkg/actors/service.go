@@ -1,4 +1,4 @@
-package service
+package actors
 
 import (
 	"context"
@@ -11,7 +11,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/selmison/seed-desafio-cdc/gen/actors"
-	"github.com/selmison/seed-desafio-cdc/pkg/actor/domain"
 )
 
 type service struct {
@@ -24,9 +23,9 @@ func NewService(repo *gorm.DB, logger kitLog.Logger) actors.Service {
 	return &service{repo, logger}
 }
 
-// Create implements create.
-func (s *service) Create(_ context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
-	actor := domain.Actor{
+// CreateActor implements create.
+func (s *service) CreateActor(_ context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
+	actor := Actor{
 		ID:          uuid.New().String(),
 		Name:        strings.TrimSpace(dto.Name),
 		Email:       strings.TrimSpace(dto.EMail),
