@@ -70,7 +70,7 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, res
 			defer resp.Body.Close()
 		}
 		switch resp.StatusCode {
-		case http.StatusOK:
+		case http.StatusCreated:
 			var (
 				body CreateActorResponseBody
 				err  error
@@ -83,7 +83,7 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, res
 			if err != nil {
 				return nil, goahttp.ErrValidationError("actors", "create_actor", err)
 			}
-			res := NewCreateActorActorDTOOK(&body)
+			res := NewCreateActorActorDTOCreated(&body)
 			return res, nil
 		case http.StatusBadRequest:
 			var (

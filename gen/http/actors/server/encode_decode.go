@@ -12,10 +12,9 @@ import (
 	"io"
 	"net/http"
 
+	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
-
-	"github.com/selmison/seed-desafio-cdc/gen/actors"
 )
 
 // EncodeCreateActorResponse returns an encoder for responses returned by the
@@ -25,7 +24,7 @@ func EncodeCreateActorResponse(encoder func(context.Context, http.ResponseWriter
 		res := v.(*actors.ActorDTO)
 		enc := encoder(ctx, w)
 		body := NewCreateActorResponseBody(res)
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		return enc.Encode(body)
 	}
 }

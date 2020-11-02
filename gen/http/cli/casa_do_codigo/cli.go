@@ -32,12 +32,12 @@ categories create-category
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` actors create-actor --body '{
-      "description": "h7r",
-      "e-mail": "Dicta rerum nesciunt perspiciatis.",
-      "name": "Sint atque."
+      "description": "5qz",
+      "e-mail": "andreanne_reichert@hayes.org",
+      "name": "Sunt ducimus."
    }'` + "\n" +
 		os.Args[0] + ` categories create-category --body '{
-      "name": "Aperiam veritatis excepturi quia ab est."
+      "name": "Ab delectus quam aut."
    }'` + "\n" +
 		""
 }
@@ -180,9 +180,9 @@ CreateActor implements create_actor.
 
 Example:
     `+os.Args[0]+` actors create-actor --body '{
-      "description": "h7r",
-      "e-mail": "Dicta rerum nesciunt perspiciatis.",
-      "name": "Sint atque."
+      "description": "5qz",
+      "e-mail": "andreanne_reichert@hayes.org",
+      "name": "Sunt ducimus."
    }'
 `, os.Args[0])
 }
@@ -209,7 +209,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` categories create-category --body '{
-      "name": "Aperiam veritatis excepturi quia ab est."
+      "name": "Ab delectus quam aut."
    }'
 `, os.Args[0])
 }

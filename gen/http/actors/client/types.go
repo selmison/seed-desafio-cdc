@@ -61,9 +61,9 @@ func NewCreateActorRequestBody(p *actors.CreateActorDTO) *CreateActorRequestBody
 	return body
 }
 
-// NewCreateActorActorDTOOK builds a "actors" service "create_actor" endpoint
-// result from a HTTP "OK" response.
-func NewCreateActorActorDTOOK(body *CreateActorResponseBody) *actors.ActorDTO {
+// NewCreateActorActorDTOCreated builds a "actors" service "create_actor"
+// endpoint result from a HTTP "Created" response.
+func NewCreateActorActorDTOCreated(body *CreateActorResponseBody) *actors.ActorDTO {
 	v := &actors.ActorDTO{
 		ID:          *body.ID,
 		Name:        *body.Name,
@@ -107,6 +107,9 @@ func ValidateCreateActorResponseBody(body *CreateActorResponseBody) (err error) 
 	}
 	if body.CreatedAt == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("created_at", "body"))
+	}
+	if body.EMail != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.e-mail", *body.EMail, goa.FormatEmail))
 	}
 	if body.Description != nil {
 		if utf8.RuneCountInString(*body.Description) > 400 {

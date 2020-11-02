@@ -20,22 +20,22 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateActorRequestBody'
             example:
-              description: h7r
-              e-mail: Dicta rerum nesciunt perspiciatis.
-              name: Sint atque.
+              description: 5qz
+              e-mail: andreanne_reichert@hayes.org
+              name: Sunt ducimus.
       responses:
-        "200":
+        "201":
           description: ""
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ActorDTO'
               example:
-                created_at: Aperiam reprehenderit labore voluptas adipisci fugit.
-                description: lif
-                e-mail: Accusamus aut hic aut officiis totam.
-                id: Quia aut voluptatem.
-                name: Odit at illo enim voluptatibus.
+                created_at: Ut incidunt molestiae voluptates.
+                description: 88u
+                e-mail: trent_jacobs@schimmel.org
+                id: Aut vel hic deleniti accusamus debitis dolor.
+                name: Et aperiam laboriosam sed et.
         "400":
           description: ""
           content:
@@ -43,12 +43,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
+                temporary: true
+                timeout: false
   /categories:
     post:
       tags:
@@ -62,7 +62,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCategoryRequestBody'
             example:
-              name: Aperiam veritatis excepturi quia ab est.
+              name: Ab delectus quam aut.
       responses:
         "201":
           description: ""
@@ -71,8 +71,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
               example:
-                id: Rerum id illo ea ea sit.
-                name: Qui alias ad repudiandae amet.
+                id: Possimus velit.
+                name: Commodi sed ratione tempore est.
         "400":
           description: ""
           content:
@@ -102,26 +102,27 @@ components:
       properties:
         created_at:
           type: string
-          example: Sequi exercitationem aut laborum minus fugit iste.
+          example: Voluptate et omnis sapiente.
         description:
           type: string
-          example: yhm
+          example: 6q8
           maxLength: 400
         e-mail:
           type: string
-          example: Et doloremque.
+          example: rudolph@volkman.com
+          format: email
         id:
           type: string
-          example: Necessitatibus molestiae quam a amet voluptas.
+          example: Ut autem molestiae et omnis ut ipsa.
         name:
           type: string
-          example: Vero voluptas iure praesentium veritatis suscipit.
+          example: Rem et quae harum laborum dolore aperiam.
       example:
-        created_at: Neque libero dolorem.
-        description: 7qo
-        e-mail: Sit sint dolores.
-        id: Eius molestiae dicta alias.
-        name: Molestiae asperiores.
+        created_at: Et necessitatibus impedit quam.
+        description: wdh
+        e-mail: lucinda_lueilwitz@gulgowskijerde.com
+        id: Ad iure numquam.
+        name: Aut in sint magni dignissimos est.
       required:
       - id
       - name
@@ -133,13 +134,13 @@ components:
       properties:
         id:
           type: string
-          example: Perspiciatis voluptatem doloremque eum eos.
+          example: Ducimus voluptatum.
         name:
           type: string
-          example: Sit minus est.
+          example: Dignissimos et occaecati dolorem.
       example:
-        id: Aut earum qui.
-        name: Nam quos aperiam quidem necessitatibus.
+        id: Eum sit est.
+        name: Dolorum in autem.
       required:
       - id
       - name
@@ -148,18 +149,19 @@ components:
       properties:
         description:
           type: string
-          example: q0a
+          example: qet
           maxLength: 400
         e-mail:
           type: string
-          example: Similique ut.
+          example: cooper_little@romaguera.name
+          format: email
         name:
           type: string
-          example: Commodi sed ratione tempore est.
+          example: Harum eos dolores.
       example:
-        description: 60i
-        e-mail: Quo non nam aut exercitationem aut.
-        name: Autem in.
+        description: ly7
+        e-mail: rocio_mann@stroman.biz
+        name: Cupiditate illo non voluptas.
       required:
       - name
       - e-mail
@@ -169,9 +171,9 @@ components:
       properties:
         name:
           type: string
-          example: Enim dolor qui.
+          example: Hic quibusdam sint et quos atque assumenda.
       example:
-        name: Vitae debitis eos et.
+        name: Quia et dolore unde incidunt ipsum rerum.
       required:
       - name
     Error:
@@ -180,7 +182,7 @@ components:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: false
+          example: true
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of the problem.
@@ -200,14 +202,14 @@ components:
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       example:
-        fault: false
+        fault: true
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
         temporary: false
-        timeout: true
+        timeout: false
       required:
       - name
       - id

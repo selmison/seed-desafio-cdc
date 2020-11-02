@@ -12,10 +12,9 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
+	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
-
-	"github.com/selmison/seed-desafio-cdc/gen/actors"
 )
 
 // Server lists the actors service endpoint HTTP handlers.

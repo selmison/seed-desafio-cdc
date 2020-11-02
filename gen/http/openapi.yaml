@@ -30,8 +30,8 @@ paths:
           - e-mail
           - description
       responses:
-        "200":
-          description: OK response.
+        "201":
+          description: Created response.
           schema:
             $ref: '#/definitions/ActorsCreateActorResponseBody'
             required:
@@ -95,7 +95,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -115,15 +115,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: create_actor_invalid_fields_response_body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -137,18 +137,19 @@ definitions:
     properties:
       description:
         type: string
-        example: iiv
+        example: l9g
         maxLength: 400
       e-mail:
         type: string
-        example: Ea quas soluta unde dolores similique.
+        example: elijah@murphydoyle.net
+        format: email
       name:
         type: string
-        example: Et dolorem accusantium accusantium.
+        example: Qui id saepe fuga quas illo eos.
     example:
-      description: yyv
-      e-mail: Assumenda et qui beatae ut quia.
-      name: Eum quaerat quas cumque natus voluptatem.
+      description: lnu
+      e-mail: sandra@strosinklocko.com
+      name: Et eum.
     required:
     - name
     - e-mail
@@ -159,26 +160,27 @@ definitions:
     properties:
       created_at:
         type: string
-        example: Veritatis delectus voluptas qui quibusdam ducimus.
+        example: Voluptatem error.
       description:
         type: string
-        example: w4v
+        example: zi1
         maxLength: 400
       e-mail:
         type: string
-        example: Harum dolorem.
+        example: ruthie@gerlachwest.org
+        format: email
       id:
         type: string
-        example: Debitis cumque atque consequuntur aliquid.
+        example: Ut ab soluta occaecati autem in qui.
       name:
         type: string
-        example: Atque necessitatibus praesentium facere sed non ea.
+        example: Non nam.
     example:
-      created_at: Accusamus debitis dolor nulla.
-      description: qpw
-      e-mail: Consequuntur ex eum aut nesciunt aperiam.
-      id: Suscipit mollitia exercitationem dicta ut error voluptatem.
-      name: Aliquam id illum.
+      created_at: Consequuntur omnis explicabo.
+      description: 0t0
+      e-mail: dawson@nikolaus.info
+      id: Sed neque libero dolorem repellendus.
+      name: Id velit modi non non enim dolor.
     required:
     - id
     - name
@@ -192,7 +194,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -212,15 +214,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: create_category_invalid_fields_response_body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -234,9 +236,9 @@ definitions:
     properties:
       name:
         type: string
-        example: Ab delectus quam aut.
+        example: Ab nam quae omnis aspernatur aperiam voluptatem.
     example:
-      name: Possimus velit.
+      name: Sit repellat qui molestiae nemo animi rerum.
     required:
     - name
   CategoriesCreateCategoryResponseBody:
@@ -245,13 +247,13 @@ definitions:
     properties:
       id:
         type: string
-        example: At quam cum.
+        example: Illo aspernatur magnam.
       name:
         type: string
-        example: Optio eum iusto delectus quae.
+        example: Excepturi consequatur accusamus unde qui quo.
     example:
-      id: Dolores maxime ut.
-      name: Molestiae voluptates.
+      id: Aut sint earum.
+      name: Et est perspiciatis quis magni est reiciendis.
     required:
     - id
     - name

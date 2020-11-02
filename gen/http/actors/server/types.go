@@ -100,6 +100,9 @@ func ValidateCreateActorRequestBody(body *CreateActorRequestBody) (err error) {
 	if body.Description == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("description", "body"))
 	}
+	if body.EMail != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.e-mail", *body.EMail, goa.FormatEmail))
+	}
 	if body.Description != nil {
 		if utf8.RuneCountInString(*body.Description) > 400 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.description", *body.Description, utf8.RuneCountInString(*body.Description), 400, false))

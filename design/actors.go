@@ -25,7 +25,9 @@ var ActorDTO = Type("ActorDTO", func() {
 	Description("Actor Type")
 	Attribute("id", String)
 	Attribute("name", String)
-	Attribute("e-mail", String)
+	Attribute("e-mail", String, func() {
+		Format(FormatEmail)
+	})
 	Attribute("description", String, func() {
 		MaxLength(400)
 	})
@@ -36,7 +38,9 @@ var ActorDTO = Type("ActorDTO", func() {
 var CreateActorDTO = Type("CreateActorDTO", func() {
 	Description("New Actor Type")
 	Attribute("name", String)
-	Attribute("e-mail", String)
+	Attribute("e-mail", String, func() {
+		Format(FormatEmail)
+	})
 	Attribute("description", String, func() {
 		MaxLength(400)
 	})
