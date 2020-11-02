@@ -3,50 +3,47 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 
 	kitLog "github.com/go-kit/kit/log"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 
 	"github.com/selmison/seed-desafio-cdc/gen/actors"
 	"github.com/selmison/seed-desafio-cdc/pkg/actor/domain"
-	coreDomain "github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
 type service struct {
-	repo   domain.Repository
+	repo   *gorm.DB
 	logger kitLog.Logger
 }
 
 // NewService returns a new Actors Service.
-func NewService(repo domain.Repository, logger kitLog.Logger) actors.Service {
+func NewService(repo *gorm.DB, logger kitLog.Logger) actors.Service {
 	return &service{repo, logger}
 }
 
 // Create implements create.
-func (s *service) Create(ctx context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
-	id, err := coreDomain.GenerateID()
-	if err != nil {
-		return nil, err
-	}
-	name, err := domain.NewName(dto.Name)
-	if err != nil {
-		return nil, err
-	}
-	email, err := domain.NewEmail(dto.EMail)
-	if err != nil {
-		return nil, err
-	}
-	desc, err := domain.NewDesc(dto.Description)
-	if err != nil {
-		return nil, err
-	}
-	createdAt := domain.GenerateTime()
+func (s *service) Create(_ context.Context, dto *actors.CreateActorDTO) (res *actors.ActorDTO, err error) {
 	actor := domain.Actor{
-		ID:          id,
-		Name:        name,
-		Email:       email,
-		Description: desc,
-		CreatedAt:   createdAt,
+		ID:          uuid.New().String(),
+		Name:        strings.TrimSpace(dto.Name),
+		Email:       strings.TrimSpace(dto.EMail),
+		Description: strings.TrimSpace(dto.Description),
 	}
-	s.logger.Log("info", fmt.Sprintf("actors.create"))
-	return s.repo.Store(ctx, actor)
+	if err := actor.Validate(); err != nil {
+		return nil, err
+	}
+	if err := s.logger.Log("info", fmt.Sprintf("actors.create")); err != nil {
+		log.Printf("kit/log error: %v\n", err)
+	}
+	result := s.repo.Create(&actor)
+	return &actors.ActorDTO{
+		ID:          actor.ID,
+		Name:        actor.Name,
+		EMail:       actor.Email,
+		Description: actor.Description,
+		CreatedAt:   actor.CreatedAt.String(),
+	}, result.Error
 }

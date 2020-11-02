@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"os/signal"
@@ -11,41 +12,48 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/go-kit/kit/log"
+	kitLog "github.com/go-kit/kit/log"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 
 	"github.com/selmison/seed-desafio-cdc/gen/actors"
-	"github.com/selmison/seed-desafio-cdc/pkg/actor/infra"
+	"github.com/selmison/seed-desafio-cdc/pkg/actor/domain"
 	"github.com/selmison/seed-desafio-cdc/pkg/actor/service"
 )
 
 func main() {
-	// Define command line flags, add any other flag required to configure the
-	// service.
 	var (
 		hostF     = flag.String("host", "development", "Server host (valid values: development)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
+		dsnF      = flag.String("dsn", "file::memory:?cache=shared", "data source name")
 	)
 	flag.Parse()
 
-	// Setup gokit logger.
 	var (
-		logger log.Logger
+		logger kitLog.Logger
 	)
 	{
-		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-		logger = log.With(logger, "caller", log.DefaultCaller)
+		logger = kitLog.NewLogfmtLogger(os.Stderr)
+		logger = kitLog.With(logger, "ts", kitLog.DefaultTimestampUTC)
+		logger = kitLog.With(logger, "caller", kitLog.DefaultCaller)
 	}
 
-	// Initialize the services.
 	var (
 		actorsSvc actors.Service
 	)
 	{
-		repo := infra.NewActorRepository()
+		repo, err := gorm.Open(sqlite.Open(*dsnF), &gorm.Config{
+			SkipDefaultTransaction: true,
+		})
+		if err != nil {
+			panic("failed to connect database")
+		}
+		if err := repo.AutoMigrate(&domain.Actor{}); err != nil {
+			log.Fatalf("db init: %v", err)
+		}
 		actorsSvc = service.NewService(repo, logger)
 	}
 
