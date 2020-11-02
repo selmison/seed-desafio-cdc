@@ -31,3 +31,12 @@ func DecodeCreateCategoryRequest(mux goahttp.Muxer, decoder func(*http.Request) 
 		return dec(r)
 	}
 }
+
+// EncodeCreateCategoryError returns a go-kit EncodeResponseFunc suitable for
+// encoding errors returned by the categories create_category endpoint.
+func EncodeCreateCategoryError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) kithttp.ErrorEncoder {
+	enc := server.EncodeCreateCategoryError(encoder, formatter)
+	return func(ctx context.Context, err error, w http.ResponseWriter) {
+		enc(ctx, w, err)
+	}
+}

@@ -7,12 +7,16 @@ import (
 
 var _ = Service("actors", func() {
 	Description("The actors service performs operations on actors")
+
+	Error("invalid_fields")
+
 	Method("create_actor", func() {
 		Payload(CreateActorDTO)
 		Result(ActorDTO)
 		HTTP(func() {
 			POST("/actors")
 			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
 		})
 	})
 })

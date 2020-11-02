@@ -22,7 +22,7 @@ func BuildCreateCategoryPayload(categoriesCreateCategoryBody string) (*categorie
 	{
 		err = json.Unmarshal([]byte(categoriesCreateCategoryBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Sapiente facilis mollitia aut.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Aperiam veritatis excepturi quia ab est.\"\n   }'")
 		}
 	}
 	v := &categories.CreateCategoryDTO{

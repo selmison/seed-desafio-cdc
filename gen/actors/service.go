@@ -9,6 +9,8 @@ package actors
 
 import (
 	"context"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // The actors service performs operations on actors
@@ -41,4 +43,13 @@ type ActorDTO struct {
 	EMail       string
 	Description string
 	CreatedAt   string
+}
+
+// MakeInvalidFields builds a goa.ServiceError from an error.
+func MakeInvalidFields(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_fields",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
 }

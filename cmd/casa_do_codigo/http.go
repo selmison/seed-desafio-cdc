@@ -11,15 +11,16 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
-	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
-	categories "github.com/selmison/seed-desafio-cdc/gen/categories"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
+
+	"github.com/selmison/seed-desafio-cdc/gen/actors"
+	"github.com/selmison/seed-desafio-cdc/gen/categories"
 	actorskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/kitserver"
 	actorssvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/server"
 	categorieskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/kitserver"
 	categoriessvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/server"
-	goahttp "goa.design/goa/v3/http"
-	httpmdlwr "goa.design/goa/v3/http/middleware"
-	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
@@ -58,12 +59,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 			endpoint.Endpoint(actorsEndpoints.CreateActor),
 			actorskitsvr.DecodeCreateActorRequest(mux, dec),
 			actorskitsvr.EncodeCreateActorResponse(enc),
+			kithttp.ServerErrorEncoder(actorskitsvr.EncodeCreateActorError(enc, nil)),
 		)
 		actorsServer = actorssvr.New(actorsEndpoints, mux, dec, enc, eh, nil)
 		categoriesCreateCategoryHandler = kithttp.NewServer(
 			endpoint.Endpoint(categoriesEndpoints.CreateCategory),
 			categorieskitsvr.DecodeCreateCategoryRequest(mux, dec),
 			categorieskitsvr.EncodeCreateCategoryResponse(enc),
+			kithttp.ServerErrorEncoder(categorieskitsvr.EncodeCreateCategoryError(enc, nil)),
 		)
 		categoriesServer = categoriessvr.New(categoriesEndpoints, mux, dec, enc, eh, nil)
 	}

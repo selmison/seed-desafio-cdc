@@ -12,9 +12,10 @@ import (
 	"io"
 	"net/http"
 
-	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
+
+	"github.com/selmison/seed-desafio-cdc/gen/actors"
 )
 
 // EncodeCreateActorResponse returns an encoder for responses returned by the
@@ -24,7 +25,7 @@ func EncodeCreateActorResponse(encoder func(context.Context, http.ResponseWriter
 		res := v.(*actors.ActorDTO)
 		enc := encoder(ctx, w)
 		body := NewCreateActorResponseBody(res)
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusOK)
 		return enc.Encode(body)
 	}
 }
@@ -51,5 +52,33 @@ func DecodeCreateActorRequest(mux goahttp.Muxer, decoder func(*http.Request) goa
 		payload := NewCreateActorDTO(&body)
 
 		return payload, nil
+	}
+}
+
+// EncodeCreateActorError returns an encoder for errors returned by the
+// create_actor actors endpoint.
+func EncodeCreateActorError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_fields":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateActorInvalidFieldsResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_fields")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
 	}
 }

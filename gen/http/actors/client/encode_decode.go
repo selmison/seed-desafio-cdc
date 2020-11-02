@@ -52,6 +52,9 @@ func EncodeCreateActorRequest(encoder func(*http.Request) goahttp.Encoder) func(
 // DecodeCreateActorResponse returns a decoder for responses returned by the
 // actors create_actor endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
+// DecodeCreateActorResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
 func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -67,7 +70,7 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, res
 			defer resp.Body.Close()
 		}
 		switch resp.StatusCode {
-		case http.StatusCreated:
+		case http.StatusOK:
 			var (
 				body CreateActorResponseBody
 				err  error
@@ -80,8 +83,22 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, res
 			if err != nil {
 				return nil, goahttp.ErrValidationError("actors", "create_actor", err)
 			}
-			res := NewCreateActorActorDTOCreated(&body)
+			res := NewCreateActorActorDTOOK(&body)
 			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateActorInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("actors", "create_actor", err)
+			}
+			err = ValidateCreateActorInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("actors", "create_actor", err)
+			}
+			return nil, NewCreateActorInvalidFields(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("actors", "create_actor", resp.StatusCode, string(body))

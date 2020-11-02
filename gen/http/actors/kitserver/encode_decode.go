@@ -31,3 +31,12 @@ func DecodeCreateActorRequest(mux goahttp.Muxer, decoder func(*http.Request) goa
 		return dec(r)
 	}
 }
+
+// EncodeCreateActorError returns a go-kit EncodeResponseFunc suitable for
+// encoding errors returned by the actors create_actor endpoint.
+func EncodeCreateActorError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) kithttp.ErrorEncoder {
+	enc := server.EncodeCreateActorError(encoder, formatter)
+	return func(ctx context.Context, err error, w http.ResponseWriter) {
+		enc(ctx, w, err)
+	}
+}

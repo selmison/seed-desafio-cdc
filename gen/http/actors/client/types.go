@@ -32,6 +32,24 @@ type CreateActorResponseBody struct {
 	CreatedAt   *string `form:"created_at,omitempty" json:"created_at,omitempty" xml:"created_at,omitempty"`
 }
 
+// CreateActorInvalidFieldsResponseBody is the type of the "actors" service
+// "create_actor" endpoint HTTP response body for the "invalid_fields" error.
+type CreateActorInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // NewCreateActorRequestBody builds the HTTP request body from the payload of
 // the "create_actor" endpoint of the "actors" service.
 func NewCreateActorRequestBody(p *actors.CreateActorDTO) *CreateActorRequestBody {
@@ -43,15 +61,30 @@ func NewCreateActorRequestBody(p *actors.CreateActorDTO) *CreateActorRequestBody
 	return body
 }
 
-// NewCreateActorActorDTOCreated builds a "actors" service "create_actor"
-// endpoint result from a HTTP "Created" response.
-func NewCreateActorActorDTOCreated(body *CreateActorResponseBody) *actors.ActorDTO {
+// NewCreateActorActorDTOOK builds a "actors" service "create_actor" endpoint
+// result from a HTTP "OK" response.
+func NewCreateActorActorDTOOK(body *CreateActorResponseBody) *actors.ActorDTO {
 	v := &actors.ActorDTO{
 		ID:          *body.ID,
 		Name:        *body.Name,
 		EMail:       *body.EMail,
 		Description: *body.Description,
 		CreatedAt:   *body.CreatedAt,
+	}
+
+	return v
+}
+
+// NewCreateActorInvalidFields builds a actors service create_actor endpoint
+// invalid_fields error.
+func NewCreateActorInvalidFields(body *CreateActorInvalidFieldsResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
 	}
 
 	return v
@@ -79,6 +112,30 @@ func ValidateCreateActorResponseBody(body *CreateActorResponseBody) (err error) 
 		if utf8.RuneCountInString(*body.Description) > 400 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.description", *body.Description, utf8.RuneCountInString(*body.Description), 400, false))
 		}
+	}
+	return
+}
+
+// ValidateCreateActorInvalidFieldsResponseBody runs the validations defined on
+// create_actor_invalid_fields_response_body
+func ValidateCreateActorInvalidFieldsResponseBody(body *CreateActorInvalidFieldsResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
 	}
 	return
 }

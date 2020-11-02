@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 
+	"github.com/selmison/seed-desafio-cdc/gen/actors"
 	coreDomain "github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
@@ -22,7 +23,10 @@ func (a *Actor) Validate() error {
 	err := coreDomain.Validate.Struct(a)
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
-		return fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValidated)
+		err := actors.MakeInvalidFields(
+			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+		)
+		return err
 	}
 	return nil
 }

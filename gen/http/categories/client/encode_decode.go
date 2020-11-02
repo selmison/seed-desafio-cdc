@@ -52,6 +52,9 @@ func EncodeCreateCategoryRequest(encoder func(*http.Request) goahttp.Encoder) fu
 // DecodeCreateCategoryResponse returns a decoder for responses returned by the
 // categories create_category endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
+// DecodeCreateCategoryResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
 func DecodeCreateCategoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -82,6 +85,20 @@ func DecodeCreateCategoryResponse(decoder func(*http.Response) goahttp.Decoder, 
 			}
 			res := NewCreateCategoryCategoryDTOCreated(&body)
 			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateCategoryInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("categories", "create_category", err)
+			}
+			err = ValidateCreateCategoryInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("categories", "create_category", err)
+			}
+			return nil, NewCreateCategoryInvalidFields(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("categories", "create_category", resp.StatusCode, string(body))

@@ -9,6 +9,8 @@ package categories
 
 import (
 	"context"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // The categories service performs operations on categories
@@ -38,4 +40,13 @@ type CreateCategoryDTO struct {
 type CategoryDTO struct {
 	ID   string
 	Name string
+}
+
+// MakeInvalidFields builds a goa.ServiceError from an error.
+func MakeInvalidFields(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_fields",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
 }

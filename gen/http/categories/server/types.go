@@ -25,12 +25,46 @@ type CreateCategoryResponseBody struct {
 	Name string `form:"name" json:"name" xml:"name"`
 }
 
+// CreateCategoryInvalidFieldsResponseBody is the type of the "categories"
+// service "create_category" endpoint HTTP response body for the
+// "invalid_fields" error.
+type CreateCategoryInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // NewCreateCategoryResponseBody builds the HTTP response body from the result
 // of the "create_category" endpoint of the "categories" service.
 func NewCreateCategoryResponseBody(res *categories.CategoryDTO) *CreateCategoryResponseBody {
 	body := &CreateCategoryResponseBody{
 		ID:   res.ID,
 		Name: res.Name,
+	}
+	return body
+}
+
+// NewCreateCategoryInvalidFieldsResponseBody builds the HTTP response body
+// from the result of the "create_category" endpoint of the "categories"
+// service.
+func NewCreateCategoryInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCategoryInvalidFieldsResponseBody {
+	body := &CreateCategoryInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
 	}
 	return body
 }

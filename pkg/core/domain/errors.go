@@ -11,7 +11,7 @@ var (
 	ErrInternalApplication = errors.New("internal application error")
 	ErrIsRequired          = errors.New("is required")
 	ErrNotFound            = errors.New("not found")
-	ErrIsNotValidated      = errors.New("is not validated")
+	ErrIsNotValid          = errors.New("is not valid")
 	ErrIdCouldNotBeEmpty   = fmt.Errorf("%s %w", "id", ErrCouldNotBeEmpty)
 
 	FormatToErrFprintf = "fmt.Fprintf fatal: %v\n"

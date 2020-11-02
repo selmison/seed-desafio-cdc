@@ -7,12 +7,16 @@ import (
 
 var _ = Service("categories", func() {
 	Description("The categories service performs operations on categories")
+
+	Error("invalid_fields")
+
 	Method("create_category", func() {
 		Payload(CreateCategoryDTO)
 		Result(CategoryDTO)
 		HTTP(func() {
 			POST("/categories")
 			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
 		})
 	})
 })

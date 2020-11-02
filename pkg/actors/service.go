@@ -32,6 +32,7 @@ func (s *service) CreateActor(_ context.Context, dto *actors.CreateActorDTO) (re
 		Description: strings.TrimSpace(dto.Description),
 	}
 	if err := actor.Validate(); err != nil {
+
 		return nil, err
 	}
 	if err := s.logger.Log("info", fmt.Sprintf("actors.create")); err != nil {

@@ -37,7 +37,7 @@ func UsageExamples() string {
       "name": "Sint atque."
    }'` + "\n" +
 		os.Args[0] + ` categories create-category --body '{
-      "name": "Sapiente facilis mollitia aut."
+      "name": "Aperiam veritatis excepturi quia ab est."
    }'` + "\n" +
 		""
 }
@@ -209,7 +209,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` categories create-category --body '{
-      "name": "Sapiente facilis mollitia aut."
+      "name": "Aperiam veritatis excepturi quia ab est."
    }'
 `, os.Args[0])
 }

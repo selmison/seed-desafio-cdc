@@ -12,9 +12,10 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
-	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
+
+	"github.com/selmison/seed-desafio-cdc/gen/actors"
 )
 
 // Server lists the actors service endpoint HTTP handlers.
@@ -100,7 +101,7 @@ func NewCreateActorHandler(
 	var (
 		decodeRequest  = DecodeCreateActorRequest(mux, decoder)
 		encodeResponse = EncodeCreateActorResponse(encoder)
-		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+		encodeError    = EncodeCreateActorError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
