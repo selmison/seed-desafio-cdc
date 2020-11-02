@@ -14,7 +14,7 @@ type Actor struct {
 	gorm.Model
 	ID          string `gorm:"primarykey"`
 	Name        string `validate:"required,not_blank"`
-	Email       string `validate:"required,email"`
+	Email       string `gorm:"unique" validate:"required,email"`
 	Description string `validate:"required,not_blank,max=400"`
 }
 
