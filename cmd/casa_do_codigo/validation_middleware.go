@@ -49,30 +49,31 @@ func ValidationCreateCategoryMiddleware(repo *gorm.DB) endpoint.Middleware {
 	}
 }
 
-func ValidationCreateBookMiddleware(repo *gorm.DB) endpoint.Middleware {
+func ValidationBookMiddleware(repo *gorm.DB) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (interface{}, error) {
-			dto := request.(*booksGen.CreateBookDTO)
-			if err := fieldShouldBeUnique(repo, "title", strings.TrimSpace(dto.Title), books.Book{}); err != nil {
-				return nil, err
-			}
-			if err := fieldShouldBeUnique(repo, "isbn", strings.TrimSpace(dto.Isbn), books.Book{}); err != nil {
-				return nil, err
-			}
-			length := 500
-			if len(dto.Synopsis) > length {
-				return nil, goa.InvalidLengthError("body.synopsis", dto.Synopsis, len(dto.Synopsis), length, false)
-			}
-			issue, err := time.Parse(time.RFC3339, dto.Issue)
-			if err != nil {
-				return nil, err
-			}
-			today := time.Now()
-			if today.After(issue) {
-				return nil, &goa.ServiceError{
-					Name:    "invalid_fields",
-					ID:      goa.NewErrorID(),
-					Message: fmt.Sprintf("the '%s' %s", "body.issue", "should be in the future"),
+			if dto, ok := request.(*booksGen.CreateBookDTO); ok {
+				if err := fieldShouldBeUnique(repo, "title", strings.TrimSpace(dto.Title), books.Book{}); err != nil {
+					return nil, err
+				}
+				if err := fieldShouldBeUnique(repo, "isbn", strings.TrimSpace(dto.Isbn), books.Book{}); err != nil {
+					return nil, err
+				}
+				length := 500
+				if len(dto.Synopsis) > length {
+					return nil, goa.InvalidLengthError("body.synopsis", dto.Synopsis, len(dto.Synopsis), length, false)
+				}
+				issue, err := time.Parse(time.RFC3339, dto.Issue)
+				if err != nil {
+					return nil, err
+				}
+				today := time.Now()
+				if today.After(issue) {
+					return nil, &goa.ServiceError{
+						Name:    "invalid_fields",
+						ID:      goa.NewErrorID(),
+						Message: fmt.Sprintf("the '%s' %s", "body.issue", "should be in the future"),
+					}
 				}
 			}
 			return next(ctx, request)

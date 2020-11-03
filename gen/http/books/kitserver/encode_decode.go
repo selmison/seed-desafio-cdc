@@ -40,3 +40,9 @@ func EncodeCreateBookError(encoder func(context.Context, http.ResponseWriter) go
 		enc(ctx, w, err)
 	}
 }
+
+// EncodeListBooksResponse returns a go-kit EncodeResponseFunc suitable for
+// encoding books list_books responses.
+func EncodeListBooksResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) kithttp.EncodeResponseFunc {
+	return server.EncodeListBooksResponse(encoder)
+}

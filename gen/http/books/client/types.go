@@ -43,6 +43,10 @@ type CreateBookResponseBody struct {
 	ActorID    *string  `form:"actor_id,omitempty" json:"actor_id,omitempty" xml:"actor_id,omitempty"`
 }
 
+// ListBooksResponseBody is the type of the "books" service "list_books"
+// endpoint HTTP response body.
+type ListBooksResponseBody []*BookDTOResponse
+
 // CreateBookInvalidFieldsResponseBody is the type of the "books" service
 // "create_book" endpoint HTTP response body for the "invalid_fields" error.
 type CreateBookInvalidFieldsResponseBody struct {
@@ -59,6 +63,20 @@ type CreateBookInvalidFieldsResponseBody struct {
 	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
 	// Is the error a server-side fault?
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// BookDTOResponse is used to define fields on response body types.
+type BookDTOResponse struct {
+	ID         *string  `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Title      *string  `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
+	Synopsis   *string  `form:"synopsis,omitempty" json:"synopsis,omitempty" xml:"synopsis,omitempty"`
+	Summary    *string  `form:"summary,omitempty" json:"summary,omitempty" xml:"summary,omitempty"`
+	Price      *float32 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
+	Pages      *int     `form:"pages,omitempty" json:"pages,omitempty" xml:"pages,omitempty"`
+	Isbn       *string  `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
+	Issue      *string  `form:"issue,omitempty" json:"issue,omitempty" xml:"issue,omitempty"`
+	CategoryID *string  `form:"category_id,omitempty" json:"category_id,omitempty" xml:"category_id,omitempty"`
+	ActorID    *string  `form:"actor_id,omitempty" json:"actor_id,omitempty" xml:"actor_id,omitempty"`
 }
 
 // NewCreateBookRequestBody builds the HTTP request body from the payload of
@@ -109,6 +127,16 @@ func NewCreateBookInvalidFields(body *CreateBookInvalidFieldsResponseBody) *goa.
 		Fault:     *body.Fault,
 	}
 
+	return v
+}
+
+// NewListBooksBookDTOOK builds a "books" service "list_books" endpoint result
+// from a HTTP "OK" response.
+func NewListBooksBookDTOOK(body []*BookDTOResponse) []*books.BookDTO {
+	v := make([]*books.BookDTO, len(body))
+	for i, val := range body {
+		v[i] = unmarshalBookDTOResponseToBooksBookDTO(val)
+	}
 	return v
 }
 
@@ -180,6 +208,53 @@ func ValidateCreateBookInvalidFieldsResponseBody(body *CreateBookInvalidFieldsRe
 	}
 	if body.Fault == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateBookDTOResponse runs the validations defined on BookDTOResponse
+func ValidateBookDTOResponse(body *BookDTOResponse) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Title == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("title", "body"))
+	}
+	if body.Synopsis == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("synopsis", "body"))
+	}
+	if body.Price == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("price", "body"))
+	}
+	if body.Pages == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("pages", "body"))
+	}
+	if body.Isbn == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("isbn", "body"))
+	}
+	if body.Issue == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("issue", "body"))
+	}
+	if body.CategoryID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("category_id", "body"))
+	}
+	if body.ActorID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("actor_id", "body"))
+	}
+	if body.Synopsis != nil {
+		if utf8.RuneCountInString(*body.Synopsis) > 500 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("body.synopsis", *body.Synopsis, utf8.RuneCountInString(*body.Synopsis), 500, false))
+		}
+	}
+	if body.Price != nil {
+		if *body.Price < 20 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.price", *body.Price, 20, true))
+		}
+	}
+	if body.Pages != nil {
+		if *body.Pages < 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.pages", *body.Pages, 100, true))
+		}
 	}
 	return
 }

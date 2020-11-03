@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
-	"github.com/selmison/seed-desafio-cdc/gen/books"
+	booksGen "github.com/selmison/seed-desafio-cdc/gen/books"
 )
 
 type service struct {
@@ -19,12 +19,15 @@ type service struct {
 }
 
 // NewService returns a new Books Service.
-func NewService(repo *gorm.DB, logger kitLog.Logger) books.Service {
+func NewService(repo *gorm.DB, logger kitLog.Logger) booksGen.Service {
 	return &service{repo, logger}
 }
 
 // CreateBook implements create.
-func (s *service) CreateBook(_ context.Context, dto *books.CreateBookDTO) (res *books.BookDTO, err error) {
+func (s *service) CreateBook(_ context.Context, dto *booksGen.CreateBookDTO) (res *booksGen.BookDTO, err error) {
+	if err := s.logger.Log("info", fmt.Sprintf("books.create_book")); err != nil {
+		log.Printf("kit/log error: %v\n", err)
+	}
 	summary := ""
 	if dto.Summary != nil {
 		summary = strings.TrimSpace(*dto.Summary)
@@ -45,11 +48,8 @@ func (s *service) CreateBook(_ context.Context, dto *books.CreateBookDTO) (res *
 
 		return nil, err
 	}
-	if err := s.logger.Log("info", fmt.Sprintf("books.create")); err != nil {
-		log.Printf("kit/log error: %v\n", err)
-	}
 	result := s.repo.Create(&book)
-	return &books.BookDTO{
+	return &booksGen.BookDTO{
 		ID:         book.ID,
 		Title:      book.Title,
 		Synopsis:   book.Synopsis,
@@ -61,4 +61,32 @@ func (s *service) CreateBook(_ context.Context, dto *books.CreateBookDTO) (res *
 		CategoryID: book.CategoryID,
 		ActorID:    book.ActorID,
 	}, result.Error
+}
+
+// ListBook implements create.
+func (s *service) ListBooks(context.Context) (res []*booksGen.BookDTO, err error) {
+	if err := s.logger.Log("info", fmt.Sprintf("books.list_books")); err != nil {
+		log.Printf("kit/log error: %v\n", err)
+	}
+	var books []*Book
+	result := s.repo.Find(&books)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	bookDTOS := make([]*booksGen.BookDTO, len(books))
+	for i, book := range books {
+		bookDTOS[i] = &booksGen.BookDTO{
+			ID:         book.ID,
+			Title:      book.Title,
+			Synopsis:   book.Synopsis,
+			Summary:    &book.Summary,
+			Price:      book.Price,
+			Pages:      book.Pages,
+			Isbn:       book.Isbn,
+			Issue:      book.Issue,
+			CategoryID: book.CategoryID,
+			ActorID:    book.ActorID,
+		}
+	}
+	return bookDTOS, nil
 }

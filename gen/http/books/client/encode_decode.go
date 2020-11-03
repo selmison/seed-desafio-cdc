@@ -16,6 +16,7 @@ import (
 
 	books "github.com/selmison/seed-desafio-cdc/gen/books"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildCreateBookRequest instantiates a HTTP request object with method and
@@ -104,4 +105,84 @@ func DecodeCreateBookResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			return nil, goahttp.ErrInvalidResponse("books", "create_book", resp.StatusCode, string(body))
 		}
 	}
+}
+
+// BuildListBooksRequest instantiates a HTTP request object with method and
+// path set to call the "books" service "list_books" endpoint
+func (c *Client) BuildListBooksRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListBooksBooksPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("books", "list_books", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListBooksResponse returns a decoder for responses returned by the
+// books list_books endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeListBooksResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListBooksResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("books", "list_books", err)
+			}
+			for _, e := range body {
+				if e != nil {
+					if err2 := ValidateBookDTOResponse(e); err2 != nil {
+						err = goa.MergeErrors(err, err2)
+					}
+				}
+			}
+			if err != nil {
+				return nil, goahttp.ErrValidationError("books", "list_books", err)
+			}
+			res := NewListBooksBookDTOOK(body)
+			return res, nil
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("books", "list_books", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// unmarshalBookDTOResponseToBooksBookDTO builds a value of type *books.BookDTO
+// from a value of type *BookDTOResponse.
+func unmarshalBookDTOResponseToBooksBookDTO(v *BookDTOResponse) *books.BookDTO {
+	res := &books.BookDTO{
+		ID:         *v.ID,
+		Title:      *v.Title,
+		Synopsis:   *v.Synopsis,
+		Summary:    v.Summary,
+		Price:      *v.Price,
+		Pages:      *v.Pages,
+		Isbn:       *v.Isbn,
+		Issue:      *v.Issue,
+		CategoryID: *v.CategoryID,
+		ActorID:    *v.ActorID,
+	}
+
+	return res
 }

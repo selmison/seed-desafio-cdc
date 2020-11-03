@@ -26,7 +26,7 @@ import (
 //
 func UsageCommands() string {
 	return `actors create-actor
-books create-book
+books (create-book|list-books)
 categories create-category
 `
 }
@@ -34,23 +34,23 @@ categories create-category
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` actors create-actor --body '{
-      "description": "et4",
-      "e-mail": "zion@yundt.biz",
-      "name": "Eligendi quibusdam ducimus qui at."
+      "description": "0av",
+      "e-mail": "pietro_reinger@corkery.info",
+      "name": "Et qui beatae ut quia aliquid eligendi."
    }'` + "\n" +
 		os.Args[0] + ` books create-book --body '{
-      "actor_id": "Exercitationem atque velit.",
-      "category_id": "Soluta eos ipsa ad.",
-      "isbn": "Earum qui est nam quos aperiam quidem.",
-      "issue": "Quisquam in cum numquam.",
-      "pages": 1974383956477392325,
-      "price": 20.982689,
-      "summary": "Recusandae sit minus.",
-      "synopsis": "1km",
-      "title": "Debitis eos et culpa."
+      "actor_id": "Soluta eos ipsa ad.",
+      "category_id": "Quisquam in cum numquam.",
+      "isbn": "Minus est ipsa.",
+      "issue": "Earum qui est nam quos aperiam quidem.",
+      "pages": 8283409113468120753,
+      "price": 20.110447,
+      "summary": "Eos et culpa perspiciatis voluptatem doloremque eum.",
+      "synopsis": "j73",
+      "title": "Non enim."
    }'` + "\n" +
 		os.Args[0] + ` categories create-category --body '{
-      "name": "Cupiditate hic."
+      "name": "Fuga ex."
    }'` + "\n" +
 		""
 }
@@ -75,6 +75,8 @@ func ParseEndpoint(
 		booksCreateBookFlags    = flag.NewFlagSet("create-book", flag.ExitOnError)
 		booksCreateBookBodyFlag = booksCreateBookFlags.String("body", "REQUIRED", "")
 
+		booksListBooksFlags = flag.NewFlagSet("list-books", flag.ExitOnError)
+
 		categoriesFlags = flag.NewFlagSet("categories", flag.ContinueOnError)
 
 		categoriesCreateCategoryFlags    = flag.NewFlagSet("create-category", flag.ExitOnError)
@@ -85,6 +87,7 @@ func ParseEndpoint(
 
 	booksFlags.Usage = booksUsage
 	booksCreateBookFlags.Usage = booksCreateBookUsage
+	booksListBooksFlags.Usage = booksListBooksUsage
 
 	categoriesFlags.Usage = categoriesUsage
 	categoriesCreateCategoryFlags.Usage = categoriesCreateCategoryUsage
@@ -137,6 +140,9 @@ func ParseEndpoint(
 			case "create-book":
 				epf = booksCreateBookFlags
 
+			case "list-books":
+				epf = booksListBooksFlags
+
 			}
 
 		case "categories":
@@ -179,6 +185,9 @@ func ParseEndpoint(
 			case "create-book":
 				endpoint = c.CreateBook()
 				data, err = booksc.BuildCreateBookPayload(*booksCreateBookBodyFlag)
+			case "list-books":
+				endpoint = c.ListBooks()
+				data = nil
 			}
 		case "categories":
 			c := categoriesc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -217,9 +226,9 @@ CreateActor implements create_actor.
 
 Example:
     `+os.Args[0]+` actors create-actor --body '{
-      "description": "et4",
-      "e-mail": "zion@yundt.biz",
-      "name": "Eligendi quibusdam ducimus qui at."
+      "description": "0av",
+      "e-mail": "pietro_reinger@corkery.info",
+      "name": "Et qui beatae ut quia aliquid eligendi."
    }'
 `, os.Args[0])
 }
@@ -232,6 +241,7 @@ Usage:
 
 COMMAND:
     create-book: CreateBook implements create_book.
+    list-books: ListBooks implements list_books.
 
 Additional help:
     %s books COMMAND --help
@@ -245,16 +255,26 @@ CreateBook implements create_book.
 
 Example:
     `+os.Args[0]+` books create-book --body '{
-      "actor_id": "Exercitationem atque velit.",
-      "category_id": "Soluta eos ipsa ad.",
-      "isbn": "Earum qui est nam quos aperiam quidem.",
-      "issue": "Quisquam in cum numquam.",
-      "pages": 1974383956477392325,
-      "price": 20.982689,
-      "summary": "Recusandae sit minus.",
-      "synopsis": "1km",
-      "title": "Debitis eos et culpa."
+      "actor_id": "Soluta eos ipsa ad.",
+      "category_id": "Quisquam in cum numquam.",
+      "isbn": "Minus est ipsa.",
+      "issue": "Earum qui est nam quos aperiam quidem.",
+      "pages": 8283409113468120753,
+      "price": 20.110447,
+      "summary": "Eos et culpa perspiciatis voluptatem doloremque eum.",
+      "synopsis": "j73",
+      "title": "Non enim."
    }'
+`, os.Args[0])
+}
+
+func booksListBooksUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] books list-books
+
+ListBooks implements list_books.
+
+Example:
+    `+os.Args[0]+` books list-books
 `, os.Args[0])
 }
 
@@ -280,7 +300,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` categories create-category --body '{
-      "name": "Cupiditate hic."
+      "name": "Fuga ex."
    }'
 `, os.Args[0])
 }

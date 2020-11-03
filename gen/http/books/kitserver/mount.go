@@ -24,3 +24,15 @@ func MountCreateBookHandler(mux goahttp.Muxer, h http.Handler) {
 	}
 	mux.Handle("POST", "/books", f)
 }
+
+// MountListBooksHandler configures the mux to serve the "books" service
+// "list_books" endpoint.
+func MountListBooksHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/books", f)
+}

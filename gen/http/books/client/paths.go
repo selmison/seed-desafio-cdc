@@ -11,3 +11,8 @@ package client
 func CreateBookBooksPath() string {
 	return "/books"
 }
+
+// ListBooksBooksPath returns the URL path to the books service list_books HTTP endpoint.
+func ListBooksBooksPath() string {
+	return "/books"
+}

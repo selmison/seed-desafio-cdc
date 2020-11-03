@@ -24,7 +24,7 @@ func BuildCreateBookPayload(booksCreateBookBody string) (*books.CreateBookDTO, e
 	{
 		err = json.Unmarshal([]byte(booksCreateBookBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_id\": \"Exercitationem atque velit.\",\n      \"category_id\": \"Soluta eos ipsa ad.\",\n      \"isbn\": \"Earum qui est nam quos aperiam quidem.\",\n      \"issue\": \"Quisquam in cum numquam.\",\n      \"pages\": 1974383956477392325,\n      \"price\": 20.982689,\n      \"summary\": \"Recusandae sit minus.\",\n      \"synopsis\": \"1km\",\n      \"title\": \"Debitis eos et culpa.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_id\": \"Soluta eos ipsa ad.\",\n      \"category_id\": \"Quisquam in cum numquam.\",\n      \"isbn\": \"Minus est ipsa.\",\n      \"issue\": \"Earum qui est nam quos aperiam quidem.\",\n      \"pages\": 8283409113468120753,\n      \"price\": 20.110447,\n      \"summary\": \"Eos et culpa perspiciatis voluptatem doloremque eum.\",\n      \"synopsis\": \"j73\",\n      \"title\": \"Non enim.\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Synopsis) > 500 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.synopsis", body.Synopsis, utf8.RuneCountInString(body.Synopsis), 500, false))

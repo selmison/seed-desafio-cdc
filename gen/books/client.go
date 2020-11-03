@@ -16,12 +16,14 @@ import (
 // Client is the "books" service client.
 type Client struct {
 	CreateBookEndpoint endpoint.Endpoint
+	ListBooksEndpoint  endpoint.Endpoint
 }
 
 // NewClient initializes a "books" service client given the endpoints.
-func NewClient(createBook endpoint.Endpoint) *Client {
+func NewClient(createBook, listBooks endpoint.Endpoint) *Client {
 	return &Client{
 		CreateBookEndpoint: createBook,
+		ListBooksEndpoint:  listBooks,
 	}
 }
 
@@ -33,4 +35,14 @@ func (c *Client) CreateBook(ctx context.Context, p *CreateBookDTO) (res *BookDTO
 		return
 	}
 	return ires.(*BookDTO), nil
+}
+
+// ListBooks calls the "list_books" endpoint of the "books" service.
+func (c *Client) ListBooks(ctx context.Context) (res []*BookDTO, err error) {
+	var ires interface{}
+	ires, err = c.ListBooksEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*BookDTO), nil
 }

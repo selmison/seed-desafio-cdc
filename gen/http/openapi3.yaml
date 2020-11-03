@@ -20,9 +20,9 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateActorRequestBody'
             example:
-              description: et4
-              e-mail: zion@yundt.biz
-              name: Eligendi quibusdam ducimus qui at.
+              description: 0av
+              e-mail: pietro_reinger@corkery.info
+              name: Et qui beatae ut quia aliquid eligendi.
       responses:
         "201":
           description: ""
@@ -31,64 +31,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActorDTO'
               example:
-                created_at: Dolorem repellendus possimus id velit modi.
-                description: oxq
-                e-mail: alexa.bogisich@brown.net
-                id: Nam aut exercitationem.
-                name: Et rerum.
-        "400":
-          description: ""
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
-                name: bad_request
-                temporary: true
-                timeout: false
-  /books:
-    post:
-      tags:
-      - books
-      summary: create_book books
-      operationId: books#create_book
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateBookRequestBody'
-            example:
-              actor_id: Exercitationem atque velit.
-              category_id: Soluta eos ipsa ad.
-              isbn: Earum qui est nam quos aperiam quidem.
-              issue: Quisquam in cum numquam.
-              pages: 1974383956477392325
-              price: 20.982689
-              summary: Recusandae sit minus.
-              synopsis: 1km
-              title: Debitis eos et culpa.
-      responses:
-        "201":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookDTO'
-              example:
-                actor_id: A voluptatem adipisci placeat rem.
-                category_id: Similique consequuntur qui ab voluptatum.
-                id: Eius ut ut.
-                isbn: Saepe fuga quas illo eos.
-                issue: Vitae numquam.
-                pages: 8067000679146593882
-                price: 20.48758
-                summary: Ea neque.
-                synopsis: wuy
-                title: Incidunt necessitatibus aut minima quaerat consequuntur omnis.
+                created_at: Commodi sed neque libero.
+                description: 1i7
+                e-mail: queenie.jaskolski@bogisichklein.info
+                id: In qui quo non.
+                name: Aut exercitationem.
         "400":
           description: ""
           content:
@@ -101,6 +48,155 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
+                timeout: false
+  /books:
+    get:
+      tags:
+      - books
+      summary: list_books books
+      operationId: books#list_books
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookDTO'
+                example:
+                - actor_id: Nihil eligendi omnis voluptatem.
+                  category_id: Et eum.
+                  id: Quia a voluptatem adipisci placeat rem.
+                  isbn: Nihil qui aut perferendis provident alias facilis.
+                  issue: Perferendis cum accusamus ea omnis.
+                  pages: 5576691719649980440
+                  price: 20.947353
+                  summary: Assumenda minima debitis provident odio.
+                  synopsis: u6t
+                  title: Sit accusamus provident cupiditate hic.
+                - actor_id: Nihil eligendi omnis voluptatem.
+                  category_id: Et eum.
+                  id: Quia a voluptatem adipisci placeat rem.
+                  isbn: Nihil qui aut perferendis provident alias facilis.
+                  issue: Perferendis cum accusamus ea omnis.
+                  pages: 5576691719649980440
+                  price: 20.947353
+                  summary: Assumenda minima debitis provident odio.
+                  synopsis: u6t
+                  title: Sit accusamus provident cupiditate hic.
+                - actor_id: Nihil eligendi omnis voluptatem.
+                  category_id: Et eum.
+                  id: Quia a voluptatem adipisci placeat rem.
+                  isbn: Nihil qui aut perferendis provident alias facilis.
+                  issue: Perferendis cum accusamus ea omnis.
+                  pages: 5576691719649980440
+                  price: 20.947353
+                  summary: Assumenda minima debitis provident odio.
+                  synopsis: u6t
+                  title: Sit accusamus provident cupiditate hic.
+                - actor_id: Nihil eligendi omnis voluptatem.
+                  category_id: Et eum.
+                  id: Quia a voluptatem adipisci placeat rem.
+                  isbn: Nihil qui aut perferendis provident alias facilis.
+                  issue: Perferendis cum accusamus ea omnis.
+                  pages: 5576691719649980440
+                  price: 20.947353
+                  summary: Assumenda minima debitis provident odio.
+                  synopsis: u6t
+                  title: Sit accusamus provident cupiditate hic.
+              example:
+              - actor_id: Nihil eligendi omnis voluptatem.
+                category_id: Et eum.
+                id: Quia a voluptatem adipisci placeat rem.
+                isbn: Nihil qui aut perferendis provident alias facilis.
+                issue: Perferendis cum accusamus ea omnis.
+                pages: 5576691719649980440
+                price: 20.947353
+                summary: Assumenda minima debitis provident odio.
+                synopsis: u6t
+                title: Sit accusamus provident cupiditate hic.
+              - actor_id: Nihil eligendi omnis voluptatem.
+                category_id: Et eum.
+                id: Quia a voluptatem adipisci placeat rem.
+                isbn: Nihil qui aut perferendis provident alias facilis.
+                issue: Perferendis cum accusamus ea omnis.
+                pages: 5576691719649980440
+                price: 20.947353
+                summary: Assumenda minima debitis provident odio.
+                synopsis: u6t
+                title: Sit accusamus provident cupiditate hic.
+              - actor_id: Nihil eligendi omnis voluptatem.
+                category_id: Et eum.
+                id: Quia a voluptatem adipisci placeat rem.
+                isbn: Nihil qui aut perferendis provident alias facilis.
+                issue: Perferendis cum accusamus ea omnis.
+                pages: 5576691719649980440
+                price: 20.947353
+                summary: Assumenda minima debitis provident odio.
+                synopsis: u6t
+                title: Sit accusamus provident cupiditate hic.
+              - actor_id: Nihil eligendi omnis voluptatem.
+                category_id: Et eum.
+                id: Quia a voluptatem adipisci placeat rem.
+                isbn: Nihil qui aut perferendis provident alias facilis.
+                issue: Perferendis cum accusamus ea omnis.
+                pages: 5576691719649980440
+                price: 20.947353
+                summary: Assumenda minima debitis provident odio.
+                synopsis: u6t
+                title: Sit accusamus provident cupiditate hic.
+    post:
+      tags:
+      - books
+      summary: create_book books
+      operationId: books#create_book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequestBody'
+            example:
+              actor_id: Soluta eos ipsa ad.
+              category_id: Quisquam in cum numquam.
+              isbn: Minus est ipsa.
+              issue: Earum qui est nam quos aperiam quidem.
+              pages: 8283409113468120753
+              price: 20.110447
+              summary: Eos et culpa perspiciatis voluptatem doloremque eum.
+              synopsis: j73
+              title: Non enim.
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDTO'
+              example:
+                actor_id: Eos aliquam vitae numquam culpa similique.
+                category_id: Fuga quas.
+                id: Exercitationem atque velit.
+                isbn: Totam provident ratione ea.
+                issue: Totam qui id.
+                pages: 6683934939303022064
+                price: 20.160345
+                summary: Quaerat consequuntur.
+                synopsis: 60t
+                title: Eius ut ut.
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
                 timeout: true
   /categories:
     post:
@@ -115,7 +211,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCategoryRequestBody'
             example:
-              name: Cupiditate hic.
+              name: Fuga ex.
       responses:
         "201":
           description: ""
@@ -124,8 +220,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
               example:
-                id: Maxime blanditiis cum.
-                name: Assumenda minima debitis provident odio.
+                id: Temporibus est.
+                name: Quia reiciendis aut sed soluta.
         "400":
           description: ""
           content:
@@ -133,7 +229,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -155,27 +251,27 @@ components:
       properties:
         created_at:
           type: string
-          example: Non voluptatem.
+          example: Quidem earum esse enim.
         description:
           type: string
-          example: 8da
+          example: 9vp
           maxLength: 400
         e-mail:
           type: string
-          example: vickie@ornwest.name
+          example: roman@spencervon.org
           format: email
         id:
           type: string
-          example: Esse laboriosam asperiores et quo.
+          example: Amet consequatur.
         name:
           type: string
-          example: Eum consequatur rem sunt voluptates sed amet.
+          example: Eos ut repellat est praesentium nostrum excepturi.
       example:
-        created_at: Corrupti eos consectetur repellat animi libero.
-        description: aui
-        e-mail: wiley_goodwin@bahringerbruen.org
-        id: Iusto nihil cupiditate voluptatem ut ut corporis.
-        name: Ut doloremque doloremque at nemo pariatur.
+        created_at: Deleniti nobis.
+        description: 89n
+        e-mail: elyssa.renner@green.name
+        id: Facere quis fugit.
+        name: Aliquid beatae sequi in placeat.
       required:
       - id
       - name
@@ -187,48 +283,48 @@ components:
       properties:
         actor_id:
           type: string
-          example: Consequatur eveniet expedita dolore quod ratione.
+          example: Quae neque eum et natus omnis.
         category_id:
           type: string
-          example: Ut soluta.
+          example: Hic beatae exercitationem itaque necessitatibus.
         id:
           type: string
-          example: Inventore eligendi tenetur dolores provident commodi eos.
+          example: Deserunt expedita ratione.
         isbn:
           type: string
-          example: Voluptate quis velit.
+          example: Expedita minus quia nobis reprehenderit.
         issue:
           type: string
-          example: Recusandae non doloremque molestiae.
+          example: Quos aut aliquid.
         pages:
           type: integer
-          example: 5355104610354169749
+          example: 3301727903157585340
           minimum: 100
         price:
           type: number
-          example: 20.539713
+          example: 20.60122
           minimum: 20
         summary:
           type: string
-          example: Eos vel quidem nostrum qui molestias.
+          example: Occaecati eligendi fugit mollitia.
         synopsis:
           type: string
-          example: 5xf
+          example: oe8
           maxLength: 500
         title:
           type: string
-          example: Minima expedita corrupti quo dolorem soluta fugiat.
+          example: Culpa omnis nihil.
       example:
-        actor_id: Dicta ut.
-        category_id: Non deserunt error ea tempore minus omnis.
-        id: Facilis asperiores.
-        isbn: Nam incidunt sit nisi molestiae aliquid nesciunt.
-        issue: Vel mollitia rerum.
-        pages: 1275965153535795852
-        price: 20.31295
-        summary: Nobis architecto voluptatem adipisci quas aut.
-        synopsis: brv
-        title: Ut culpa recusandae et rem distinctio.
+        actor_id: Quae dolorum.
+        category_id: Natus eaque recusandae alias itaque ipsa.
+        id: Sint id.
+        isbn: Dolor sit asperiores et inventore asperiores doloribus.
+        issue: Saepe ad.
+        pages: 2958065447482187856
+        price: 20.866953
+        summary: Est recusandae sed harum voluptates quia.
+        synopsis: zvd
+        title: Sed sit.
       required:
       - id
       - title
@@ -244,13 +340,13 @@ components:
       properties:
         id:
           type: string
-          example: Maiores labore autem occaecati eligendi.
+          example: Animi sed eos iure.
         name:
           type: string
-          example: Mollitia enim voluptatem.
+          example: Quaerat corporis harum praesentium consequatur dolor quam.
       example:
-        id: Expedita minus quia nobis reprehenderit.
-        name: Quos aut aliquid.
+        id: Sint dignissimos.
+        name: Dolores qui doloremque provident id ut tenetur.
       required:
       - id
       - name
@@ -259,19 +355,19 @@ components:
       properties:
         description:
           type: string
-          example: jn3
+          example: 8da
           maxLength: 400
         e-mail:
           type: string
-          example: norma_wolf@murphydietrich.name
+          example: vickie@ornwest.name
           format: email
         name:
           type: string
-          example: Explicabo sit error eum.
+          example: Eum consequatur rem sunt voluptates sed amet.
       example:
-        description: j2b
-        e-mail: pierce.lind@goyette.com
-        name: Iste qui possimus sunt eum.
+        description: n1p
+        e-mail: vivien@bartonbatz.net
+        name: Non voluptatem.
       required:
       - name
       - e-mail
@@ -281,44 +377,44 @@ components:
       properties:
         actor_id:
           type: string
-          example: Quidem earum esse enim.
+          example: Ut culpa recusandae et rem distinctio.
         category_id:
           type: string
-          example: Consectetur quo.
+          example: Facilis asperiores.
         isbn:
           type: string
-          example: Occaecati animi iste et vitae et.
+          example: Ut soluta.
         issue:
           type: string
-          example: Sit et est atque dolor.
+          example: Consequatur eveniet expedita dolore quod ratione.
         pages:
           type: integer
-          example: 4396883226183177350
+          example: 4441684894377169495
           minimum: 100
         price:
           type: number
-          example: 20.127165
+          example: 20.599264
           minimum: 20
         summary:
           type: string
-          example: Assumenda aperiam excepturi harum enim.
+          example: Velit necessitatibus recusandae non.
         synopsis:
           type: string
-          example: ycz
+          example: 55g
           maxLength: 500
         title:
           type: string
-          example: Quaerat cumque.
+          example: Qui molestias.
       example:
-        actor_id: Dolorem nobis totam eius autem accusantium cupiditate.
-        category_id: Rerum corporis nostrum veniam autem.
-        isbn: Sed incidunt similique at autem dolorem consequatur.
-        issue: Commodi earum et voluptatum eaque.
-        pages: 3168454827643865631
-        price: 20.004736
-        summary: Placeat aut hic iure voluptatem.
-        synopsis: 8ql
-        title: Facere quis fugit.
+        actor_id: Ut qui et eius dolore.
+        category_id: Deserunt error ea tempore minus omnis aspernatur.
+        isbn: Nisi molestiae aliquid nesciunt et.
+        issue: Mollitia rerum ullam.
+        pages: 4787081792796410834
+        price: 20.744522
+        summary: Quas aut quis culpa dolor.
+        synopsis: hii
+        title: Dolore enim quia.
       required:
       - title
       - synopsis
@@ -333,9 +429,9 @@ components:
       properties:
         name:
           type: string
-          example: Et eius dolore quia deserunt expedita.
+          example: Ex ex voluptas.
       example:
-        name: Est culpa omnis nihil ullam.
+        name: Omnis facere veniam porro.
       required:
       - name
     Error:
@@ -366,12 +462,12 @@ components:
           description: Is the error a timeout?
           example: false
       example:
-        fault: false
+        fault: true
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
         temporary: true
-        timeout: true
+        timeout: false
       required:
       - name
       - id

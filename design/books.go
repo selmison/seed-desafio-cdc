@@ -19,6 +19,13 @@ var _ = Service("books", func() {
 			Response("invalid_fields", StatusBadRequest)
 		})
 	})
+
+	Method("list_books", func() {
+		Result(BooksDTO)
+		HTTP(func() {
+			GET("/books")
+		})
+	})
 })
 
 var BookDTO = Type("BookDTO", func() {
@@ -61,3 +68,5 @@ var CreateBookDTO = Type("CreateBookDTO", func() {
 	Attribute("actor_id", String)
 	Required("title", "synopsis", "price", "pages", "isbn", "issue", "category_id", "actor_id")
 })
+
+var BooksDTO = ArrayOf(BookDTO)

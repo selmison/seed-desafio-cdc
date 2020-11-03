@@ -86,7 +86,7 @@ func main() {
 		categoriesEndpoints.Use(ValidationCreateCategoryMiddleware(repo))
 
 		booksEndpoints = booksGen.NewEndpoints(booksSvc)
-		booksEndpoints.Use(ValidationCreateBookMiddleware(repo))
+		booksEndpoints.Use(ValidationBookMiddleware(repo))
 	}
 
 	// Create channel used by both the signal handler and server goroutines

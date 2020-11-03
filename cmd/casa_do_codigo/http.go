@@ -55,6 +55,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 		categoriesCreateCategoryHandler *kithttp.Server
 		categoriesServer                *categoriessvr.Server
 		booksCreateBookHandler          *kithttp.Server
+		booksListBooksHandler           *kithttp.Server
 		booksServer                     *bookssvr.Server
 	)
 	{
@@ -79,6 +80,11 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 			bookskitsvr.EncodeCreateBookResponse(enc),
 			kithttp.ServerErrorEncoder(bookskitsvr.EncodeCreateBookError(enc, nil)),
 		)
+		booksListBooksHandler = kithttp.NewServer(
+			endpoint.Endpoint(booksEndpoints.ListBooks),
+			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
+			bookskitsvr.EncodeListBooksResponse(enc),
+		)
 		booksServer = bookssvr.New(booksEndpoints, mux, dec, enc, eh, nil)
 	}
 
@@ -86,6 +92,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 	actorskitsvr.MountCreateActorHandler(mux, actorsCreateActorHandler)
 	categorieskitsvr.MountCreateCategoryHandler(mux, categoriesCreateCategoryHandler)
 	bookskitsvr.MountCreateBookHandler(mux, booksCreateBookHandler)
+	bookskitsvr.MountListBooksHandler(mux, booksListBooksHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

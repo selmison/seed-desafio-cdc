@@ -16,18 +16,21 @@ import (
 // Endpoints wraps the "books" service endpoints.
 type Endpoints struct {
 	CreateBook endpoint.Endpoint
+	ListBooks  endpoint.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "books" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		CreateBook: NewCreateBookEndpoint(s),
+		ListBooks:  NewListBooksEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "books" service endpoints.
 func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.CreateBook = m(e.CreateBook)
+	e.ListBooks = m(e.ListBooks)
 }
 
 // NewCreateBookEndpoint returns an endpoint function that calls the method
@@ -36,5 +39,13 @@ func NewCreateBookEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateBookDTO)
 		return s.CreateBook(ctx, p)
+	}
+}
+
+// NewListBooksEndpoint returns an endpoint function that calls the method
+// "list_books" of service "books".
+func NewListBooksEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListBooks(ctx)
 	}
 }

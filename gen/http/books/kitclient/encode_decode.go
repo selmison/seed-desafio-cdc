@@ -33,3 +33,12 @@ func DecodeCreateBookResponse(decoder func(*http.Response) goahttp.Decoder) kith
 		return dec(resp)
 	}
 }
+
+// DecodeListBooksResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding books list_books responses.
+func DecodeListBooksResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeListBooksResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}

@@ -43,6 +43,10 @@ type CreateBookResponseBody struct {
 	ActorID    string  `form:"actor_id" json:"actor_id" xml:"actor_id"`
 }
 
+// ListBooksResponseBody is the type of the "books" service "list_books"
+// endpoint HTTP response body.
+type ListBooksResponseBody []*BookDTOResponse
+
 // CreateBookInvalidFieldsResponseBody is the type of the "books" service
 // "create_book" endpoint HTTP response body for the "invalid_fields" error.
 type CreateBookInvalidFieldsResponseBody struct {
@@ -61,6 +65,20 @@ type CreateBookInvalidFieldsResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// BookDTOResponse is used to define fields on response body types.
+type BookDTOResponse struct {
+	ID         string  `form:"id" json:"id" xml:"id"`
+	Title      string  `form:"title" json:"title" xml:"title"`
+	Synopsis   string  `form:"synopsis" json:"synopsis" xml:"synopsis"`
+	Summary    *string `form:"summary,omitempty" json:"summary,omitempty" xml:"summary,omitempty"`
+	Price      float32 `form:"price" json:"price" xml:"price"`
+	Pages      int     `form:"pages" json:"pages" xml:"pages"`
+	Isbn       string  `form:"isbn" json:"isbn" xml:"isbn"`
+	Issue      string  `form:"issue" json:"issue" xml:"issue"`
+	CategoryID string  `form:"category_id" json:"category_id" xml:"category_id"`
+	ActorID    string  `form:"actor_id" json:"actor_id" xml:"actor_id"`
+}
+
 // NewCreateBookResponseBody builds the HTTP response body from the result of
 // the "create_book" endpoint of the "books" service.
 func NewCreateBookResponseBody(res *books.BookDTO) *CreateBookResponseBody {
@@ -75,6 +93,16 @@ func NewCreateBookResponseBody(res *books.BookDTO) *CreateBookResponseBody {
 		Issue:      res.Issue,
 		CategoryID: res.CategoryID,
 		ActorID:    res.ActorID,
+	}
+	return body
+}
+
+// NewListBooksResponseBody builds the HTTP response body from the result of
+// the "list_books" endpoint of the "books" service.
+func NewListBooksResponseBody(res []*books.BookDTO) ListBooksResponseBody {
+	body := make([]*BookDTOResponse, len(res))
+	for i, val := range res {
+		body[i] = marshalBooksBookDTOToBookDTOResponse(val)
 	}
 	return body
 }

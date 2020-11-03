@@ -81,3 +81,34 @@ func EncodeCreateBookError(encoder func(context.Context, http.ResponseWriter) go
 		}
 	}
 }
+
+// EncodeListBooksResponse returns an encoder for responses returned by the
+// books list_books endpoint.
+func EncodeListBooksResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.([]*books.BookDTO)
+		enc := encoder(ctx, w)
+		body := NewListBooksResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// marshalBooksBookDTOToBookDTOResponse builds a value of type *BookDTOResponse
+// from a value of type *books.BookDTO.
+func marshalBooksBookDTOToBookDTOResponse(v *books.BookDTO) *BookDTOResponse {
+	res := &BookDTOResponse{
+		ID:         v.ID,
+		Title:      v.Title,
+		Synopsis:   v.Synopsis,
+		Summary:    v.Summary,
+		Price:      v.Price,
+		Pages:      v.Pages,
+		Isbn:       v.Isbn,
+		Issue:      v.Issue,
+		CategoryID: v.CategoryID,
+		ActorID:    v.ActorID,
+	}
+
+	return res
+}
