@@ -11,11 +11,10 @@ var (
 	ErrInternalApplication = errors.New("internal application error")
 	ErrIsRequired          = errors.New("is required")
 	ErrNotFound            = errors.New("not found")
-	ErrIsNotValidated      = errors.New("is not validated")
+	ErrIsNotValid          = errors.New("is not valid")
 	ErrIdCouldNotBeEmpty   = fmt.Errorf("%s %w", "id", ErrCouldNotBeEmpty)
-)
+	ErrShouldBeUnique      = errors.New("should be unique")
 
-//// StatusCode is an implementation of the StatusCoder interface in go-kit/http.
-//func (ErrCouldNotBeEmpty) StatusCode() int {
-//	return http.StatusUnauthorized
-//}
+	FormatToErrFprintf = "fmt.Fprintf fatal: %v\n"
+	FormatToErrKitLog  = "kit/log fatal: %v\n"
+)
