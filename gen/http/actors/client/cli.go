@@ -24,7 +24,7 @@ func BuildCreateActorPayload(actorsCreateActorBody string) (*actors.CreateActorD
 	{
 		err = json.Unmarshal([]byte(actorsCreateActorBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"5qz\",\n      \"e-mail\": \"andreanne_reichert@hayes.org\",\n      \"name\": \"Sunt ducimus.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"et4\",\n      \"e-mail\": \"zion@yundt.biz\",\n      \"name\": \"Eligendi quibusdam ducimus qui at.\"\n   }'")
 		}
 		err = goa.MergeErrors(err, goa.ValidateFormat("body.e-mail", body.EMail, goa.FormatEmail))
 

@@ -4,7 +4,7 @@ info:
   description: Casa do Código HTTP service
   version: "1.0"
 servers:
-- url: http://localhost:3333/actors
+- url: http://localhost:3333
   description: hosts for Casa do Código Service.
 paths:
   /actors:
@@ -20,9 +20,9 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateActorRequestBody'
             example:
-              description: 5qz
-              e-mail: andreanne_reichert@hayes.org
-              name: Sunt ducimus.
+              description: et4
+              e-mail: zion@yundt.biz
+              name: Eligendi quibusdam ducimus qui at.
       responses:
         "201":
           description: ""
@@ -31,11 +31,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActorDTO'
               example:
-                created_at: Ut incidunt molestiae voluptates.
-                description: 88u
-                e-mail: trent_jacobs@schimmel.org
-                id: Aut vel hic deleniti accusamus debitis dolor.
-                name: Et aperiam laboriosam sed et.
+                created_at: Dolorem repellendus possimus id velit modi.
+                description: oxq
+                e-mail: alexa.bogisich@brown.net
+                id: Nam aut exercitationem.
+                name: Et rerum.
         "400":
           description: ""
           content:
@@ -49,6 +49,59 @@ paths:
                 name: bad_request
                 temporary: true
                 timeout: false
+  /books:
+    post:
+      tags:
+      - books
+      summary: create_book books
+      operationId: books#create_book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequestBody'
+            example:
+              actor_id: Exercitationem atque velit.
+              category_id: Soluta eos ipsa ad.
+              isbn: Earum qui est nam quos aperiam quidem.
+              issue: Quisquam in cum numquam.
+              pages: 1974383956477392325
+              price: 20.982689
+              summary: Recusandae sit minus.
+              synopsis: 1km
+              title: Debitis eos et culpa.
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDTO'
+              example:
+                actor_id: A voluptatem adipisci placeat rem.
+                category_id: Similique consequuntur qui ab voluptatum.
+                id: Eius ut ut.
+                isbn: Saepe fuga quas illo eos.
+                issue: Vitae numquam.
+                pages: 8067000679146593882
+                price: 20.48758
+                summary: Ea neque.
+                synopsis: wuy
+                title: Incidunt necessitatibus aut minima quaerat consequuntur omnis.
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: false
+                timeout: true
   /categories:
     post:
       tags:
@@ -62,7 +115,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCategoryRequestBody'
             example:
-              name: Ab delectus quam aut.
+              name: Cupiditate hic.
       responses:
         "201":
           description: ""
@@ -71,8 +124,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
               example:
-                id: Possimus velit.
-                name: Commodi sed ratione tempore est.
+                id: Maxime blanditiis cum.
+                name: Assumenda minima debitis provident odio.
         "400":
           description: ""
           content:
@@ -102,45 +155,102 @@ components:
       properties:
         created_at:
           type: string
-          example: Voluptate et omnis sapiente.
+          example: Non voluptatem.
         description:
           type: string
-          example: 6q8
+          example: 8da
           maxLength: 400
         e-mail:
           type: string
-          example: rudolph@volkman.com
+          example: vickie@ornwest.name
           format: email
         id:
           type: string
-          example: Ut autem molestiae et omnis ut ipsa.
+          example: Esse laboriosam asperiores et quo.
         name:
           type: string
-          example: Rem et quae harum laborum dolore aperiam.
+          example: Eum consequatur rem sunt voluptates sed amet.
       example:
-        created_at: Et necessitatibus impedit quam.
-        description: wdh
-        e-mail: lucinda_lueilwitz@gulgowskijerde.com
-        id: Ad iure numquam.
-        name: Aut in sint magni dignissimos est.
+        created_at: Corrupti eos consectetur repellat animi libero.
+        description: aui
+        e-mail: wiley_goodwin@bahringerbruen.org
+        id: Iusto nihil cupiditate voluptatem ut ut corporis.
+        name: Ut doloremque doloremque at nemo pariatur.
       required:
       - id
       - name
       - e-mail
       - description
       - created_at
+    BookDTO:
+      type: object
+      properties:
+        actor_id:
+          type: string
+          example: Consequatur eveniet expedita dolore quod ratione.
+        category_id:
+          type: string
+          example: Ut soluta.
+        id:
+          type: string
+          example: Inventore eligendi tenetur dolores provident commodi eos.
+        isbn:
+          type: string
+          example: Voluptate quis velit.
+        issue:
+          type: string
+          example: Recusandae non doloremque molestiae.
+        pages:
+          type: integer
+          example: 5355104610354169749
+          minimum: 100
+        price:
+          type: number
+          example: 20.539713
+          minimum: 20
+        summary:
+          type: string
+          example: Eos vel quidem nostrum qui molestias.
+        synopsis:
+          type: string
+          example: 5xf
+          maxLength: 500
+        title:
+          type: string
+          example: Minima expedita corrupti quo dolorem soluta fugiat.
+      example:
+        actor_id: Dicta ut.
+        category_id: Non deserunt error ea tempore minus omnis.
+        id: Facilis asperiores.
+        isbn: Nam incidunt sit nisi molestiae aliquid nesciunt.
+        issue: Vel mollitia rerum.
+        pages: 1275965153535795852
+        price: 20.31295
+        summary: Nobis architecto voluptatem adipisci quas aut.
+        synopsis: brv
+        title: Ut culpa recusandae et rem distinctio.
+      required:
+      - id
+      - title
+      - synopsis
+      - price
+      - pages
+      - isbn
+      - issue
+      - category_id
+      - actor_id
     CategoryDTO:
       type: object
       properties:
         id:
           type: string
-          example: Ducimus voluptatum.
+          example: Maiores labore autem occaecati eligendi.
         name:
           type: string
-          example: Dignissimos et occaecati dolorem.
+          example: Mollitia enim voluptatem.
       example:
-        id: Eum sit est.
-        name: Dolorum in autem.
+        id: Expedita minus quia nobis reprehenderit.
+        name: Quos aut aliquid.
       required:
       - id
       - name
@@ -149,31 +259,83 @@ components:
       properties:
         description:
           type: string
-          example: qet
+          example: jn3
           maxLength: 400
         e-mail:
           type: string
-          example: cooper_little@romaguera.name
+          example: norma_wolf@murphydietrich.name
           format: email
         name:
           type: string
-          example: Harum eos dolores.
+          example: Explicabo sit error eum.
       example:
-        description: ly7
-        e-mail: rocio_mann@stroman.biz
-        name: Cupiditate illo non voluptas.
+        description: j2b
+        e-mail: pierce.lind@goyette.com
+        name: Iste qui possimus sunt eum.
       required:
       - name
       - e-mail
       - description
+    CreateBookRequestBody:
+      type: object
+      properties:
+        actor_id:
+          type: string
+          example: Quidem earum esse enim.
+        category_id:
+          type: string
+          example: Consectetur quo.
+        isbn:
+          type: string
+          example: Occaecati animi iste et vitae et.
+        issue:
+          type: string
+          example: Sit et est atque dolor.
+        pages:
+          type: integer
+          example: 4396883226183177350
+          minimum: 100
+        price:
+          type: number
+          example: 20.127165
+          minimum: 20
+        summary:
+          type: string
+          example: Assumenda aperiam excepturi harum enim.
+        synopsis:
+          type: string
+          example: ycz
+          maxLength: 500
+        title:
+          type: string
+          example: Quaerat cumque.
+      example:
+        actor_id: Dolorem nobis totam eius autem accusantium cupiditate.
+        category_id: Rerum corporis nostrum veniam autem.
+        isbn: Sed incidunt similique at autem dolorem consequatur.
+        issue: Commodi earum et voluptatum eaque.
+        pages: 3168454827643865631
+        price: 20.004736
+        summary: Placeat aut hic iure voluptatem.
+        synopsis: 8ql
+        title: Facere quis fugit.
+      required:
+      - title
+      - synopsis
+      - price
+      - pages
+      - isbn
+      - issue
+      - category_id
+      - actor_id
     CreateCategoryRequestBody:
       type: object
       properties:
         name:
           type: string
-          example: Hic quibusdam sint et quos atque assumenda.
+          example: Et eius dolore quia deserunt expedita.
       example:
-        name: Quia et dolore unde incidunt ipsum rerum.
+        name: Est culpa omnis nihil ullam.
       required:
       - name
     Error:
@@ -182,7 +344,7 @@ components:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: true
+          example: false
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of the problem.
@@ -198,18 +360,18 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: true
+          example: false
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: true
+          example: false
       example:
-        fault: true
+        fault: false
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
-        temporary: false
-        timeout: false
+        temporary: true
+        timeout: true
       required:
       - name
       - id

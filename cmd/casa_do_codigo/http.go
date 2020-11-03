@@ -11,21 +11,23 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
+	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
+	books "github.com/selmison/seed-desafio-cdc/gen/books"
+	categories "github.com/selmison/seed-desafio-cdc/gen/categories"
+	actorskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/kitserver"
+	actorssvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/server"
+	bookskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/books/kitserver"
+	bookssvr "github.com/selmison/seed-desafio-cdc/gen/http/books/server"
+	categorieskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/kitserver"
+	categoriessvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/server"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
-
-	"github.com/selmison/seed-desafio-cdc/gen/actors"
-	"github.com/selmison/seed-desafio-cdc/gen/categories"
-	actorskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/kitserver"
-	actorssvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/server"
-	categorieskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/kitserver"
-	categoriessvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/server"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.Endpoints, categoriesEndpoints *categories.Endpoints, wg *sync.WaitGroup, errc chan error, logger log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.Endpoints, categoriesEndpoints *categories.Endpoints, booksEndpoints *books.Endpoints, wg *sync.WaitGroup, errc chan error, logger log.Logger, debug bool) {
 
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
@@ -52,6 +54,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 		actorsServer                    *actorssvr.Server
 		categoriesCreateCategoryHandler *kithttp.Server
 		categoriesServer                *categoriessvr.Server
+		booksCreateBookHandler          *kithttp.Server
+		booksServer                     *bookssvr.Server
 	)
 	{
 		eh := errorHandler(logger)
@@ -69,11 +73,19 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 			kithttp.ServerErrorEncoder(categorieskitsvr.EncodeCreateCategoryError(enc, nil)),
 		)
 		categoriesServer = categoriessvr.New(categoriesEndpoints, mux, dec, enc, eh, nil)
+		booksCreateBookHandler = kithttp.NewServer(
+			endpoint.Endpoint(booksEndpoints.CreateBook),
+			bookskitsvr.DecodeCreateBookRequest(mux, dec),
+			bookskitsvr.EncodeCreateBookResponse(enc),
+			kithttp.ServerErrorEncoder(bookskitsvr.EncodeCreateBookError(enc, nil)),
+		)
+		booksServer = bookssvr.New(booksEndpoints, mux, dec, enc, eh, nil)
 	}
 
 	// Configure the mux.
 	actorskitsvr.MountCreateActorHandler(mux, actorsCreateActorHandler)
 	categorieskitsvr.MountCreateCategoryHandler(mux, categoriesCreateCategoryHandler)
+	bookskitsvr.MountCreateBookHandler(mux, booksCreateBookHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -90,6 +102,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
 	}
 	for _, m := range categoriesServer.Mounts {
+		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
+	}
+	for _, m := range booksServer.Mounts {
 		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
 	}
 

@@ -46,6 +46,48 @@ paths:
             $ref: '#/definitions/ActorsCreateActorInvalidFieldsResponseBody'
       schemes:
       - http
+  /books:
+    post:
+      tags:
+      - books
+      summary: create_book books
+      operationId: books#create_book
+      parameters:
+      - name: create_book_request_body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/BooksCreateBookRequestBody'
+          required:
+          - title
+          - synopsis
+          - price
+          - pages
+          - isbn
+          - issue
+          - category_id
+          - actor_id
+      responses:
+        "201":
+          description: Created response.
+          schema:
+            $ref: '#/definitions/BooksCreateBookResponseBody'
+            required:
+            - id
+            - title
+            - synopsis
+            - price
+            - pages
+            - isbn
+            - issue
+            - category_id
+            - actor_id
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/BooksCreateBookInvalidFieldsResponseBody'
+      schemes:
+      - http
   /categories:
     post:
       tags:
@@ -111,14 +153,14 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: create_actor_invalid_fields_response_body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -137,19 +179,19 @@ definitions:
     properties:
       description:
         type: string
-        example: l9g
+        example: y98
         maxLength: 400
       e-mail:
         type: string
-        example: elijah@murphydoyle.net
+        example: layne@berniertrantow.com
         format: email
       name:
         type: string
-        example: Qui id saepe fuga quas illo eos.
+        example: Natus neque magnam debitis totam.
     example:
-      description: lnu
-      e-mail: sandra@strosinklocko.com
-      name: Et eum.
+      description: tzs
+      e-mail: adelia@bins.com
+      name: Ut magnam ea.
     required:
     - name
     - e-mail
@@ -160,41 +202,41 @@ definitions:
     properties:
       created_at:
         type: string
-        example: Voluptatem error.
+        example: Laborum omnis corrupti error accusantium asperiores.
       description:
         type: string
-        example: zi1
+        example: 8n8
         maxLength: 400
       e-mail:
         type: string
-        example: ruthie@gerlachwest.org
+        example: thelma@ortiz.biz
         format: email
       id:
         type: string
-        example: Ut ab soluta occaecati autem in qui.
+        example: Qui aut.
       name:
         type: string
-        example: Non nam.
+        example: Provident alias facilis ut perferendis.
     example:
-      created_at: Consequuntur omnis explicabo.
-      description: 0t0
-      e-mail: dawson@nikolaus.info
-      id: Sed neque libero dolorem repellendus.
-      name: Id velit modi non non enim dolor.
+      created_at: Quis fuga voluptas dolorum.
+      description: mrt
+      e-mail: nash@konopelski.name
+      id: Aspernatur magnam porro excepturi consequatur accusamus.
+      name: Qui quo eos.
     required:
     - id
     - name
     - e-mail
     - description
     - created_at
-  CategoriesCreateCategoryInvalidFieldsResponseBody:
+  BooksCreateBookInvalidFieldsResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -214,6 +256,160 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
+        example: false
+    description: create_book_invalid_fields_response_body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  BooksCreateBookRequestBody:
+    title: BooksCreateBookRequestBody
+    type: object
+    properties:
+      actor_id:
+        type: string
+        example: Ipsum rerum quia ducimus voluptatum.
+      category_id:
+        type: string
+        example: Atque assumenda dolor quia et dolore unde.
+      isbn:
+        type: string
+        example: Et ut provident at hic.
+      issue:
+        type: string
+        example: Sint et.
+      pages:
+        type: integer
+        example: 8812144099905341790
+        minimum: 100
+      price:
+        type: number
+        example: 20.14946
+        minimum: 20
+      summary:
+        type: string
+        example: Magnam et necessitatibus impedit quam.
+      synopsis:
+        type: string
+        example: vwd
+        maxLength: 500
+      title:
+        type: string
+        example: Sequi aliquid sed.
+    example:
+      actor_id: Facere minima cupiditate consectetur quidem mollitia ab.
+      category_id: Aliquam aliquid.
+      isbn: Veritatis officiis.
+      issue: Quibusdam aut eum libero dolor.
+      pages: 7390490842971779351
+      price: 20.992483
+      summary: Dolorum in autem.
+      synopsis: d7k
+      title: Dignissimos et occaecati dolorem.
+    required:
+    - title
+    - synopsis
+    - price
+    - pages
+    - isbn
+    - issue
+    - category_id
+    - actor_id
+  BooksCreateBookResponseBody:
+    title: BooksCreateBookResponseBody
+    type: object
+    properties:
+      actor_id:
+        type: string
+        example: Voluptate et omnis sapiente.
+      category_id:
+        type: string
+        example: Inventore voluptates.
+      id:
+        type: string
+        example: Tempore expedita rerum.
+      isbn:
+        type: string
+        example: Aperiam nisi corporis exercitationem eos autem.
+      issue:
+        type: string
+        example: Dolores qui.
+      pages:
+        type: integer
+        example: 559015399982001321
+        minimum: 100
+      price:
+        type: number
+        example: 20.87227
+        minimum: 20
+      summary:
+        type: string
+        example: Exercitationem sunt illum optio sed dolores aut.
+      synopsis:
+        type: string
+        example: t1i
+        maxLength: 500
+      title:
+        type: string
+        example: Blanditiis ratione quas hic dolorem nemo nisi.
+    example:
+      actor_id: Assumenda accusantium a expedita.
+      category_id: Est quos est asperiores provident inventore sit.
+      id: Ad iure numquam.
+      isbn: Voluptas tenetur.
+      issue: Est provident ducimus pariatur dolorem.
+      pages: 8540336219985469738
+      price: 20.014729
+      summary: Quaerat doloribus nisi.
+      synopsis: u12
+      title: Aut in sint magni dignissimos est.
+    required:
+    - id
+    - title
+    - synopsis
+    - price
+    - pages
+    - isbn
+    - issue
+    - category_id
+    - actor_id
+  CategoriesCreateCategoryInvalidFieldsResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
         example: true
     description: create_category_invalid_fields_response_body result type (default view)
     example:
@@ -222,7 +418,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -236,9 +432,9 @@ definitions:
     properties:
       name:
         type: string
-        example: Ab nam quae omnis aspernatur aperiam voluptatem.
+        example: Voluptatem et accusantium ipsa commodi corporis.
     example:
-      name: Sit repellat qui molestiae nemo animi rerum.
+      name: Expedita necessitatibus ab mollitia ut porro.
     required:
     - name
   CategoriesCreateCategoryResponseBody:
@@ -247,13 +443,13 @@ definitions:
     properties:
       id:
         type: string
-        example: Illo aspernatur magnam.
+        example: Distinctio et quasi harum nam sit ut.
       name:
         type: string
-        example: Excepturi consequatur accusamus unde qui quo.
+        example: Perferendis adipisci excepturi qui qui repellat dolor.
     example:
-      id: Aut sint earum.
-      name: Et est perspiciatis quis magni est reiciendis.
+      id: Fugiat distinctio iusto corporis eum.
+      name: Ut tempora alias quis repellat qui.
     required:
     - id
     - name

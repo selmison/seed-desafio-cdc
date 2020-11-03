@@ -17,8 +17,10 @@ import (
 	"gorm.io/gorm"
 
 	actorsGen "github.com/selmison/seed-desafio-cdc/gen/actors"
+	booksGen "github.com/selmison/seed-desafio-cdc/gen/books"
 	categoriesGen "github.com/selmison/seed-desafio-cdc/gen/categories"
 	"github.com/selmison/seed-desafio-cdc/pkg/actors"
+	"github.com/selmison/seed-desafio-cdc/pkg/books"
 	"github.com/selmison/seed-desafio-cdc/pkg/categories"
 	coreDomain "github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
@@ -44,11 +46,14 @@ func main() {
 	}
 
 	var (
+		repo          *gorm.DB
 		actorsSvc     actorsGen.Service
 		categoriesSvc categoriesGen.Service
+		booksSvc      booksGen.Service
 	)
 	{
-		repo, err := gorm.Open(sqlite.Open(*dsnF), &gorm.Config{
+		var err error
+		repo, err = gorm.Open(sqlite.Open(*dsnF), &gorm.Config{
 			SkipDefaultTransaction: true,
 		})
 		if err != nil {
@@ -57,11 +62,13 @@ func main() {
 		if err := repo.AutoMigrate(
 			&actors.Actor{},
 			&categories.Category{},
+			&books.Book{},
 		); err != nil {
 			log.Fatalf("db init: %v", err)
 		}
 		actorsSvc = actors.NewService(repo, logger)
 		categoriesSvc = categories.NewService(repo, logger)
+		booksSvc = books.NewService(repo, logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
@@ -69,10 +76,17 @@ func main() {
 	var (
 		actorsEndpoints     *actorsGen.Endpoints
 		categoriesEndpoints *categoriesGen.Endpoints
+		booksEndpoints      *booksGen.Endpoints
 	)
 	{
 		actorsEndpoints = actorsGen.NewEndpoints(actorsSvc)
+		actorsEndpoints.Use(ValidationCreateActorMiddleware(repo))
+
 		categoriesEndpoints = categoriesGen.NewEndpoints(categoriesSvc)
+		categoriesEndpoints.Use(ValidationCreateCategoryMiddleware(repo))
+
+		booksEndpoints = booksGen.NewEndpoints(booksSvc)
+		booksEndpoints.Use(ValidationCreateBookMiddleware(repo))
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -94,7 +108,7 @@ func main() {
 	switch *hostF {
 	case "development":
 		{
-			addr := "http://localhost:3333/actors"
+			addr := "http://localhost:3333"
 			u, err := url.Parse(addr)
 			if err != nil {
 				if _, err := fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err); err != nil {
@@ -114,7 +128,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host += ":80"
 			}
-			handleHTTPServer(ctx, u, actorsEndpoints, categoriesEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, actorsEndpoints, categoriesEndpoints, booksEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

@@ -15,6 +15,7 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	actorsc "github.com/selmison/seed-desafio-cdc/gen/http/actors/client"
+	booksc "github.com/selmison/seed-desafio-cdc/gen/http/books/client"
 	categoriesc "github.com/selmison/seed-desafio-cdc/gen/http/categories/client"
 	goahttp "goa.design/goa/v3/http"
 )
@@ -25,6 +26,7 @@ import (
 //
 func UsageCommands() string {
 	return `actors create-actor
+books create-book
 categories create-category
 `
 }
@@ -32,12 +34,23 @@ categories create-category
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` actors create-actor --body '{
-      "description": "5qz",
-      "e-mail": "andreanne_reichert@hayes.org",
-      "name": "Sunt ducimus."
+      "description": "et4",
+      "e-mail": "zion@yundt.biz",
+      "name": "Eligendi quibusdam ducimus qui at."
+   }'` + "\n" +
+		os.Args[0] + ` books create-book --body '{
+      "actor_id": "Exercitationem atque velit.",
+      "category_id": "Soluta eos ipsa ad.",
+      "isbn": "Earum qui est nam quos aperiam quidem.",
+      "issue": "Quisquam in cum numquam.",
+      "pages": 1974383956477392325,
+      "price": 20.982689,
+      "summary": "Recusandae sit minus.",
+      "synopsis": "1km",
+      "title": "Debitis eos et culpa."
    }'` + "\n" +
 		os.Args[0] + ` categories create-category --body '{
-      "name": "Ab delectus quam aut."
+      "name": "Cupiditate hic."
    }'` + "\n" +
 		""
 }
@@ -57,6 +70,11 @@ func ParseEndpoint(
 		actorsCreateActorFlags    = flag.NewFlagSet("create-actor", flag.ExitOnError)
 		actorsCreateActorBodyFlag = actorsCreateActorFlags.String("body", "REQUIRED", "")
 
+		booksFlags = flag.NewFlagSet("books", flag.ContinueOnError)
+
+		booksCreateBookFlags    = flag.NewFlagSet("create-book", flag.ExitOnError)
+		booksCreateBookBodyFlag = booksCreateBookFlags.String("body", "REQUIRED", "")
+
 		categoriesFlags = flag.NewFlagSet("categories", flag.ContinueOnError)
 
 		categoriesCreateCategoryFlags    = flag.NewFlagSet("create-category", flag.ExitOnError)
@@ -64,6 +82,9 @@ func ParseEndpoint(
 	)
 	actorsFlags.Usage = actorsUsage
 	actorsCreateActorFlags.Usage = actorsCreateActorUsage
+
+	booksFlags.Usage = booksUsage
+	booksCreateBookFlags.Usage = booksCreateBookUsage
 
 	categoriesFlags.Usage = categoriesUsage
 	categoriesCreateCategoryFlags.Usage = categoriesCreateCategoryUsage
@@ -85,6 +106,8 @@ func ParseEndpoint(
 		switch svcn {
 		case "actors":
 			svcf = actorsFlags
+		case "books":
+			svcf = booksFlags
 		case "categories":
 			svcf = categoriesFlags
 		default:
@@ -106,6 +129,13 @@ func ParseEndpoint(
 			switch epn {
 			case "create-actor":
 				epf = actorsCreateActorFlags
+
+			}
+
+		case "books":
+			switch epn {
+			case "create-book":
+				epf = booksCreateBookFlags
 
 			}
 
@@ -142,6 +172,13 @@ func ParseEndpoint(
 			case "create-actor":
 				endpoint = c.CreateActor()
 				data, err = actorsc.BuildCreateActorPayload(*actorsCreateActorBodyFlag)
+			}
+		case "books":
+			c := booksc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "create-book":
+				endpoint = c.CreateBook()
+				data, err = booksc.BuildCreateBookPayload(*booksCreateBookBodyFlag)
 			}
 		case "categories":
 			c := categoriesc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -180,9 +217,43 @@ CreateActor implements create_actor.
 
 Example:
     `+os.Args[0]+` actors create-actor --body '{
-      "description": "5qz",
-      "e-mail": "andreanne_reichert@hayes.org",
-      "name": "Sunt ducimus."
+      "description": "et4",
+      "e-mail": "zion@yundt.biz",
+      "name": "Eligendi quibusdam ducimus qui at."
+   }'
+`, os.Args[0])
+}
+
+// booksUsage displays the usage of the books command and its subcommands.
+func booksUsage() {
+	fmt.Fprintf(os.Stderr, `The books service performs operations on books
+Usage:
+    %s [globalflags] books COMMAND [flags]
+
+COMMAND:
+    create-book: CreateBook implements create_book.
+
+Additional help:
+    %s books COMMAND --help
+`, os.Args[0], os.Args[0])
+}
+func booksCreateBookUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] books create-book -body JSON
+
+CreateBook implements create_book.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` books create-book --body '{
+      "actor_id": "Exercitationem atque velit.",
+      "category_id": "Soluta eos ipsa ad.",
+      "isbn": "Earum qui est nam quos aperiam quidem.",
+      "issue": "Quisquam in cum numquam.",
+      "pages": 1974383956477392325,
+      "price": 20.982689,
+      "summary": "Recusandae sit minus.",
+      "synopsis": "1km",
+      "title": "Debitis eos et culpa."
    }'
 `, os.Args[0])
 }
@@ -209,7 +280,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` categories create-category --body '{
-      "name": "Ab delectus quam aut."
+      "name": "Cupiditate hic."
    }'
 `, os.Args[0])
 }
