@@ -45,6 +45,14 @@ type Client struct {
 	// show_category endpoint.
 	ShowCategoryDoer goahttp.Doer
 
+	// CreateCountry Doer is the HTTP client used to make requests to the
+	// create_country endpoint.
+	CreateCountryDoer goahttp.Doer
+
+	// CreateState Doer is the HTTP client used to make requests to the
+	// create_state endpoint.
+	CreateStateDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -72,6 +80,8 @@ func NewClient(
 		ShowBookDoer:        doer,
 		CreateCategoryDoer:  doer,
 		ShowCategoryDoer:    doer,
+		CreateCountryDoer:   doer,
+		CreateStateDoer:     doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -223,6 +233,54 @@ func (c *Client) ShowCategory() endpoint.Endpoint {
 		resp, err := c.ShowCategoryDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "show_category", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateCountry returns an endpoint that makes HTTP requests to the catalog
+// service create_country server.
+func (c *Client) CreateCountry() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateCountryRequest(c.encoder)
+		decodeResponse = DecodeCreateCountryResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateCountryRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateCountryDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_country", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateState returns an endpoint that makes HTTP requests to the catalog
+// service create_state server.
+func (c *Client) CreateState() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateStateRequest(c.encoder)
+		decodeResponse = DecodeCreateStateResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateStateRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateStateDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_state", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -28,14 +28,16 @@ func (s *service) CreateActor(_ context.Context, dto *catalogGen.CreateActorDTO)
 	if err := s.logger.Log("info", fmt.Sprintf("catalog.create")); err != nil {
 		log.Printf("kit/log error: %v\n", err)
 	}
-	result := s.repo.Create(&actor)
+	if result := s.repo.Create(&actor); result.Error != nil {
+		return nil, result.Error
+	}
 	return &catalogGen.ActorDTO{
 		ID:          actor.ID,
 		Name:        actor.Name,
 		Email:       actor.Email,
 		Description: actor.Description,
 		CreatedAt:   actor.CreatedAt.String(),
-	}, result.Error
+	}, nil
 }
 
 // ShowActor implements show_actor.

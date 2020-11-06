@@ -23,16 +23,16 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `catalog (create-actor|show-actor|create-book|list-books|show-book|create-category|show-category)
+	return `catalog (create-actor|show-actor|create-book|list-books|show-book|create-category|show-category|create-country|create-state)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` catalog create-actor --body '{
-      "description": "zi1",
-      "email": "ruthie@gerlachwest.org",
-      "name": "Non nam."
+      "description": "hni",
+      "email": "phoebe.lang@lynch.name",
+      "name": "Dicta alias et molestiae."
    }'` + "\n" +
 		""
 }
@@ -68,6 +68,12 @@ func ParseEndpoint(
 
 		catalogShowCategoryFlags  = flag.NewFlagSet("show-category", flag.ExitOnError)
 		catalogShowCategoryIDFlag = catalogShowCategoryFlags.String("id", "REQUIRED", "ID")
+
+		catalogCreateCountryFlags    = flag.NewFlagSet("create-country", flag.ExitOnError)
+		catalogCreateCountryBodyFlag = catalogCreateCountryFlags.String("body", "REQUIRED", "")
+
+		catalogCreateStateFlags    = flag.NewFlagSet("create-state", flag.ExitOnError)
+		catalogCreateStateBodyFlag = catalogCreateStateFlags.String("body", "REQUIRED", "")
 	)
 	catalogFlags.Usage = catalogUsage
 	catalogCreateActorFlags.Usage = catalogCreateActorUsage
@@ -77,6 +83,8 @@ func ParseEndpoint(
 	catalogShowBookFlags.Usage = catalogShowBookUsage
 	catalogCreateCategoryFlags.Usage = catalogCreateCategoryUsage
 	catalogShowCategoryFlags.Usage = catalogShowCategoryUsage
+	catalogCreateCountryFlags.Usage = catalogCreateCountryUsage
+	catalogCreateStateFlags.Usage = catalogCreateStateUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -133,6 +141,12 @@ func ParseEndpoint(
 			case "show-category":
 				epf = catalogShowCategoryFlags
 
+			case "create-country":
+				epf = catalogCreateCountryFlags
+
+			case "create-state":
+				epf = catalogCreateStateFlags
+
 			}
 
 		}
@@ -179,6 +193,12 @@ func ParseEndpoint(
 			case "show-category":
 				endpoint = c.ShowCategory()
 				data, err = catalogc.BuildShowCategoryPayload(*catalogShowCategoryIDFlag)
+			case "create-country":
+				endpoint = c.CreateCountry()
+				data, err = catalogc.BuildCreateCountryPayload(*catalogCreateCountryBodyFlag)
+			case "create-state":
+				endpoint = c.CreateState()
+				data, err = catalogc.BuildCreateStatePayload(*catalogCreateStateBodyFlag)
 			}
 		}
 	}
@@ -203,6 +223,8 @@ COMMAND:
     show-book: ShowBook implements show_book.
     create-category: CreateCategory implements create_category.
     show-category: ShowCategory implements show_category.
+    create-country: CreateCountry implements create_country.
+    create-state: CreateState implements create_state.
 
 Additional help:
     %s catalog COMMAND --help
@@ -216,9 +238,9 @@ CreateActor implements create_actor.
 
 Example:
     `+os.Args[0]+` catalog create-actor --body '{
-      "description": "zi1",
-      "email": "ruthie@gerlachwest.org",
-      "name": "Non nam."
+      "description": "hni",
+      "email": "phoebe.lang@lynch.name",
+      "name": "Dicta alias et molestiae."
    }'
 `, os.Args[0])
 }
@@ -230,7 +252,7 @@ ShowActor implements show_actor.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-actor --id "Totam qui id."
+    `+os.Args[0]+` catalog show-actor --id "Aut perferendis provident alias facilis ut."
 `, os.Args[0])
 }
 
@@ -243,23 +265,21 @@ CreateBook implements create_book.
 Example:
     `+os.Args[0]+` catalog create-book --body '{
       "actor_ids": [
-         "Earum eum et est.",
-         "Quis magni.",
-         "Reiciendis temporibus dolor quia maxime."
+         "Sunt laborum maxime.",
+         "Optio nihil nulla aut fugit."
       ],
       "category_ids": [
-         "Fugit ut laborum omnis corrupti error.",
-         "Asperiores illo.",
-         "Magnam porro excepturi consequatur accusamus.",
-         "Qui quo eos."
+         "Repellat qui.",
+         "Nemo animi rerum eos.",
+         "Eos dolores voluptates."
       ],
-      "isbn": "Quibusdam distinctio non dolorem mollitia inventore non.",
-      "issue": "Aut ipsum minus accusamus.",
-      "pages": 4234284910476771043,
-      "price": 20.168549,
-      "summary": "Non ea.",
-      "synopsis": "18t",
-      "title": "Ex aspernatur temporibus est aspernatur quia reiciendis."
+      "isbn": "Cumque dignissimos optio ab.",
+      "issue": "Quae omnis aspernatur aperiam voluptatem.",
+      "pages": 8707861222127399202,
+      "price": 20.998156,
+      "summary": "Magni est reiciendis temporibus.",
+      "synopsis": "ejj",
+      "title": "Aut sint earum."
    }'
 `, os.Args[0])
 }
@@ -281,7 +301,7 @@ ShowBook implements show_book.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-book --id "Dolorem exercitationem sunt illum optio sed dolores."
+    `+os.Args[0]+` catalog show-book --id "Nisi corporis exercitationem eos."
 `, os.Args[0])
 }
 
@@ -293,7 +313,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` catalog create-category --body '{
-      "name": "Dicta facere officia repellendus magnam et necessitatibus."
+      "name": "Ut provident at hic."
    }'
 `, os.Args[0])
 }
@@ -305,6 +325,33 @@ ShowCategory implements show_category.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-category --id "Ipsum rerum quia ducimus voluptatum."
+    `+os.Args[0]+` catalog show-category --id "Dignissimos et occaecati dolorem."
+`, os.Args[0])
+}
+
+func catalogCreateCountryUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-country -body JSON
+
+CreateCountry implements create_country.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` catalog create-country --body '{
+      "name": "Officiis accusamus quibusdam aut eum."
+   }'
+`, os.Args[0])
+}
+
+func catalogCreateStateUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-state -body JSON
+
+CreateState implements create_state.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` catalog create-state --body '{
+      "country_id": "Perferendis adipisci excepturi qui qui repellat dolor.",
+      "name": "Sit ut."
+   }'
 `, os.Args[0])
 }

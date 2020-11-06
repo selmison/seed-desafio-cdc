@@ -42,6 +42,19 @@ type CreateCategoryRequestBody struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 }
 
+// CreateCountryRequestBody is the type of the "catalog" service
+// "create_country" endpoint HTTP request body.
+type CreateCountryRequestBody struct {
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// CreateStateRequestBody is the type of the "catalog" service "create_state"
+// endpoint HTTP request body.
+type CreateStateRequestBody struct {
+	Name      *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	CountryID *string `form:"country_id,omitempty" json:"country_id,omitempty" xml:"country_id,omitempty"`
+}
+
 // CreateActorResponseBody is the type of the "catalog" service "create_actor"
 // endpoint HTTP response body.
 type CreateActorResponseBody struct {
@@ -108,6 +121,22 @@ type CreateCategoryResponseBody struct {
 type ShowCategoryResponseBody struct {
 	ID   string `form:"id" json:"id" xml:"id"`
 	Name string `form:"name" json:"name" xml:"name"`
+}
+
+// CreateCountryResponseBody is the type of the "catalog" service
+// "create_country" endpoint HTTP response body.
+type CreateCountryResponseBody struct {
+	ID       string  `form:"id" json:"id" xml:"id"`
+	Name     string  `form:"name" json:"name" xml:"name"`
+	StateIds *string `form:"state_ids,omitempty" json:"state_ids,omitempty" xml:"state_ids,omitempty"`
+}
+
+// CreateStateResponseBody is the type of the "catalog" service "create_state"
+// endpoint HTTP response body.
+type CreateStateResponseBody struct {
+	ID        string `form:"id" json:"id" xml:"id"`
+	Name      string `form:"name" json:"name" xml:"name"`
+	CountryID string `form:"country_id" json:"country_id" xml:"country_id"`
 }
 
 // CreateActorInvalidFieldsResponseBody is the type of the "catalog" service
@@ -203,6 +232,42 @@ type CreateCategoryInvalidFieldsResponseBody struct {
 // ShowCategoryNotFoundResponseBody is the type of the "catalog" service
 // "show_category" endpoint HTTP response body for the "not_found" error.
 type ShowCategoryNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateCountryInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_country" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCountryInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateStateInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_state" endpoint HTTP response body for the "invalid_fields" error.
+type CreateStateInvalidFieldsResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -344,6 +409,28 @@ func NewShowCategoryResponseBody(res *catalog.CategoryDTO) *ShowCategoryResponse
 	return body
 }
 
+// NewCreateCountryResponseBody builds the HTTP response body from the result
+// of the "create_country" endpoint of the "catalog" service.
+func NewCreateCountryResponseBody(res *catalog.CountryDTO) *CreateCountryResponseBody {
+	body := &CreateCountryResponseBody{
+		ID:       res.ID,
+		Name:     res.Name,
+		StateIds: res.StateIds,
+	}
+	return body
+}
+
+// NewCreateStateResponseBody builds the HTTP response body from the result of
+// the "create_state" endpoint of the "catalog" service.
+func NewCreateStateResponseBody(res *catalog.StateDTO) *CreateStateResponseBody {
+	body := &CreateStateResponseBody{
+		ID:        res.ID,
+		Name:      res.Name,
+		CountryID: res.CountryID,
+	}
+	return body
+}
+
 // NewCreateActorInvalidFieldsResponseBody builds the HTTP response body from
 // the result of the "create_actor" endpoint of the "catalog" service.
 func NewCreateActorInvalidFieldsResponseBody(res *goa.ServiceError) *CreateActorInvalidFieldsResponseBody {
@@ -428,6 +515,34 @@ func NewShowCategoryNotFoundResponseBody(res *goa.ServiceError) *ShowCategoryNot
 	return body
 }
 
+// NewCreateCountryInvalidFieldsResponseBody builds the HTTP response body from
+// the result of the "create_country" endpoint of the "catalog" service.
+func NewCreateCountryInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCountryInvalidFieldsResponseBody {
+	body := &CreateCountryInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateStateInvalidFieldsResponseBody builds the HTTP response body from
+// the result of the "create_state" endpoint of the "catalog" service.
+func NewCreateStateInvalidFieldsResponseBody(res *goa.ServiceError) *CreateStateInvalidFieldsResponseBody {
+	body := &CreateStateInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewCreateActorDTO builds a catalog service create_actor endpoint payload.
 func NewCreateActorDTO(body *CreateActorRequestBody) *catalog.CreateActorDTO {
 	v := &catalog.CreateActorDTO{
@@ -493,6 +608,25 @@ func NewCreateCategoryDTO(body *CreateCategoryRequestBody) *catalog.CreateCatego
 func NewShowCategoryShowByIDDTO(id string) *catalog.ShowByIDDTO {
 	v := &catalog.ShowByIDDTO{}
 	v.ID = id
+
+	return v
+}
+
+// NewCreateCountryDTO builds a catalog service create_country endpoint payload.
+func NewCreateCountryDTO(body *CreateCountryRequestBody) *catalog.CreateCountryDTO {
+	v := &catalog.CreateCountryDTO{
+		Name: *body.Name,
+	}
+
+	return v
+}
+
+// NewCreateStateDTO builds a catalog service create_state endpoint payload.
+func NewCreateStateDTO(body *CreateStateRequestBody) *catalog.CreateStateDTO {
+	v := &catalog.CreateStateDTO{
+		Name:      *body.Name,
+		CountryID: *body.CountryID,
+	}
 
 	return v
 }
@@ -570,6 +704,27 @@ func ValidateCreateBookRequestBody(body *CreateBookRequestBody) (err error) {
 func ValidateCreateCategoryRequestBody(body *CreateCategoryRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateCreateCountryRequestBody runs the validations defined on
+// create_country_request_body
+func ValidateCreateCountryRequestBody(body *CreateCountryRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateCreateStateRequestBody runs the validations defined on
+// create_state_request_body
+func ValidateCreateStateRequestBody(body *CreateStateRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.CountryID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country_id", "body"))
 	}
 	return
 }

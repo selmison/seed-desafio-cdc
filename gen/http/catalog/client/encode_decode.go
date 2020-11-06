@@ -590,6 +590,182 @@ func DecodeShowCategoryResponse(decoder func(*http.Response) goahttp.Decoder, re
 	}
 }
 
+// BuildCreateCountryRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "create_country" endpoint
+func (c *Client) BuildCreateCountryRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateCountryCatalogPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "create_country", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateCountryRequest returns an encoder for requests sent to the
+// catalog create_country server.
+func EncodeCreateCountryRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.CreateCountryDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "create_country", "*catalog.CreateCountryDTO", v)
+		}
+		body := NewCreateCountryRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "create_country", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreateCountryResponse returns a decoder for responses returned by the
+// catalog create_country endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeCreateCountryResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeCreateCountryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreateCountryResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_country", err)
+			}
+			err = ValidateCreateCountryResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_country", err)
+			}
+			res := NewCreateCountryCountryDTOCreated(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateCountryInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_country", err)
+			}
+			err = ValidateCreateCountryInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_country", err)
+			}
+			return nil, NewCreateCountryInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "create_country", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildCreateStateRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "create_state" endpoint
+func (c *Client) BuildCreateStateRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateStateCatalogPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "create_state", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateStateRequest returns an encoder for requests sent to the catalog
+// create_state server.
+func EncodeCreateStateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.CreateStateDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "create_state", "*catalog.CreateStateDTO", v)
+		}
+		body := NewCreateStateRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "create_state", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreateStateResponse returns a decoder for responses returned by the
+// catalog create_state endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeCreateStateResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeCreateStateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreateStateResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_state", err)
+			}
+			err = ValidateCreateStateResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_state", err)
+			}
+			res := NewCreateStateStateDTOCreated(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateStateInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_state", err)
+			}
+			err = ValidateCreateStateInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_state", err)
+			}
+			return nil, NewCreateStateInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "create_state", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // unmarshalBookDTOResponseToCatalogBookDTO builds a value of type
 // *catalog.BookDTO from a value of type *BookDTOResponse.
 func unmarshalBookDTOResponseToCatalogBookDTO(v *BookDTOResponse) *catalog.BookDTO {

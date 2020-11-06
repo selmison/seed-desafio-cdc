@@ -24,7 +24,7 @@ func BuildCreateActorPayload(catalogCreateActorBody string) (*catalog.CreateActo
 	{
 		err = json.Unmarshal([]byte(catalogCreateActorBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"zi1\",\n      \"email\": \"ruthie@gerlachwest.org\",\n      \"name\": \"Non nam.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"hni\",\n      \"email\": \"phoebe.lang@lynch.name\",\n      \"name\": \"Dicta alias et molestiae.\"\n   }'")
 		}
 		err = goa.MergeErrors(err, goa.ValidateFormat("body.email", body.Email, goa.FormatEmail))
 
@@ -65,7 +65,7 @@ func BuildCreateBookPayload(catalogCreateBookBody string) (*catalog.CreateBookDT
 	{
 		err = json.Unmarshal([]byte(catalogCreateBookBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_ids\": [\n         \"Earum eum et est.\",\n         \"Quis magni.\",\n         \"Reiciendis temporibus dolor quia maxime.\"\n      ],\n      \"category_ids\": [\n         \"Fugit ut laborum omnis corrupti error.\",\n         \"Asperiores illo.\",\n         \"Magnam porro excepturi consequatur accusamus.\",\n         \"Qui quo eos.\"\n      ],\n      \"isbn\": \"Quibusdam distinctio non dolorem mollitia inventore non.\",\n      \"issue\": \"Aut ipsum minus accusamus.\",\n      \"pages\": 4234284910476771043,\n      \"price\": 20.168549,\n      \"summary\": \"Non ea.\",\n      \"synopsis\": \"18t\",\n      \"title\": \"Ex aspernatur temporibus est aspernatur quia reiciendis.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_ids\": [\n         \"Sunt laborum maxime.\",\n         \"Optio nihil nulla aut fugit.\"\n      ],\n      \"category_ids\": [\n         \"Repellat qui.\",\n         \"Nemo animi rerum eos.\",\n         \"Eos dolores voluptates.\"\n      ],\n      \"isbn\": \"Cumque dignissimos optio ab.\",\n      \"issue\": \"Quae omnis aspernatur aperiam voluptatem.\",\n      \"pages\": 8707861222127399202,\n      \"price\": 20.998156,\n      \"summary\": \"Magni est reiciendis temporibus.\",\n      \"synopsis\": \"ejj\",\n      \"title\": \"Aut sint earum.\"\n   }'")
 		}
 		if body.CategoryIds == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("category_ids", "body"))
@@ -132,7 +132,7 @@ func BuildCreateCategoryPayload(catalogCreateCategoryBody string) (*catalog.Crea
 	{
 		err = json.Unmarshal([]byte(catalogCreateCategoryBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Dicta facere officia repellendus magnam et necessitatibus.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Ut provident at hic.\"\n   }'")
 		}
 	}
 	v := &catalog.CreateCategoryDTO{
@@ -151,6 +151,43 @@ func BuildShowCategoryPayload(catalogShowCategoryID string) (*catalog.ShowByIDDT
 	}
 	v := &catalog.ShowByIDDTO{}
 	v.ID = id
+
+	return v, nil
+}
+
+// BuildCreateCountryPayload builds the payload for the catalog create_country
+// endpoint from CLI flags.
+func BuildCreateCountryPayload(catalogCreateCountryBody string) (*catalog.CreateCountryDTO, error) {
+	var err error
+	var body CreateCountryRequestBody
+	{
+		err = json.Unmarshal([]byte(catalogCreateCountryBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Officiis accusamus quibusdam aut eum.\"\n   }'")
+		}
+	}
+	v := &catalog.CreateCountryDTO{
+		Name: body.Name,
+	}
+
+	return v, nil
+}
+
+// BuildCreateStatePayload builds the payload for the catalog create_state
+// endpoint from CLI flags.
+func BuildCreateStatePayload(catalogCreateStateBody string) (*catalog.CreateStateDTO, error) {
+	var err error
+	var body CreateStateRequestBody
+	{
+		err = json.Unmarshal([]byte(catalogCreateStateBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"country_id\": \"Perferendis adipisci excepturi qui qui repellat dolor.\",\n      \"name\": \"Sit ut.\"\n   }'")
+		}
+	}
+	v := &catalog.CreateStateDTO{
+		Name:      body.Name,
+		CountryID: body.CountryID,
+	}
 
 	return v, nil
 }

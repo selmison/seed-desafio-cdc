@@ -26,11 +26,13 @@ func (s *service) CreateCategory(_ context.Context, dto *catalogGen.CreateCatego
 	if err := s.logger.Log("info", fmt.Sprintf("catalog.create")); err != nil {
 		log.Printf("kit/log error: %v\n", err)
 	}
-	result := s.repo.Create(&category)
+	if result := s.repo.Create(&category); result.Error != nil {
+		return nil, result.Error
+	}
 	return &catalogGen.CategoryDTO{
 		ID:   category.ID,
 		Name: category.Name,
-	}, result.Error
+	}, nil
 }
 
 // ShowCategory implements show_category.

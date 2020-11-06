@@ -45,3 +45,13 @@ func CreateCategoryCatalogPath() string {
 func ShowCategoryCatalogPath(id string) string {
 	return fmt.Sprintf("/categories/%v", id)
 }
+
+// CreateCountryCatalogPath returns the URL path to the catalog service create_country HTTP endpoint.
+func CreateCountryCatalogPath() string {
+	return "/countries"
+}
+
+// CreateStateCatalogPath returns the URL path to the catalog service create_state HTTP endpoint.
+func CreateStateCatalogPath() string {
+	return "/states"
+}

@@ -171,3 +171,53 @@ func EncodeShowCategoryError(encoder func(context.Context, http.ResponseWriter) 
 		enc(ctx, w, err)
 	}
 }
+
+// EncodeCreateCountryResponse returns a go-kit EncodeResponseFunc suitable for
+// encoding catalog create_country responses.
+func EncodeCreateCountryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) kithttp.EncodeResponseFunc {
+	return server.EncodeCreateCountryResponse(encoder)
+}
+
+// DecodeCreateCountryRequest returns a go-kit DecodeRequestFunc suitable for
+// decoding catalog create_country requests.
+func DecodeCreateCountryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) kithttp.DecodeRequestFunc {
+	dec := server.DecodeCreateCountryRequest(mux, decoder)
+	return func(ctx context.Context, r *http.Request) (interface{}, error) {
+		r = r.WithContext(ctx)
+		return dec(r)
+	}
+}
+
+// EncodeCreateCountryError returns a go-kit EncodeResponseFunc suitable for
+// encoding errors returned by the catalog create_country endpoint.
+func EncodeCreateCountryError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) kithttp.ErrorEncoder {
+	enc := server.EncodeCreateCountryError(encoder, formatter)
+	return func(ctx context.Context, err error, w http.ResponseWriter) {
+		enc(ctx, w, err)
+	}
+}
+
+// EncodeCreateStateResponse returns a go-kit EncodeResponseFunc suitable for
+// encoding catalog create_state responses.
+func EncodeCreateStateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) kithttp.EncodeResponseFunc {
+	return server.EncodeCreateStateResponse(encoder)
+}
+
+// DecodeCreateStateRequest returns a go-kit DecodeRequestFunc suitable for
+// decoding catalog create_state requests.
+func DecodeCreateStateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) kithttp.DecodeRequestFunc {
+	dec := server.DecodeCreateStateRequest(mux, decoder)
+	return func(ctx context.Context, r *http.Request) (interface{}, error) {
+		r = r.WithContext(ctx)
+		return dec(r)
+	}
+}
+
+// EncodeCreateStateError returns a go-kit EncodeResponseFunc suitable for
+// encoding errors returned by the catalog create_state endpoint.
+func EncodeCreateStateError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) kithttp.ErrorEncoder {
+	enc := server.EncodeCreateStateError(encoder, formatter)
+	return func(ctx context.Context, err error, w http.ResponseWriter) {
+		enc(ctx, w, err)
+	}
+}

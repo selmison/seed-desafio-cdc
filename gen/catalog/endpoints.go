@@ -22,6 +22,8 @@ type Endpoints struct {
 	ShowBook       endpoint.Endpoint
 	CreateCategory endpoint.Endpoint
 	ShowCategory   endpoint.Endpoint
+	CreateCountry  endpoint.Endpoint
+	CreateState    endpoint.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "catalog" service with endpoints.
@@ -34,6 +36,8 @@ func NewEndpoints(s Service) *Endpoints {
 		ShowBook:       NewShowBookEndpoint(s),
 		CreateCategory: NewCreateCategoryEndpoint(s),
 		ShowCategory:   NewShowCategoryEndpoint(s),
+		CreateCountry:  NewCreateCountryEndpoint(s),
+		CreateState:    NewCreateStateEndpoint(s),
 	}
 }
 
@@ -46,6 +50,8 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.ShowBook = m(e.ShowBook)
 	e.CreateCategory = m(e.CreateCategory)
 	e.ShowCategory = m(e.ShowCategory)
+	e.CreateCountry = m(e.CreateCountry)
+	e.CreateState = m(e.CreateState)
 }
 
 // NewCreateActorEndpoint returns an endpoint function that calls the method
@@ -107,5 +113,23 @@ func NewShowCategoryEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*ShowByIDDTO)
 		return s.ShowCategory(ctx, p)
+	}
+}
+
+// NewCreateCountryEndpoint returns an endpoint function that calls the method
+// "create_country" of service "catalog".
+func NewCreateCountryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCountryDTO)
+		return s.CreateCountry(ctx, p)
+	}
+}
+
+// NewCreateStateEndpoint returns an endpoint function that calls the method
+// "create_state" of service "catalog".
+func NewCreateStateEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateStateDTO)
+		return s.CreateState(ctx, p)
 	}
 }

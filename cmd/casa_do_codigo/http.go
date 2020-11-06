@@ -52,6 +52,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 		catalogShowBookHandler       *kitHttp.Server
 		catalogCreateCategoryHandler *kitHttp.Server
 		catalogShowCategoryHandler   *kitHttp.Server
+		catalogCreateCountryHandler  *kitHttp.Server
+		catalogCreateStateHandler    *kitHttp.Server
 		catalogServer                *catalogSvr.Server
 	)
 	{
@@ -97,6 +99,18 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeShowCategoryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCategoryError(enc, nil)),
 		)
+		catalogCreateCountryHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCountry),
+			catalogKitSvr.DecodeCreateCountryRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCountryResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCountryError(enc, nil)),
+		)
+		catalogCreateStateHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateState),
+			catalogKitSvr.DecodeCreateStateRequest(mux, dec),
+			catalogKitSvr.EncodeCreateStateResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateStateError(enc, nil)),
+		)
 		catalogServer = catalogSvr.New(catalogEndpoints, mux, dec, enc, eh, nil)
 	}
 
@@ -108,6 +122,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	catalogKitSvr.MountShowBookHandler(mux, catalogShowBookHandler)
 	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
 	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
+	catalogKitSvr.MountCreateCountryHandler(mux, catalogCreateCountryHandler)
+	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

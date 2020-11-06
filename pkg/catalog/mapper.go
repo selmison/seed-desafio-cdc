@@ -71,6 +71,14 @@ func (s *service) mapIDsToCategories(ids []string) []*Category {
 	return categories
 }
 
+func (s *service) mapIDsToStates(ids []string) []*State {
+	states := make([]*State, len(ids))
+	for i, id := range ids {
+		states[i] = &State{ID: id}
+	}
+	return states
+}
+
 func (s *service) mapActorsToIDs(actors []*Actor) []string {
 	ids := make([]string, len(actors))
 	for i, actor := range actors {

@@ -42,6 +42,19 @@ type CreateCategoryRequestBody struct {
 	Name string `form:"name" json:"name" xml:"name"`
 }
 
+// CreateCountryRequestBody is the type of the "catalog" service
+// "create_country" endpoint HTTP request body.
+type CreateCountryRequestBody struct {
+	Name string `form:"name" json:"name" xml:"name"`
+}
+
+// CreateStateRequestBody is the type of the "catalog" service "create_state"
+// endpoint HTTP request body.
+type CreateStateRequestBody struct {
+	Name      string `form:"name" json:"name" xml:"name"`
+	CountryID string `form:"country_id" json:"country_id" xml:"country_id"`
+}
+
 // CreateActorResponseBody is the type of the "catalog" service "create_actor"
 // endpoint HTTP response body.
 type CreateActorResponseBody struct {
@@ -108,6 +121,22 @@ type CreateCategoryResponseBody struct {
 type ShowCategoryResponseBody struct {
 	ID   *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// CreateCountryResponseBody is the type of the "catalog" service
+// "create_country" endpoint HTTP response body.
+type CreateCountryResponseBody struct {
+	ID       *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Name     *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	StateIds *string `form:"state_ids,omitempty" json:"state_ids,omitempty" xml:"state_ids,omitempty"`
+}
+
+// CreateStateResponseBody is the type of the "catalog" service "create_state"
+// endpoint HTTP response body.
+type CreateStateResponseBody struct {
+	ID        *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Name      *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	CountryID *string `form:"country_id,omitempty" json:"country_id,omitempty" xml:"country_id,omitempty"`
 }
 
 // CreateActorInvalidFieldsResponseBody is the type of the "catalog" service
@@ -218,6 +247,42 @@ type ShowCategoryNotFoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// CreateCountryInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_country" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCountryInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// CreateStateInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_state" endpoint HTTP response body for the "invalid_fields" error.
+type CreateStateInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // BookDTOResponse is used to define fields on response body types.
 type BookDTOResponse struct {
 	ID          *string  `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
@@ -275,6 +340,25 @@ func NewCreateBookRequestBody(p *catalog.CreateBookDTO) *CreateBookRequestBody {
 func NewCreateCategoryRequestBody(p *catalog.CreateCategoryDTO) *CreateCategoryRequestBody {
 	body := &CreateCategoryRequestBody{
 		Name: p.Name,
+	}
+	return body
+}
+
+// NewCreateCountryRequestBody builds the HTTP request body from the payload of
+// the "create_country" endpoint of the "catalog" service.
+func NewCreateCountryRequestBody(p *catalog.CreateCountryDTO) *CreateCountryRequestBody {
+	body := &CreateCountryRequestBody{
+		Name: p.Name,
+	}
+	return body
+}
+
+// NewCreateStateRequestBody builds the HTTP request body from the payload of
+// the "create_state" endpoint of the "catalog" service.
+func NewCreateStateRequestBody(p *catalog.CreateStateDTO) *CreateStateRequestBody {
+	body := &CreateStateRequestBody{
+		Name:      p.Name,
+		CountryID: p.CountryID,
 	}
 	return body
 }
@@ -479,6 +563,60 @@ func NewShowCategoryNotFound(body *ShowCategoryNotFoundResponseBody) *goa.Servic
 	return v
 }
 
+// NewCreateCountryCountryDTOCreated builds a "catalog" service
+// "create_country" endpoint result from a HTTP "Created" response.
+func NewCreateCountryCountryDTOCreated(body *CreateCountryResponseBody) *catalog.CountryDTO {
+	v := &catalog.CountryDTO{
+		ID:       *body.ID,
+		Name:     *body.Name,
+		StateIds: body.StateIds,
+	}
+
+	return v
+}
+
+// NewCreateCountryInvalidFields builds a catalog service create_country
+// endpoint invalid_fields error.
+func NewCreateCountryInvalidFields(body *CreateCountryInvalidFieldsResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewCreateStateStateDTOCreated builds a "catalog" service "create_state"
+// endpoint result from a HTTP "Created" response.
+func NewCreateStateStateDTOCreated(body *CreateStateResponseBody) *catalog.StateDTO {
+	v := &catalog.StateDTO{
+		ID:        *body.ID,
+		Name:      *body.Name,
+		CountryID: *body.CountryID,
+	}
+
+	return v
+}
+
+// NewCreateStateInvalidFields builds a catalog service create_state endpoint
+// invalid_fields error.
+func NewCreateStateInvalidFields(body *CreateStateInvalidFieldsResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
 // ValidateCreateActorResponseBody runs the validations defined on
 // create_actor_response_body
 func ValidateCreateActorResponseBody(body *CreateActorResponseBody) (err error) {
@@ -657,6 +795,33 @@ func ValidateShowCategoryResponseBody(body *ShowCategoryResponseBody) (err error
 	return
 }
 
+// ValidateCreateCountryResponseBody runs the validations defined on
+// create_country_response_body
+func ValidateCreateCountryResponseBody(body *CreateCountryResponseBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateCreateStateResponseBody runs the validations defined on
+// create_state_response_body
+func ValidateCreateStateResponseBody(body *CreateStateResponseBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.CountryID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country_id", "body"))
+	}
+	return
+}
+
 // ValidateCreateActorInvalidFieldsResponseBody runs the validations defined on
 // create_actor_invalid_fields_response_body
 func ValidateCreateActorInvalidFieldsResponseBody(body *CreateActorInvalidFieldsResponseBody) (err error) {
@@ -780,6 +945,54 @@ func ValidateCreateCategoryInvalidFieldsResponseBody(body *CreateCategoryInvalid
 // ValidateShowCategoryNotFoundResponseBody runs the validations defined on
 // show_category_not_found_response_body
 func ValidateShowCategoryNotFoundResponseBody(body *ShowCategoryNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateCountryInvalidFieldsResponseBody runs the validations defined
+// on create_country_invalid_fields_response_body
+func ValidateCreateCountryInvalidFieldsResponseBody(body *CreateCountryInvalidFieldsResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateStateInvalidFieldsResponseBody runs the validations defined on
+// create_state_invalid_fields_response_body
+func ValidateCreateStateInvalidFieldsResponseBody(body *CreateStateInvalidFieldsResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

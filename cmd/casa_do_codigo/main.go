@@ -57,6 +57,8 @@ func main() {
 			&catalog.Actor{},
 			&catalog.Category{},
 			&catalog.Book{},
+			&catalog.Country{},
+			&catalog.State{},
 		); err != nil {
 			log.Fatalf("db init: %v", err)
 		}

@@ -74,6 +74,27 @@ var _ = Service("catalog", func() {
 			Response("not_found", StatusNotFound)
 		})
 	})
+
+	Method("create_country", func() {
+		Payload(CreateCountryDTO)
+		Result(CountryDTO)
+		HTTP(func() {
+			POST("/countries")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("create_state", func() {
+		Payload(CreateStateDTO)
+		Result(StateDTO)
+		HTTP(func() {
+			POST("/states")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 })
 
 var ShowByIDDTO = Type("ShowByIDDTO", func() {
