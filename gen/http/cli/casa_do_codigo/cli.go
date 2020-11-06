@@ -14,9 +14,7 @@ import (
 	"os"
 
 	"github.com/go-kit/kit/endpoint"
-	actorsc "github.com/selmison/seed-desafio-cdc/gen/http/actors/client"
-	booksc "github.com/selmison/seed-desafio-cdc/gen/http/books/client"
-	categoriesc "github.com/selmison/seed-desafio-cdc/gen/http/categories/client"
+	catalogc "github.com/selmison/seed-desafio-cdc/gen/http/catalog/client"
 	goahttp "goa.design/goa/v3/http"
 )
 
@@ -25,32 +23,16 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `actors create-actor
-books (create-book|list-books)
-categories create-category
+	return `catalog (create-actor|show-actor|create-book|list-books|show-book|create-category|show-category)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` actors create-actor --body '{
-      "description": "0av",
-      "e-mail": "pietro_reinger@corkery.info",
-      "name": "Et qui beatae ut quia aliquid eligendi."
-   }'` + "\n" +
-		os.Args[0] + ` books create-book --body '{
-      "actor_id": "Soluta eos ipsa ad.",
-      "category_id": "Quisquam in cum numquam.",
-      "isbn": "Minus est ipsa.",
-      "issue": "Earum qui est nam quos aperiam quidem.",
-      "pages": 8283409113468120753,
-      "price": 20.110447,
-      "summary": "Eos et culpa perspiciatis voluptatem doloremque eum.",
-      "synopsis": "j73",
-      "title": "Non enim."
-   }'` + "\n" +
-		os.Args[0] + ` categories create-category --body '{
-      "name": "Fuga ex."
+	return os.Args[0] + ` catalog create-actor --body '{
+      "description": "zi1",
+      "email": "ruthie@gerlachwest.org",
+      "name": "Non nam."
    }'` + "\n" +
 		""
 }
@@ -65,32 +47,36 @@ func ParseEndpoint(
 	restore bool,
 ) (endpoint.Endpoint, interface{}, error) {
 	var (
-		actorsFlags = flag.NewFlagSet("actors", flag.ContinueOnError)
+		catalogFlags = flag.NewFlagSet("catalog", flag.ContinueOnError)
 
-		actorsCreateActorFlags    = flag.NewFlagSet("create-actor", flag.ExitOnError)
-		actorsCreateActorBodyFlag = actorsCreateActorFlags.String("body", "REQUIRED", "")
+		catalogCreateActorFlags    = flag.NewFlagSet("create-actor", flag.ExitOnError)
+		catalogCreateActorBodyFlag = catalogCreateActorFlags.String("body", "REQUIRED", "")
 
-		booksFlags = flag.NewFlagSet("books", flag.ContinueOnError)
+		catalogShowActorFlags  = flag.NewFlagSet("show-actor", flag.ExitOnError)
+		catalogShowActorIDFlag = catalogShowActorFlags.String("id", "REQUIRED", "ID")
 
-		booksCreateBookFlags    = flag.NewFlagSet("create-book", flag.ExitOnError)
-		booksCreateBookBodyFlag = booksCreateBookFlags.String("body", "REQUIRED", "")
+		catalogCreateBookFlags    = flag.NewFlagSet("create-book", flag.ExitOnError)
+		catalogCreateBookBodyFlag = catalogCreateBookFlags.String("body", "REQUIRED", "")
 
-		booksListBooksFlags = flag.NewFlagSet("list-books", flag.ExitOnError)
+		catalogListBooksFlags = flag.NewFlagSet("list-books", flag.ExitOnError)
 
-		categoriesFlags = flag.NewFlagSet("categories", flag.ContinueOnError)
+		catalogShowBookFlags  = flag.NewFlagSet("show-book", flag.ExitOnError)
+		catalogShowBookIDFlag = catalogShowBookFlags.String("id", "REQUIRED", "ID")
 
-		categoriesCreateCategoryFlags    = flag.NewFlagSet("create-category", flag.ExitOnError)
-		categoriesCreateCategoryBodyFlag = categoriesCreateCategoryFlags.String("body", "REQUIRED", "")
+		catalogCreateCategoryFlags    = flag.NewFlagSet("create-category", flag.ExitOnError)
+		catalogCreateCategoryBodyFlag = catalogCreateCategoryFlags.String("body", "REQUIRED", "")
+
+		catalogShowCategoryFlags  = flag.NewFlagSet("show-category", flag.ExitOnError)
+		catalogShowCategoryIDFlag = catalogShowCategoryFlags.String("id", "REQUIRED", "ID")
 	)
-	actorsFlags.Usage = actorsUsage
-	actorsCreateActorFlags.Usage = actorsCreateActorUsage
-
-	booksFlags.Usage = booksUsage
-	booksCreateBookFlags.Usage = booksCreateBookUsage
-	booksListBooksFlags.Usage = booksListBooksUsage
-
-	categoriesFlags.Usage = categoriesUsage
-	categoriesCreateCategoryFlags.Usage = categoriesCreateCategoryUsage
+	catalogFlags.Usage = catalogUsage
+	catalogCreateActorFlags.Usage = catalogCreateActorUsage
+	catalogShowActorFlags.Usage = catalogShowActorUsage
+	catalogCreateBookFlags.Usage = catalogCreateBookUsage
+	catalogListBooksFlags.Usage = catalogListBooksUsage
+	catalogShowBookFlags.Usage = catalogShowBookUsage
+	catalogCreateCategoryFlags.Usage = catalogCreateCategoryUsage
+	catalogShowCategoryFlags.Usage = catalogShowCategoryUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -107,12 +93,8 @@ func ParseEndpoint(
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "actors":
-			svcf = actorsFlags
-		case "books":
-			svcf = booksFlags
-		case "categories":
-			svcf = categoriesFlags
+		case "catalog":
+			svcf = catalogFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -128,27 +110,28 @@ func ParseEndpoint(
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "actors":
+		case "catalog":
 			switch epn {
 			case "create-actor":
-				epf = actorsCreateActorFlags
+				epf = catalogCreateActorFlags
 
-			}
+			case "show-actor":
+				epf = catalogShowActorFlags
 
-		case "books":
-			switch epn {
 			case "create-book":
-				epf = booksCreateBookFlags
+				epf = catalogCreateBookFlags
 
 			case "list-books":
-				epf = booksListBooksFlags
+				epf = catalogListBooksFlags
 
-			}
+			case "show-book":
+				epf = catalogShowBookFlags
 
-		case "categories":
-			switch epn {
 			case "create-category":
-				epf = categoriesCreateCategoryFlags
+				epf = catalogCreateCategoryFlags
+
+			case "show-category":
+				epf = catalogShowCategoryFlags
 
 			}
 
@@ -172,29 +155,30 @@ func ParseEndpoint(
 	)
 	{
 		switch svcn {
-		case "actors":
-			c := actorsc.NewClient(scheme, host, doer, enc, dec, restore)
+		case "catalog":
+			c := catalogc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "create-actor":
 				endpoint = c.CreateActor()
-				data, err = actorsc.BuildCreateActorPayload(*actorsCreateActorBodyFlag)
-			}
-		case "books":
-			c := booksc.NewClient(scheme, host, doer, enc, dec, restore)
-			switch epn {
+				data, err = catalogc.BuildCreateActorPayload(*catalogCreateActorBodyFlag)
+			case "show-actor":
+				endpoint = c.ShowActor()
+				data, err = catalogc.BuildShowActorPayload(*catalogShowActorIDFlag)
 			case "create-book":
 				endpoint = c.CreateBook()
-				data, err = booksc.BuildCreateBookPayload(*booksCreateBookBodyFlag)
+				data, err = catalogc.BuildCreateBookPayload(*catalogCreateBookBodyFlag)
 			case "list-books":
 				endpoint = c.ListBooks()
 				data = nil
-			}
-		case "categories":
-			c := categoriesc.NewClient(scheme, host, doer, enc, dec, restore)
-			switch epn {
+			case "show-book":
+				endpoint = c.ShowBook()
+				data, err = catalogc.BuildShowBookPayload(*catalogShowBookIDFlag)
 			case "create-category":
 				endpoint = c.CreateCategory()
-				data, err = categoriesc.BuildCreateCategoryPayload(*categoriesCreateCategoryBodyFlag)
+				data, err = catalogc.BuildCreateCategoryPayload(*catalogCreateCategoryBodyFlag)
+			case "show-category":
+				endpoint = c.ShowCategory()
+				data, err = catalogc.BuildShowCategoryPayload(*catalogShowCategoryIDFlag)
 			}
 		}
 	}
@@ -205,102 +189,122 @@ func ParseEndpoint(
 	return endpoint, data, nil
 }
 
-// actorsUsage displays the usage of the actors command and its subcommands.
-func actorsUsage() {
-	fmt.Fprintf(os.Stderr, `The actors service performs operations on actors
+// catalogUsage displays the usage of the catalog command and its subcommands.
+func catalogUsage() {
+	fmt.Fprintf(os.Stderr, `The catalog service performs operations on catalog
 Usage:
-    %s [globalflags] actors COMMAND [flags]
+    %s [globalflags] catalog COMMAND [flags]
 
 COMMAND:
     create-actor: CreateActor implements create_actor.
+    show-actor: ShowActor implements show_actor.
+    create-book: CreateBook implements create_book.
+    list-books: ListBooks implements list_books.
+    show-book: ShowBook implements show_book.
+    create-category: CreateCategory implements create_category.
+    show-category: ShowCategory implements show_category.
 
 Additional help:
-    %s actors COMMAND --help
+    %s catalog COMMAND --help
 `, os.Args[0], os.Args[0])
 }
-func actorsCreateActorUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] actors create-actor -body JSON
+func catalogCreateActorUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-actor -body JSON
 
 CreateActor implements create_actor.
     -body JSON: 
 
 Example:
-    `+os.Args[0]+` actors create-actor --body '{
-      "description": "0av",
-      "e-mail": "pietro_reinger@corkery.info",
-      "name": "Et qui beatae ut quia aliquid eligendi."
+    `+os.Args[0]+` catalog create-actor --body '{
+      "description": "zi1",
+      "email": "ruthie@gerlachwest.org",
+      "name": "Non nam."
    }'
 `, os.Args[0])
 }
 
-// booksUsage displays the usage of the books command and its subcommands.
-func booksUsage() {
-	fmt.Fprintf(os.Stderr, `The books service performs operations on books
-Usage:
-    %s [globalflags] books COMMAND [flags]
+func catalogShowActorUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog show-actor -id STRING
 
-COMMAND:
-    create-book: CreateBook implements create_book.
-    list-books: ListBooks implements list_books.
+ShowActor implements show_actor.
+    -id STRING: ID
 
-Additional help:
-    %s books COMMAND --help
-`, os.Args[0], os.Args[0])
+Example:
+    `+os.Args[0]+` catalog show-actor --id "Totam qui id."
+`, os.Args[0])
 }
-func booksCreateBookUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] books create-book -body JSON
+
+func catalogCreateBookUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-book -body JSON
 
 CreateBook implements create_book.
     -body JSON: 
 
 Example:
-    `+os.Args[0]+` books create-book --body '{
-      "actor_id": "Soluta eos ipsa ad.",
-      "category_id": "Quisquam in cum numquam.",
-      "isbn": "Minus est ipsa.",
-      "issue": "Earum qui est nam quos aperiam quidem.",
-      "pages": 8283409113468120753,
-      "price": 20.110447,
-      "summary": "Eos et culpa perspiciatis voluptatem doloremque eum.",
-      "synopsis": "j73",
-      "title": "Non enim."
+    `+os.Args[0]+` catalog create-book --body '{
+      "actor_ids": [
+         "Earum eum et est.",
+         "Quis magni.",
+         "Reiciendis temporibus dolor quia maxime."
+      ],
+      "category_ids": [
+         "Fugit ut laborum omnis corrupti error.",
+         "Asperiores illo.",
+         "Magnam porro excepturi consequatur accusamus.",
+         "Qui quo eos."
+      ],
+      "isbn": "Quibusdam distinctio non dolorem mollitia inventore non.",
+      "issue": "Aut ipsum minus accusamus.",
+      "pages": 4234284910476771043,
+      "price": 20.168549,
+      "summary": "Non ea.",
+      "synopsis": "18t",
+      "title": "Ex aspernatur temporibus est aspernatur quia reiciendis."
    }'
 `, os.Args[0])
 }
 
-func booksListBooksUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] books list-books
+func catalogListBooksUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog list-books
 
 ListBooks implements list_books.
 
 Example:
-    `+os.Args[0]+` books list-books
+    `+os.Args[0]+` catalog list-books
 `, os.Args[0])
 }
 
-// categoriesUsage displays the usage of the categories command and its
-// subcommands.
-func categoriesUsage() {
-	fmt.Fprintf(os.Stderr, `The categories service performs operations on categories
-Usage:
-    %s [globalflags] categories COMMAND [flags]
+func catalogShowBookUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog show-book -id STRING
 
-COMMAND:
-    create-category: CreateCategory implements create_category.
+ShowBook implements show_book.
+    -id STRING: ID
 
-Additional help:
-    %s categories COMMAND --help
-`, os.Args[0], os.Args[0])
+Example:
+    `+os.Args[0]+` catalog show-book --id "Dolorem exercitationem sunt illum optio sed dolores."
+`, os.Args[0])
 }
-func categoriesCreateCategoryUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] categories create-category -body JSON
+
+func catalogCreateCategoryUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-category -body JSON
 
 CreateCategory implements create_category.
     -body JSON: 
 
 Example:
-    `+os.Args[0]+` categories create-category --body '{
-      "name": "Fuga ex."
+    `+os.Args[0]+` catalog create-category --body '{
+      "name": "Dicta facere officia repellendus magnam et necessitatibus."
    }'
+`, os.Args[0])
+}
+
+func catalogShowCategoryUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog show-category -id STRING
+
+ShowCategory implements show_category.
+    -id STRING: ID
+
+Example:
+    `+os.Args[0]+` catalog show-category --id "Ipsum rerum quia ducimus voluptatum."
 `, os.Args[0])
 }

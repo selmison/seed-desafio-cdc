@@ -10,9 +10,7 @@ var _ = API("casa_do_codigo", func() {
 	Description("Casa do Código HTTP service")
 	Server("casa_do_codigo", func() {
 		Description("hosts for Casa do Código Service.")
-		Services("actors")
-		Services("categories")
-		Services("books")
+		Services("catalog")
 		Host("development", func() {
 			Description("Development hosts.")
 			URI("http://localhost:3333")

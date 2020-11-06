@@ -10,39 +10,34 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
-	kithttp "github.com/go-kit/kit/transport/http"
-	actors "github.com/selmison/seed-desafio-cdc/gen/actors"
-	books "github.com/selmison/seed-desafio-cdc/gen/books"
-	categories "github.com/selmison/seed-desafio-cdc/gen/categories"
-	actorskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/kitserver"
-	actorssvr "github.com/selmison/seed-desafio-cdc/gen/http/actors/server"
-	bookskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/books/kitserver"
-	bookssvr "github.com/selmison/seed-desafio-cdc/gen/http/books/server"
-	categorieskitsvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/kitserver"
-	categoriessvr "github.com/selmison/seed-desafio-cdc/gen/http/categories/server"
-	goahttp "goa.design/goa/v3/http"
-	httpmdlwr "goa.design/goa/v3/http/middleware"
+	kitHttp "github.com/go-kit/kit/transport/http"
+	goaHttp "goa.design/goa/v3/http"
+	httpMdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
+
+	catalogGen "github.com/selmison/seed-desafio-cdc/gen/catalog"
+	catalogKitSvr "github.com/selmison/seed-desafio-cdc/gen/http/catalog/kitserver"
+	catalogSvr "github.com/selmison/seed-desafio-cdc/gen/http/catalog/server"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.Endpoints, categoriesEndpoints *categories.Endpoints, booksEndpoints *books.Endpoints, wg *sync.WaitGroup, errc chan error, logger log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalogGen.Endpoints, wg *sync.WaitGroup, errc chan error, logger log.Logger, debug bool) {
 
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
 	// Other encodings can be used by providing the corresponding functions,
 	// see goa.design/implement/encoding.
 	var (
-		dec = goahttp.RequestDecoder
-		enc = goahttp.ResponseEncoder
+		dec = goaHttp.RequestDecoder
+		enc = goaHttp.ResponseEncoder
 	)
 
 	// Build the service HTTP request multiplexer and configure it to serve
 	// HTTP requests to the service endpoints.
-	var mux goahttp.Muxer
+	var mux goaHttp.Muxer
 	{
-		mux = goahttp.NewMuxer()
+		mux = goaHttp.NewMuxer()
 	}
 
 	// Wrap the endpoints with the transport specific layers. The generated
@@ -50,68 +45,82 @@ func handleHTTPServer(ctx context.Context, u *url.URL, actorsEndpoints *actors.E
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		actorsCreateActorHandler        *kithttp.Server
-		actorsServer                    *actorssvr.Server
-		categoriesCreateCategoryHandler *kithttp.Server
-		categoriesServer                *categoriessvr.Server
-		booksCreateBookHandler          *kithttp.Server
-		booksListBooksHandler           *kithttp.Server
-		booksServer                     *bookssvr.Server
+		catalogCreateActorHandler    *kitHttp.Server
+		catalogShowActorHandler      *kitHttp.Server
+		catalogCreateBookHandler     *kitHttp.Server
+		catalogListBooksHandler      *kitHttp.Server
+		catalogShowBookHandler       *kitHttp.Server
+		catalogCreateCategoryHandler *kitHttp.Server
+		catalogShowCategoryHandler   *kitHttp.Server
+		catalogServer                *catalogSvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		actorsCreateActorHandler = kithttp.NewServer(
-			endpoint.Endpoint(actorsEndpoints.CreateActor),
-			actorskitsvr.DecodeCreateActorRequest(mux, dec),
-			actorskitsvr.EncodeCreateActorResponse(enc),
-			kithttp.ServerErrorEncoder(actorskitsvr.EncodeCreateActorError(enc, nil)),
+		catalogCreateActorHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateActor),
+			catalogKitSvr.DecodeCreateActorRequest(mux, dec),
+			catalogKitSvr.EncodeCreateActorResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateActorError(enc, nil)),
 		)
-		actorsServer = actorssvr.New(actorsEndpoints, mux, dec, enc, eh, nil)
-		categoriesCreateCategoryHandler = kithttp.NewServer(
-			endpoint.Endpoint(categoriesEndpoints.CreateCategory),
-			categorieskitsvr.DecodeCreateCategoryRequest(mux, dec),
-			categorieskitsvr.EncodeCreateCategoryResponse(enc),
-			kithttp.ServerErrorEncoder(categorieskitsvr.EncodeCreateCategoryError(enc, nil)),
+		catalogShowActorHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.ShowActor),
+			catalogKitSvr.DecodeShowActorRequest(mux, dec),
+			catalogKitSvr.EncodeShowActorResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowActorError(enc, nil)),
 		)
-		categoriesServer = categoriessvr.New(categoriesEndpoints, mux, dec, enc, eh, nil)
-		booksCreateBookHandler = kithttp.NewServer(
-			endpoint.Endpoint(booksEndpoints.CreateBook),
-			bookskitsvr.DecodeCreateBookRequest(mux, dec),
-			bookskitsvr.EncodeCreateBookResponse(enc),
-			kithttp.ServerErrorEncoder(bookskitsvr.EncodeCreateBookError(enc, nil)),
+		catalogCreateBookHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateBook),
+			catalogKitSvr.DecodeCreateBookRequest(mux, dec),
+			catalogKitSvr.EncodeCreateBookResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateBookError(enc, nil)),
 		)
-		booksListBooksHandler = kithttp.NewServer(
-			endpoint.Endpoint(booksEndpoints.ListBooks),
+		catalogListBooksHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.ListBooks),
 			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
-			bookskitsvr.EncodeListBooksResponse(enc),
+			catalogKitSvr.EncodeListBooksResponse(enc),
 		)
-		booksServer = bookssvr.New(booksEndpoints, mux, dec, enc, eh, nil)
+		catalogShowBookHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.ShowBook),
+			catalogKitSvr.DecodeShowBookRequest(mux, dec),
+			catalogKitSvr.EncodeShowBookResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowBookError(enc, nil)),
+		)
+		catalogCreateCategoryHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCategory),
+			catalogKitSvr.DecodeCreateCategoryRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCategoryResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCategoryError(enc, nil)),
+		)
+		catalogShowCategoryHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.ShowCategory),
+			catalogKitSvr.DecodeShowCategoryRequest(mux, dec),
+			catalogKitSvr.EncodeShowCategoryResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCategoryError(enc, nil)),
+		)
+		catalogServer = catalogSvr.New(catalogEndpoints, mux, dec, enc, eh, nil)
 	}
 
 	// Configure the mux.
-	actorskitsvr.MountCreateActorHandler(mux, actorsCreateActorHandler)
-	categorieskitsvr.MountCreateCategoryHandler(mux, categoriesCreateCategoryHandler)
-	bookskitsvr.MountCreateBookHandler(mux, booksCreateBookHandler)
-	bookskitsvr.MountListBooksHandler(mux, booksListBooksHandler)
+	catalogKitSvr.MountCreateActorHandler(mux, catalogCreateActorHandler)
+	catalogKitSvr.MountShowActorHandler(mux, catalogShowActorHandler)
+	catalogKitSvr.MountCreateBookHandler(mux, catalogCreateBookHandler)
+	catalogKitSvr.MountListBooksHandler(mux, catalogListBooksHandler)
+	catalogKitSvr.MountShowBookHandler(mux, catalogShowBookHandler)
+	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
+	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		handler = httpmdlwr.Log(logger)(handler)
-		handler = httpmdlwr.RequestID()(handler)
+		handler = httpMdlwr.Log(logger)(handler)
+		handler = httpMdlwr.RequestID()(handler)
 	}
 
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler}
-	for _, m := range actorsServer.Mounts {
-		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
-	}
-	for _, m := range categoriesServer.Mounts {
-		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
-	}
-	for _, m := range booksServer.Mounts {
+	for _, m := range catalogServer.Mounts {
 		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
 	}
 
