@@ -22,6 +22,7 @@ type Endpoints struct {
 	ShowBook       endpoint.Endpoint
 	CreateCategory endpoint.Endpoint
 	ShowCategory   endpoint.Endpoint
+	CreateCustomer endpoint.Endpoint
 	CreateCountry  endpoint.Endpoint
 	CreateState    endpoint.Endpoint
 }
@@ -36,6 +37,7 @@ func NewEndpoints(s Service) *Endpoints {
 		ShowBook:       NewShowBookEndpoint(s),
 		CreateCategory: NewCreateCategoryEndpoint(s),
 		ShowCategory:   NewShowCategoryEndpoint(s),
+		CreateCustomer: NewCreateCustomerEndpoint(s),
 		CreateCountry:  NewCreateCountryEndpoint(s),
 		CreateState:    NewCreateStateEndpoint(s),
 	}
@@ -50,6 +52,7 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.ShowBook = m(e.ShowBook)
 	e.CreateCategory = m(e.CreateCategory)
 	e.ShowCategory = m(e.ShowCategory)
+	e.CreateCustomer = m(e.CreateCustomer)
 	e.CreateCountry = m(e.CreateCountry)
 	e.CreateState = m(e.CreateState)
 }
@@ -113,6 +116,15 @@ func NewShowCategoryEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*ShowByIDDTO)
 		return s.ShowCategory(ctx, p)
+	}
+}
+
+// NewCreateCustomerEndpoint returns an endpoint function that calls the method
+// "create_customer" of service "catalog".
+func NewCreateCustomerEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCustomerDTO)
+		return s.CreateCustomer(ctx, p)
 	}
 }
 

@@ -45,6 +45,10 @@ type Client struct {
 	// show_category endpoint.
 	ShowCategoryDoer goahttp.Doer
 
+	// CreateCustomer Doer is the HTTP client used to make requests to the
+	// create_customer endpoint.
+	CreateCustomerDoer goahttp.Doer
+
 	// CreateCountry Doer is the HTTP client used to make requests to the
 	// create_country endpoint.
 	CreateCountryDoer goahttp.Doer
@@ -80,6 +84,7 @@ func NewClient(
 		ShowBookDoer:        doer,
 		CreateCategoryDoer:  doer,
 		ShowCategoryDoer:    doer,
+		CreateCustomerDoer:  doer,
 		CreateCountryDoer:   doer,
 		CreateStateDoer:     doer,
 		RestoreResponseBody: restoreBody,
@@ -233,6 +238,30 @@ func (c *Client) ShowCategory() endpoint.Endpoint {
 		resp, err := c.ShowCategoryDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "show_category", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateCustomer returns an endpoint that makes HTTP requests to the catalog
+// service create_customer server.
+func (c *Client) CreateCustomer() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateCustomerRequest(c.encoder)
+		decodeResponse = DecodeCreateCustomerResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateCustomerRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateCustomerDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_customer", err)
 		}
 		return decodeResponse(resp)
 	}

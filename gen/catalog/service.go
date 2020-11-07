@@ -29,6 +29,8 @@ type Service interface {
 	CreateCategory(context.Context, *CreateCategoryDTO) (res *CategoryDTO, err error)
 	// ShowCategory implements show_category.
 	ShowCategory(context.Context, *ShowByIDDTO) (res *CategoryDTO, err error)
+	// CreateCustomer implements create_customer.
+	CreateCustomer(context.Context, *CreateCustomerDTO) (res *CustomerDTO, err error)
 	// CreateCountry implements create_country.
 	CreateCountry(context.Context, *CreateCountryDTO) (res *CountryDTO, err error)
 	// CreateState implements create_state.
@@ -43,7 +45,7 @@ const ServiceName = "catalog"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [9]string{"create_actor", "show_actor", "create_book", "list_books", "show_book", "create_category", "show_category", "create_country", "create_state"}
+var MethodNames = [10]string{"create_actor", "show_actor", "create_book", "list_books", "show_book", "create_category", "show_category", "create_customer", "create_country", "create_state"}
 
 // CreateActorDTO is the payload type of the catalog service create_actor
 // method.
@@ -107,6 +109,28 @@ type CategoryDTO struct {
 	Name string
 }
 
+// CreateCustomerDTO is the payload type of the catalog service create_customer
+// method.
+type CreateCustomerDTO struct {
+	FirstName string
+	LastName  string
+	Email     string
+	Document  string
+	Address   *AddressDTO
+	Phone     string
+}
+
+// CustomerDTO is the result type of the catalog service create_customer method.
+type CustomerDTO struct {
+	ID        string
+	FirstName string
+	LastName  string
+	Email     string
+	Document  string
+	Address   *AddressDTO
+	Phone     string
+}
+
 // CreateCountryDTO is the payload type of the catalog service create_country
 // method.
 type CreateCountryDTO struct {
@@ -132,6 +156,16 @@ type StateDTO struct {
 	ID        string
 	Name      string
 	CountryID string
+}
+
+// Address Type
+type AddressDTO struct {
+	Address    string
+	Complement string
+	City       string
+	CountryID  string
+	StateID    string
+	Cep        string
 }
 
 // MakeInvalidFields builds a goa.ServiceError from an error.

@@ -46,6 +46,11 @@ func ShowCategoryCatalogPath(id string) string {
 	return fmt.Sprintf("/categories/%v", id)
 }
 
+// CreateCustomerCatalogPath returns the URL path to the catalog service create_customer HTTP endpoint.
+func CreateCustomerCatalogPath() string {
+	return "/customers"
+}
+
 // CreateCountryCatalogPath returns the URL path to the catalog service create_country HTTP endpoint.
 func CreateCountryCatalogPath() string {
 	return "/countries"

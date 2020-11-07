@@ -42,6 +42,17 @@ type CreateCategoryRequestBody struct {
 	Name string `form:"name" json:"name" xml:"name"`
 }
 
+// CreateCustomerRequestBody is the type of the "catalog" service
+// "create_customer" endpoint HTTP request body.
+type CreateCustomerRequestBody struct {
+	FirstName string                 `form:"first_name" json:"first_name" xml:"first_name"`
+	LastName  string                 `form:"last_name" json:"last_name" xml:"last_name"`
+	Email     string                 `form:"email" json:"email" xml:"email"`
+	Document  string                 `form:"document" json:"document" xml:"document"`
+	Address   *AddressDTORequestBody `form:"address" json:"address" xml:"address"`
+	Phone     string                 `form:"phone" json:"phone" xml:"phone"`
+}
+
 // CreateCountryRequestBody is the type of the "catalog" service
 // "create_country" endpoint HTTP request body.
 type CreateCountryRequestBody struct {
@@ -121,6 +132,18 @@ type CreateCategoryResponseBody struct {
 type ShowCategoryResponseBody struct {
 	ID   *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// CreateCustomerResponseBody is the type of the "catalog" service
+// "create_customer" endpoint HTTP response body.
+type CreateCustomerResponseBody struct {
+	ID        *string                 `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	FirstName *string                 `form:"first_name,omitempty" json:"first_name,omitempty" xml:"first_name,omitempty"`
+	LastName  *string                 `form:"last_name,omitempty" json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Email     *string                 `form:"email,omitempty" json:"email,omitempty" xml:"email,omitempty"`
+	Document  *string                 `form:"document,omitempty" json:"document,omitempty" xml:"document,omitempty"`
+	Address   *AddressDTOResponseBody `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	Phone     *string                 `form:"phone,omitempty" json:"phone,omitempty" xml:"phone,omitempty"`
 }
 
 // CreateCountryResponseBody is the type of the "catalog" service
@@ -247,6 +270,24 @@ type ShowCategoryNotFoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// CreateCustomerInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_customer" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCustomerInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // CreateCountryInvalidFieldsResponseBody is the type of the "catalog" service
 // "create_country" endpoint HTTP response body for the "invalid_fields" error.
 type CreateCountryInvalidFieldsResponseBody struct {
@@ -297,6 +338,26 @@ type BookDTOResponse struct {
 	ActorIds    []string `form:"actor_ids,omitempty" json:"actor_ids,omitempty" xml:"actor_ids,omitempty"`
 }
 
+// AddressDTORequestBody is used to define fields on request body types.
+type AddressDTORequestBody struct {
+	Address    string `form:"address" json:"address" xml:"address"`
+	Complement string `form:"complement" json:"complement" xml:"complement"`
+	City       string `form:"city" json:"city" xml:"city"`
+	CountryID  string `form:"country_id" json:"country_id" xml:"country_id"`
+	StateID    string `form:"state_id" json:"state_id" xml:"state_id"`
+	Cep        string `form:"cep" json:"cep" xml:"cep"`
+}
+
+// AddressDTOResponseBody is used to define fields on response body types.
+type AddressDTOResponseBody struct {
+	Address    *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	Complement *string `form:"complement,omitempty" json:"complement,omitempty" xml:"complement,omitempty"`
+	City       *string `form:"city,omitempty" json:"city,omitempty" xml:"city,omitempty"`
+	CountryID  *string `form:"country_id,omitempty" json:"country_id,omitempty" xml:"country_id,omitempty"`
+	StateID    *string `form:"state_id,omitempty" json:"state_id,omitempty" xml:"state_id,omitempty"`
+	Cep        *string `form:"cep,omitempty" json:"cep,omitempty" xml:"cep,omitempty"`
+}
+
 // NewCreateActorRequestBody builds the HTTP request body from the payload of
 // the "create_actor" endpoint of the "catalog" service.
 func NewCreateActorRequestBody(p *catalog.CreateActorDTO) *CreateActorRequestBody {
@@ -340,6 +401,22 @@ func NewCreateBookRequestBody(p *catalog.CreateBookDTO) *CreateBookRequestBody {
 func NewCreateCategoryRequestBody(p *catalog.CreateCategoryDTO) *CreateCategoryRequestBody {
 	body := &CreateCategoryRequestBody{
 		Name: p.Name,
+	}
+	return body
+}
+
+// NewCreateCustomerRequestBody builds the HTTP request body from the payload
+// of the "create_customer" endpoint of the "catalog" service.
+func NewCreateCustomerRequestBody(p *catalog.CreateCustomerDTO) *CreateCustomerRequestBody {
+	body := &CreateCustomerRequestBody{
+		FirstName: p.FirstName,
+		LastName:  p.LastName,
+		Email:     p.Email,
+		Document:  p.Document,
+		Phone:     p.Phone,
+	}
+	if p.Address != nil {
+		body.Address = marshalCatalogAddressDTOToAddressDTORequestBody(p.Address)
 	}
 	return body
 }
@@ -551,6 +628,37 @@ func NewShowCategoryCategoryDTOOK(body *ShowCategoryResponseBody) *catalog.Categ
 // NewShowCategoryNotFound builds a catalog service show_category endpoint
 // not_found error.
 func NewShowCategoryNotFound(body *ShowCategoryNotFoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewCreateCustomerCustomerDTOCreated builds a "catalog" service
+// "create_customer" endpoint result from a HTTP "Created" response.
+func NewCreateCustomerCustomerDTOCreated(body *CreateCustomerResponseBody) *catalog.CustomerDTO {
+	v := &catalog.CustomerDTO{
+		ID:        *body.ID,
+		FirstName: *body.FirstName,
+		LastName:  *body.LastName,
+		Email:     *body.Email,
+		Document:  *body.Document,
+		Phone:     *body.Phone,
+	}
+	v.Address = unmarshalAddressDTOResponseBodyToCatalogAddressDTO(body.Address)
+
+	return v
+}
+
+// NewCreateCustomerInvalidFields builds a catalog service create_customer
+// endpoint invalid_fields error.
+func NewCreateCustomerInvalidFields(body *CreateCustomerInvalidFieldsResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -795,6 +903,41 @@ func ValidateShowCategoryResponseBody(body *ShowCategoryResponseBody) (err error
 	return
 }
 
+// ValidateCreateCustomerResponseBody runs the validations defined on
+// create_customer_response_body
+func ValidateCreateCustomerResponseBody(body *CreateCustomerResponseBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.FirstName == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("first_name", "body"))
+	}
+	if body.LastName == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("last_name", "body"))
+	}
+	if body.Email == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("email", "body"))
+	}
+	if body.Document == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("document", "body"))
+	}
+	if body.Address == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("address", "body"))
+	}
+	if body.Phone == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("phone", "body"))
+	}
+	if body.Email != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.email", *body.Email, goa.FormatEmail))
+	}
+	if body.Address != nil {
+		if err2 := ValidateAddressDTOResponseBody(body.Address); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
 // ValidateCreateCountryResponseBody runs the validations defined on
 // create_country_response_body
 func ValidateCreateCountryResponseBody(body *CreateCountryResponseBody) (err error) {
@@ -966,6 +1109,30 @@ func ValidateShowCategoryNotFoundResponseBody(body *ShowCategoryNotFoundResponse
 	return
 }
 
+// ValidateCreateCustomerInvalidFieldsResponseBody runs the validations defined
+// on create_customer_invalid_fields_response_body
+func ValidateCreateCustomerInvalidFieldsResponseBody(body *CreateCustomerInvalidFieldsResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
 // ValidateCreateCountryInvalidFieldsResponseBody runs the validations defined
 // on create_country_invalid_fields_response_body
 func ValidateCreateCountryInvalidFieldsResponseBody(body *CreateCountryInvalidFieldsResponseBody) (err error) {
@@ -1057,6 +1224,30 @@ func ValidateBookDTOResponse(body *BookDTOResponse) (err error) {
 		if *body.Pages < 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.pages", *body.Pages, 100, true))
 		}
+	}
+	return
+}
+
+// ValidateAddressDTOResponseBody runs the validations defined on
+// AddressDTOResponseBody
+func ValidateAddressDTOResponseBody(body *AddressDTOResponseBody) (err error) {
+	if body.Address == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("address", "body"))
+	}
+	if body.Complement == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("complement", "body"))
+	}
+	if body.City == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("city", "body"))
+	}
+	if body.CountryID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country_id", "body"))
+	}
+	if body.StateID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("state_id", "body"))
+	}
+	if body.Cep == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("cep", "body"))
 	}
 	return
 }

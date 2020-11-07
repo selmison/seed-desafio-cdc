@@ -97,6 +97,18 @@ func MountShowCategoryHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/categories/{id}", f)
 }
 
+// MountCreateCustomerHandler configures the mux to serve the "catalog" service
+// "create_customer" endpoint.
+func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/customers", f)
+}
+
 // MountCreateCountryHandler configures the mux to serve the "catalog" service
 // "create_country" endpoint.
 func MountCreateCountryHandler(mux goahttp.Muxer, h http.Handler) {

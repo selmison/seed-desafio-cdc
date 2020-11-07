@@ -22,12 +22,13 @@ type Client struct {
 	ShowBookEndpoint       endpoint.Endpoint
 	CreateCategoryEndpoint endpoint.Endpoint
 	ShowCategoryEndpoint   endpoint.Endpoint
+	CreateCustomerEndpoint endpoint.Endpoint
 	CreateCountryEndpoint  endpoint.Endpoint
 	CreateStateEndpoint    endpoint.Endpoint
 }
 
 // NewClient initializes a "catalog" service client given the endpoints.
-func NewClient(createActor, showActor, createBook, listBooks, showBook, createCategory, showCategory, createCountry, createState endpoint.Endpoint) *Client {
+func NewClient(createActor, showActor, createBook, listBooks, showBook, createCategory, showCategory, createCustomer, createCountry, createState endpoint.Endpoint) *Client {
 	return &Client{
 		CreateActorEndpoint:    createActor,
 		ShowActorEndpoint:      showActor,
@@ -36,6 +37,7 @@ func NewClient(createActor, showActor, createBook, listBooks, showBook, createCa
 		ShowBookEndpoint:       showBook,
 		CreateCategoryEndpoint: createCategory,
 		ShowCategoryEndpoint:   showCategory,
+		CreateCustomerEndpoint: createCustomer,
 		CreateCountryEndpoint:  createCountry,
 		CreateStateEndpoint:    createState,
 	}
@@ -109,6 +111,16 @@ func (c *Client) ShowCategory(ctx context.Context, p *ShowByIDDTO) (res *Categor
 		return
 	}
 	return ires.(*CategoryDTO), nil
+}
+
+// CreateCustomer calls the "create_customer" endpoint of the "catalog" service.
+func (c *Client) CreateCustomer(ctx context.Context, p *CreateCustomerDTO) (res *CustomerDTO, err error) {
+	var ires interface{}
+	ires, err = c.CreateCustomerEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CustomerDTO), nil
 }
 
 // CreateCountry calls the "create_country" endpoint of the "catalog" service.

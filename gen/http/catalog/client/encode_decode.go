@@ -590,6 +590,94 @@ func DecodeShowCategoryResponse(decoder func(*http.Response) goahttp.Decoder, re
 	}
 }
 
+// BuildCreateCustomerRequest instantiates a HTTP request object with method
+// and path set to call the "catalog" service "create_customer" endpoint
+func (c *Client) BuildCreateCustomerRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateCustomerCatalogPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "create_customer", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateCustomerRequest returns an encoder for requests sent to the
+// catalog create_customer server.
+func EncodeCreateCustomerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.CreateCustomerDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "create_customer", "*catalog.CreateCustomerDTO", v)
+		}
+		body := NewCreateCustomerRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "create_customer", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreateCustomerResponse returns a decoder for responses returned by the
+// catalog create_customer endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeCreateCustomerResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreateCustomerResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_customer", err)
+			}
+			err = ValidateCreateCustomerResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_customer", err)
+			}
+			res := NewCreateCustomerCustomerDTOCreated(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateCustomerInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_customer", err)
+			}
+			err = ValidateCreateCustomerInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_customer", err)
+			}
+			return nil, NewCreateCustomerInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "create_customer", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildCreateCountryRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "create_country" endpoint
 func (c *Client) BuildCreateCountryRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -786,6 +874,51 @@ func unmarshalBookDTOResponseToCatalogBookDTO(v *BookDTOResponse) *catalog.BookD
 	res.ActorIds = make([]string, len(v.ActorIds))
 	for i, val := range v.ActorIds {
 		res.ActorIds[i] = val
+	}
+
+	return res
+}
+
+// marshalCatalogAddressDTOToAddressDTORequestBody builds a value of type
+// *AddressDTORequestBody from a value of type *catalog.AddressDTO.
+func marshalCatalogAddressDTOToAddressDTORequestBody(v *catalog.AddressDTO) *AddressDTORequestBody {
+	res := &AddressDTORequestBody{
+		Address:    v.Address,
+		Complement: v.Complement,
+		City:       v.City,
+		CountryID:  v.CountryID,
+		StateID:    v.StateID,
+		Cep:        v.Cep,
+	}
+
+	return res
+}
+
+// marshalAddressDTORequestBodyToCatalogAddressDTO builds a value of type
+// *catalog.AddressDTO from a value of type *AddressDTORequestBody.
+func marshalAddressDTORequestBodyToCatalogAddressDTO(v *AddressDTORequestBody) *catalog.AddressDTO {
+	res := &catalog.AddressDTO{
+		Address:    v.Address,
+		Complement: v.Complement,
+		City:       v.City,
+		CountryID:  v.CountryID,
+		StateID:    v.StateID,
+		Cep:        v.Cep,
+	}
+
+	return res
+}
+
+// unmarshalAddressDTOResponseBodyToCatalogAddressDTO builds a value of type
+// *catalog.AddressDTO from a value of type *AddressDTOResponseBody.
+func unmarshalAddressDTOResponseBodyToCatalogAddressDTO(v *AddressDTOResponseBody) *catalog.AddressDTO {
+	res := &catalog.AddressDTO{
+		Address:    *v.Address,
+		Complement: *v.Complement,
+		City:       *v.City,
+		CountryID:  *v.CountryID,
+		StateID:    *v.StateID,
+		Cep:        *v.Cep,
 	}
 
 	return res

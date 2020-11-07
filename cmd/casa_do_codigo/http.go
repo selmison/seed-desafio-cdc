@@ -52,6 +52,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 		catalogShowBookHandler       *kitHttp.Server
 		catalogCreateCategoryHandler *kitHttp.Server
 		catalogShowCategoryHandler   *kitHttp.Server
+		catalogCreateCustomerHandler *kitHttp.Server
 		catalogCreateCountryHandler  *kitHttp.Server
 		catalogCreateStateHandler    *kitHttp.Server
 		catalogServer                *catalogSvr.Server
@@ -99,6 +100,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeShowCategoryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCategoryError(enc, nil)),
 		)
+		catalogCreateCustomerHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCustomer),
+			catalogKitSvr.DecodeCreateCustomerRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCustomerResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCustomerError(enc, nil)),
+		)
 		catalogCreateCountryHandler = kitHttp.NewServer(
 			endpoint.Endpoint(catalogEndpoints.CreateCountry),
 			catalogKitSvr.DecodeCreateCountryRequest(mux, dec),
@@ -122,6 +129,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	catalogKitSvr.MountShowBookHandler(mux, catalogShowBookHandler)
 	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
 	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
+	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
 	catalogKitSvr.MountCreateCountryHandler(mux, catalogCreateCountryHandler)
 	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
 

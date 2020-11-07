@@ -75,6 +75,16 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("create_customer", func() {
+		Payload(CreateCustomerDTO)
+		Result(CustomerDTO)
+		HTTP(func() {
+			POST("/customers")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 	Method("create_country", func() {
 		Payload(CreateCountryDTO)
 		Result(CountryDTO)
