@@ -36,10 +36,32 @@ type CreateBookRequestBody struct {
 	ActorIds    []string `form:"actor_ids,omitempty" json:"actor_ids,omitempty" xml:"actor_ids,omitempty"`
 }
 
+// CreateCartRequestBody is the type of the "catalog" service "create_cart"
+// endpoint HTTP request body.
+type CreateCartRequestBody struct {
+	Total      *float32              `form:"total,omitempty" json:"total,omitempty" xml:"total,omitempty"`
+	Items      []*ItemDTORequestBody `form:"items,omitempty" json:"items,omitempty" xml:"items,omitempty"`
+	CustomerID *string               `form:"customer_id,omitempty" json:"customer_id,omitempty" xml:"customer_id,omitempty"`
+}
+
 // CreateCategoryRequestBody is the type of the "catalog" service
 // "create_category" endpoint HTTP request body.
 type CreateCategoryRequestBody struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// CreateCountryRequestBody is the type of the "catalog" service
+// "create_country" endpoint HTTP request body.
+type CreateCountryRequestBody struct {
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// CreateCouponRequestBody is the type of the "catalog" service "create_coupon"
+// endpoint HTTP request body.
+type CreateCouponRequestBody struct {
+	Code     *string  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	Discount *float32 `form:"discount,omitempty" json:"discount,omitempty" xml:"discount,omitempty"`
+	Validity *string  `form:"validity,omitempty" json:"validity,omitempty" xml:"validity,omitempty"`
 }
 
 // CreateCustomerRequestBody is the type of the "catalog" service
@@ -52,20 +74,6 @@ type CreateCustomerRequestBody struct {
 	Address   *AddressDTORequestBody `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
 	Phone     *string                `form:"phone,omitempty" json:"phone,omitempty" xml:"phone,omitempty"`
 	CartIds   []string               `form:"cart_ids,omitempty" json:"cart_ids,omitempty" xml:"cart_ids,omitempty"`
-}
-
-// CreateCartRequestBody is the type of the "catalog" service "create_cart"
-// endpoint HTTP request body.
-type CreateCartRequestBody struct {
-	Total      *float32              `form:"total,omitempty" json:"total,omitempty" xml:"total,omitempty"`
-	Items      []*ItemDTORequestBody `form:"items,omitempty" json:"items,omitempty" xml:"items,omitempty"`
-	CustomerID *string               `form:"customer_id,omitempty" json:"customer_id,omitempty" xml:"customer_id,omitempty"`
-}
-
-// CreateCountryRequestBody is the type of the "catalog" service
-// "create_country" endpoint HTTP request body.
-type CreateCountryRequestBody struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 }
 
 // CreateStateRequestBody is the type of the "catalog" service "create_state"
@@ -129,6 +137,15 @@ type ShowBookResponseBody struct {
 	ActorIds    []string `form:"actor_ids" json:"actor_ids" xml:"actor_ids"`
 }
 
+// CreateCartResponseBody is the type of the "catalog" service "create_cart"
+// endpoint HTTP response body.
+type CreateCartResponseBody struct {
+	ID         string                 `form:"id" json:"id" xml:"id"`
+	Total      float32                `form:"total" json:"total" xml:"total"`
+	Items      []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
+	CustomerID string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
+}
+
 // CreateCategoryResponseBody is the type of the "catalog" service
 // "create_category" endpoint HTTP response body.
 type CreateCategoryResponseBody struct {
@@ -143,6 +160,23 @@ type ShowCategoryResponseBody struct {
 	Name string `form:"name" json:"name" xml:"name"`
 }
 
+// CreateCountryResponseBody is the type of the "catalog" service
+// "create_country" endpoint HTTP response body.
+type CreateCountryResponseBody struct {
+	ID       string  `form:"id" json:"id" xml:"id"`
+	Name     string  `form:"name" json:"name" xml:"name"`
+	StateIds *string `form:"state_ids,omitempty" json:"state_ids,omitempty" xml:"state_ids,omitempty"`
+}
+
+// CreateCouponResponseBody is the type of the "catalog" service
+// "create_coupon" endpoint HTTP response body.
+type CreateCouponResponseBody struct {
+	ID       string  `form:"id" json:"id" xml:"id"`
+	Code     string  `form:"code" json:"code" xml:"code"`
+	Discount float32 `form:"discount" json:"discount" xml:"discount"`
+	Validity string  `form:"validity" json:"validity" xml:"validity"`
+}
+
 // CreateCustomerResponseBody is the type of the "catalog" service
 // "create_customer" endpoint HTTP response body.
 type CreateCustomerResponseBody struct {
@@ -154,23 +188,6 @@ type CreateCustomerResponseBody struct {
 	Address   *AddressDTOResponseBody `form:"address" json:"address" xml:"address"`
 	Phone     string                  `form:"phone" json:"phone" xml:"phone"`
 	CartIds   []string                `form:"cart_ids,omitempty" json:"cart_ids,omitempty" xml:"cart_ids,omitempty"`
-}
-
-// CreateCartResponseBody is the type of the "catalog" service "create_cart"
-// endpoint HTTP response body.
-type CreateCartResponseBody struct {
-	ID         string                 `form:"id" json:"id" xml:"id"`
-	Total      float32                `form:"total" json:"total" xml:"total"`
-	Items      []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
-	CustomerID string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
-}
-
-// CreateCountryResponseBody is the type of the "catalog" service
-// "create_country" endpoint HTTP response body.
-type CreateCountryResponseBody struct {
-	ID       string  `form:"id" json:"id" xml:"id"`
-	Name     string  `form:"name" json:"name" xml:"name"`
-	StateIds *string `form:"state_ids,omitempty" json:"state_ids,omitempty" xml:"state_ids,omitempty"`
 }
 
 // CreateStateResponseBody is the type of the "catalog" service "create_state"
@@ -253,6 +270,24 @@ type ShowBookNotFoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// CreateCartInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_cart" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCartInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // CreateCategoryInvalidFieldsResponseBody is the type of the "catalog" service
 // "create_category" endpoint HTTP response body for the "invalid_fields" error.
 type CreateCategoryInvalidFieldsResponseBody struct {
@@ -289,45 +324,45 @@ type ShowCategoryNotFoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// CreateCustomerInvalidFieldsResponseBody is the type of the "catalog" service
-// "create_customer" endpoint HTTP response body for the "invalid_fields" error.
-type CreateCustomerInvalidFieldsResponseBody struct {
-	// Name is the name of this class of errors.
-	Name string `form:"name" json:"name" xml:"name"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID string `form:"id" json:"id" xml:"id"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message string `form:"message" json:"message" xml:"message"`
-	// Is the error temporary?
-	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
-	// Is the error a timeout?
-	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
-	// Is the error a server-side fault?
-	Fault bool `form:"fault" json:"fault" xml:"fault"`
-}
-
-// CreateCartInvalidFieldsResponseBody is the type of the "catalog" service
-// "create_cart" endpoint HTTP response body for the "invalid_fields" error.
-type CreateCartInvalidFieldsResponseBody struct {
-	// Name is the name of this class of errors.
-	Name string `form:"name" json:"name" xml:"name"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID string `form:"id" json:"id" xml:"id"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message string `form:"message" json:"message" xml:"message"`
-	// Is the error temporary?
-	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
-	// Is the error a timeout?
-	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
-	// Is the error a server-side fault?
-	Fault bool `form:"fault" json:"fault" xml:"fault"`
-}
-
 // CreateCountryInvalidFieldsResponseBody is the type of the "catalog" service
 // "create_country" endpoint HTTP response body for the "invalid_fields" error.
 type CreateCountryInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateCouponInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_coupon" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCouponInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateCustomerInvalidFieldsResponseBody is the type of the "catalog" service
+// "create_customer" endpoint HTTP response body for the "invalid_fields" error.
+type CreateCustomerInvalidFieldsResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -375,6 +410,12 @@ type BookDTOResponse struct {
 	ActorIds    []string `form:"actor_ids" json:"actor_ids" xml:"actor_ids"`
 }
 
+// ItemDTOResponseBody is used to define fields on response body types.
+type ItemDTOResponseBody struct {
+	BookID string `form:"book_id" json:"book_id" xml:"book_id"`
+	Amount int32  `form:"amount" json:"amount" xml:"amount"`
+}
+
 // AddressDTOResponseBody is used to define fields on response body types.
 type AddressDTOResponseBody struct {
 	Address    string `form:"address" json:"address" xml:"address"`
@@ -385,10 +426,10 @@ type AddressDTOResponseBody struct {
 	Cep        string `form:"cep" json:"cep" xml:"cep"`
 }
 
-// ItemDTOResponseBody is used to define fields on response body types.
-type ItemDTOResponseBody struct {
-	BookID string `form:"book_id" json:"book_id" xml:"book_id"`
-	Amount int32  `form:"amount" json:"amount" xml:"amount"`
+// ItemDTORequestBody is used to define fields on request body types.
+type ItemDTORequestBody struct {
+	BookID *string `form:"book_id,omitempty" json:"book_id,omitempty" xml:"book_id,omitempty"`
+	Amount *int32  `form:"amount,omitempty" json:"amount,omitempty" xml:"amount,omitempty"`
 }
 
 // AddressDTORequestBody is used to define fields on request body types.
@@ -399,12 +440,6 @@ type AddressDTORequestBody struct {
 	CountryID  *string `form:"country_id,omitempty" json:"country_id,omitempty" xml:"country_id,omitempty"`
 	StateID    *string `form:"state_id,omitempty" json:"state_id,omitempty" xml:"state_id,omitempty"`
 	Cep        *string `form:"cep,omitempty" json:"cep,omitempty" xml:"cep,omitempty"`
-}
-
-// ItemDTORequestBody is used to define fields on request body types.
-type ItemDTORequestBody struct {
-	BookID *string `form:"book_id,omitempty" json:"book_id,omitempty" xml:"book_id,omitempty"`
-	Amount *int32  `form:"amount,omitempty" json:"amount,omitempty" xml:"amount,omitempty"`
 }
 
 // NewCreateActorResponseBody builds the HTTP response body from the result of
@@ -499,6 +534,23 @@ func NewShowBookResponseBody(res *catalog.BookDTO) *ShowBookResponseBody {
 	return body
 }
 
+// NewCreateCartResponseBody builds the HTTP response body from the result of
+// the "create_cart" endpoint of the "catalog" service.
+func NewCreateCartResponseBody(res *catalog.CartDTO) *CreateCartResponseBody {
+	body := &CreateCartResponseBody{
+		ID:         res.ID,
+		Total:      res.Total,
+		CustomerID: res.CustomerID,
+	}
+	if res.Items != nil {
+		body.Items = make([]*ItemDTOResponseBody, len(res.Items))
+		for i, val := range res.Items {
+			body.Items[i] = marshalCatalogItemDTOToItemDTOResponseBody(val)
+		}
+	}
+	return body
+}
+
 // NewCreateCategoryResponseBody builds the HTTP response body from the result
 // of the "create_category" endpoint of the "catalog" service.
 func NewCreateCategoryResponseBody(res *catalog.CategoryDTO) *CreateCategoryResponseBody {
@@ -515,6 +567,29 @@ func NewShowCategoryResponseBody(res *catalog.CategoryDTO) *ShowCategoryResponse
 	body := &ShowCategoryResponseBody{
 		ID:   res.ID,
 		Name: res.Name,
+	}
+	return body
+}
+
+// NewCreateCountryResponseBody builds the HTTP response body from the result
+// of the "create_country" endpoint of the "catalog" service.
+func NewCreateCountryResponseBody(res *catalog.CountryDTO) *CreateCountryResponseBody {
+	body := &CreateCountryResponseBody{
+		ID:       res.ID,
+		Name:     res.Name,
+		StateIds: res.StateIds,
+	}
+	return body
+}
+
+// NewCreateCouponResponseBody builds the HTTP response body from the result of
+// the "create_coupon" endpoint of the "catalog" service.
+func NewCreateCouponResponseBody(res *catalog.CouponDTO) *CreateCouponResponseBody {
+	body := &CreateCouponResponseBody{
+		ID:       res.ID,
+		Code:     res.Code,
+		Discount: res.Discount,
+		Validity: res.Validity,
 	}
 	return body
 }
@@ -538,34 +613,6 @@ func NewCreateCustomerResponseBody(res *catalog.CustomerDTO) *CreateCustomerResp
 		for i, val := range res.CartIds {
 			body.CartIds[i] = val
 		}
-	}
-	return body
-}
-
-// NewCreateCartResponseBody builds the HTTP response body from the result of
-// the "create_cart" endpoint of the "catalog" service.
-func NewCreateCartResponseBody(res *catalog.CartDTO) *CreateCartResponseBody {
-	body := &CreateCartResponseBody{
-		ID:         res.ID,
-		Total:      res.Total,
-		CustomerID: res.CustomerID,
-	}
-	if res.Items != nil {
-		body.Items = make([]*ItemDTOResponseBody, len(res.Items))
-		for i, val := range res.Items {
-			body.Items[i] = marshalCatalogItemDTOToItemDTOResponseBody(val)
-		}
-	}
-	return body
-}
-
-// NewCreateCountryResponseBody builds the HTTP response body from the result
-// of the "create_country" endpoint of the "catalog" service.
-func NewCreateCountryResponseBody(res *catalog.CountryDTO) *CreateCountryResponseBody {
-	body := &CreateCountryResponseBody{
-		ID:       res.ID,
-		Name:     res.Name,
-		StateIds: res.StateIds,
 	}
 	return body
 }
@@ -637,6 +684,20 @@ func NewShowBookNotFoundResponseBody(res *goa.ServiceError) *ShowBookNotFoundRes
 	return body
 }
 
+// NewCreateCartInvalidFieldsResponseBody builds the HTTP response body from
+// the result of the "create_cart" endpoint of the "catalog" service.
+func NewCreateCartInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCartInvalidFieldsResponseBody {
+	body := &CreateCartInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewCreateCategoryInvalidFieldsResponseBody builds the HTTP response body
 // from the result of the "create_category" endpoint of the "catalog" service.
 func NewCreateCategoryInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCategoryInvalidFieldsResponseBody {
@@ -665,38 +726,38 @@ func NewShowCategoryNotFoundResponseBody(res *goa.ServiceError) *ShowCategoryNot
 	return body
 }
 
-// NewCreateCustomerInvalidFieldsResponseBody builds the HTTP response body
-// from the result of the "create_customer" endpoint of the "catalog" service.
-func NewCreateCustomerInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCustomerInvalidFieldsResponseBody {
-	body := &CreateCustomerInvalidFieldsResponseBody{
-		Name:      res.Name,
-		ID:        res.ID,
-		Message:   res.Message,
-		Temporary: res.Temporary,
-		Timeout:   res.Timeout,
-		Fault:     res.Fault,
-	}
-	return body
-}
-
-// NewCreateCartInvalidFieldsResponseBody builds the HTTP response body from
-// the result of the "create_cart" endpoint of the "catalog" service.
-func NewCreateCartInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCartInvalidFieldsResponseBody {
-	body := &CreateCartInvalidFieldsResponseBody{
-		Name:      res.Name,
-		ID:        res.ID,
-		Message:   res.Message,
-		Temporary: res.Temporary,
-		Timeout:   res.Timeout,
-		Fault:     res.Fault,
-	}
-	return body
-}
-
 // NewCreateCountryInvalidFieldsResponseBody builds the HTTP response body from
 // the result of the "create_country" endpoint of the "catalog" service.
 func NewCreateCountryInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCountryInvalidFieldsResponseBody {
 	body := &CreateCountryInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateCouponInvalidFieldsResponseBody builds the HTTP response body from
+// the result of the "create_coupon" endpoint of the "catalog" service.
+func NewCreateCouponInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCouponInvalidFieldsResponseBody {
+	body := &CreateCouponInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateCustomerInvalidFieldsResponseBody builds the HTTP response body
+// from the result of the "create_customer" endpoint of the "catalog" service.
+func NewCreateCustomerInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCustomerInvalidFieldsResponseBody {
+	body := &CreateCustomerInvalidFieldsResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -771,6 +832,20 @@ func NewShowBookShowByIDDTO(id string) *catalog.ShowByIDDTO {
 	return v
 }
 
+// NewCreateCartDTO builds a catalog service create_cart endpoint payload.
+func NewCreateCartDTO(body *CreateCartRequestBody) *catalog.CreateCartDTO {
+	v := &catalog.CreateCartDTO{
+		Total:      *body.Total,
+		CustomerID: *body.CustomerID,
+	}
+	v.Items = make([]*catalog.ItemDTO, len(body.Items))
+	for i, val := range body.Items {
+		v.Items[i] = unmarshalItemDTORequestBodyToCatalogItemDTO(val)
+	}
+
+	return v
+}
+
 // NewCreateCategoryDTO builds a catalog service create_category endpoint
 // payload.
 func NewCreateCategoryDTO(body *CreateCategoryRequestBody) *catalog.CreateCategoryDTO {
@@ -786,6 +861,26 @@ func NewCreateCategoryDTO(body *CreateCategoryRequestBody) *catalog.CreateCatego
 func NewShowCategoryShowByIDDTO(id string) *catalog.ShowByIDDTO {
 	v := &catalog.ShowByIDDTO{}
 	v.ID = id
+
+	return v
+}
+
+// NewCreateCountryDTO builds a catalog service create_country endpoint payload.
+func NewCreateCountryDTO(body *CreateCountryRequestBody) *catalog.CreateCountryDTO {
+	v := &catalog.CreateCountryDTO{
+		Name: *body.Name,
+	}
+
+	return v
+}
+
+// NewCreateCouponDTO builds a catalog service create_coupon endpoint payload.
+func NewCreateCouponDTO(body *CreateCouponRequestBody) *catalog.CreateCouponDTO {
+	v := &catalog.CreateCouponDTO{
+		Code:     *body.Code,
+		Discount: *body.Discount,
+		Validity: *body.Validity,
+	}
 
 	return v
 }
@@ -806,29 +901,6 @@ func NewCreateCustomerDTO(body *CreateCustomerRequestBody) *catalog.CreateCustom
 		for i, val := range body.CartIds {
 			v.CartIds[i] = val
 		}
-	}
-
-	return v
-}
-
-// NewCreateCartDTO builds a catalog service create_cart endpoint payload.
-func NewCreateCartDTO(body *CreateCartRequestBody) *catalog.CreateCartDTO {
-	v := &catalog.CreateCartDTO{
-		Total:      *body.Total,
-		CustomerID: *body.CustomerID,
-	}
-	v.Items = make([]*catalog.ItemDTO, len(body.Items))
-	for i, val := range body.Items {
-		v.Items[i] = unmarshalItemDTORequestBodyToCatalogItemDTO(val)
-	}
-
-	return v
-}
-
-// NewCreateCountryDTO builds a catalog service create_country endpoint payload.
-func NewCreateCountryDTO(body *CreateCountryRequestBody) *catalog.CreateCountryDTO {
-	v := &catalog.CreateCountryDTO{
-		Name: *body.Name,
 	}
 
 	return v
@@ -912,11 +984,62 @@ func ValidateCreateBookRequestBody(body *CreateBookRequestBody) (err error) {
 	return
 }
 
+// ValidateCreateCartRequestBody runs the validations defined on
+// create_cart_request_body
+func ValidateCreateCartRequestBody(body *CreateCartRequestBody) (err error) {
+	if body.Total == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("total", "body"))
+	}
+	if body.Items == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("items", "body"))
+	}
+	if body.CustomerID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("customer_id", "body"))
+	}
+	for _, e := range body.Items {
+		if e != nil {
+			if err2 := ValidateItemDTORequestBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateCreateCategoryRequestBody runs the validations defined on
 // create_category_request_body
 func ValidateCreateCategoryRequestBody(body *CreateCategoryRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateCreateCountryRequestBody runs the validations defined on
+// create_country_request_body
+func ValidateCreateCountryRequestBody(body *CreateCountryRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateCreateCouponRequestBody runs the validations defined on
+// create_coupon_request_body
+func ValidateCreateCouponRequestBody(body *CreateCouponRequestBody) (err error) {
+	if body.Code == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("code", "body"))
+	}
+	if body.Discount == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("discount", "body"))
+	}
+	if body.Validity == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("validity", "body"))
+	}
+	if body.Discount != nil {
+		if *body.Discount < 0 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.discount", *body.Discount, 0, true))
+		}
 	}
 	return
 }
@@ -953,37 +1076,6 @@ func ValidateCreateCustomerRequestBody(body *CreateCustomerRequestBody) (err err
 	return
 }
 
-// ValidateCreateCartRequestBody runs the validations defined on
-// create_cart_request_body
-func ValidateCreateCartRequestBody(body *CreateCartRequestBody) (err error) {
-	if body.Total == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("total", "body"))
-	}
-	if body.Items == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("items", "body"))
-	}
-	if body.CustomerID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("customer_id", "body"))
-	}
-	for _, e := range body.Items {
-		if e != nil {
-			if err2 := ValidateItemDTORequestBody(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// ValidateCreateCountryRequestBody runs the validations defined on
-// create_country_request_body
-func ValidateCreateCountryRequestBody(body *CreateCountryRequestBody) (err error) {
-	if body.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
-	}
-	return
-}
-
 // ValidateCreateStateRequestBody runs the validations defined on
 // create_state_request_body
 func ValidateCreateStateRequestBody(body *CreateStateRequestBody) (err error) {
@@ -992,6 +1084,17 @@ func ValidateCreateStateRequestBody(body *CreateStateRequestBody) (err error) {
 	}
 	if body.CountryID == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("country_id", "body"))
+	}
+	return
+}
+
+// ValidateItemDTORequestBody runs the validations defined on ItemDTORequestBody
+func ValidateItemDTORequestBody(body *ItemDTORequestBody) (err error) {
+	if body.BookID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("book_id", "body"))
+	}
+	if body.Amount == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("amount", "body"))
 	}
 	return
 }
@@ -1016,17 +1119,6 @@ func ValidateAddressDTORequestBody(body *AddressDTORequestBody) (err error) {
 	}
 	if body.Cep == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("cep", "body"))
-	}
-	return
-}
-
-// ValidateItemDTORequestBody runs the validations defined on ItemDTORequestBody
-func ValidateItemDTORequestBody(body *ItemDTORequestBody) (err error) {
-	if body.BookID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("book_id", "body"))
-	}
-	if body.Amount == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("amount", "body"))
 	}
 	return
 }

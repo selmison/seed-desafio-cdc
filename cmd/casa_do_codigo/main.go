@@ -59,6 +59,7 @@ func main() {
 			&catalog.Cart{},
 			&catalog.Category{},
 			&catalog.Country{},
+			&catalog.Coupon{},
 			&catalog.Customer{},
 			&catalog.State{},
 		); err != nil {

@@ -50,11 +50,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 		catalogCreateBookHandler     *kitHttp.Server
 		catalogListBooksHandler      *kitHttp.Server
 		catalogShowBookHandler       *kitHttp.Server
+		catalogCreateCartHandler     *kitHttp.Server
 		catalogCreateCategoryHandler *kitHttp.Server
 		catalogShowCategoryHandler   *kitHttp.Server
-		catalogCreateCustomerHandler *kitHttp.Server
-		catalogCreateCartHandler     *kitHttp.Server
 		catalogCreateCountryHandler  *kitHttp.Server
+		catalogCreateCouponHandler   *kitHttp.Server
+		catalogCreateCustomerHandler *kitHttp.Server
 		catalogCreateStateHandler    *kitHttp.Server
 		catalogServer                *catalogSvr.Server
 	)
@@ -89,6 +90,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeShowBookResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowBookError(enc, nil)),
 		)
+		catalogCreateCartHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCart),
+			catalogKitSvr.DecodeCreateCartRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCartResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCartError(enc, nil)),
+		)
 		catalogCreateCategoryHandler = kitHttp.NewServer(
 			endpoint.Endpoint(catalogEndpoints.CreateCategory),
 			catalogKitSvr.DecodeCreateCategoryRequest(mux, dec),
@@ -101,23 +108,23 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeShowCategoryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCategoryError(enc, nil)),
 		)
-		catalogCreateCustomerHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCustomer),
-			catalogKitSvr.DecodeCreateCustomerRequest(mux, dec),
-			catalogKitSvr.EncodeCreateCustomerResponse(enc),
-			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCustomerError(enc, nil)),
-		)
-		catalogCreateCartHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCart),
-			catalogKitSvr.DecodeCreateCartRequest(mux, dec),
-			catalogKitSvr.EncodeCreateCartResponse(enc),
-			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCartError(enc, nil)),
-		)
 		catalogCreateCountryHandler = kitHttp.NewServer(
 			endpoint.Endpoint(catalogEndpoints.CreateCountry),
 			catalogKitSvr.DecodeCreateCountryRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCountryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCountryError(enc, nil)),
+		)
+		catalogCreateCouponHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCoupon),
+			catalogKitSvr.DecodeCreateCouponRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCouponResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCouponError(enc, nil)),
+		)
+		catalogCreateCustomerHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCustomer),
+			catalogKitSvr.DecodeCreateCustomerRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCustomerResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCustomerError(enc, nil)),
 		)
 		catalogCreateStateHandler = kitHttp.NewServer(
 			endpoint.Endpoint(catalogEndpoints.CreateState),
@@ -134,11 +141,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	catalogKitSvr.MountCreateBookHandler(mux, catalogCreateBookHandler)
 	catalogKitSvr.MountListBooksHandler(mux, catalogListBooksHandler)
 	catalogKitSvr.MountShowBookHandler(mux, catalogShowBookHandler)
+	catalogKitSvr.MountCreateCartHandler(mux, catalogCreateCartHandler)
 	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
 	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
-	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
-	catalogKitSvr.MountCreateCartHandler(mux, catalogCreateCartHandler)
 	catalogKitSvr.MountCreateCountryHandler(mux, catalogCreateCountryHandler)
+	catalogKitSvr.MountCreateCouponHandler(mux, catalogCreateCouponHandler)
+	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
 	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted

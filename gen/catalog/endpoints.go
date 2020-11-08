@@ -20,11 +20,12 @@ type Endpoints struct {
 	CreateBook     endpoint.Endpoint
 	ListBooks      endpoint.Endpoint
 	ShowBook       endpoint.Endpoint
+	CreateCart     endpoint.Endpoint
 	CreateCategory endpoint.Endpoint
 	ShowCategory   endpoint.Endpoint
-	CreateCustomer endpoint.Endpoint
-	CreateCart     endpoint.Endpoint
 	CreateCountry  endpoint.Endpoint
+	CreateCoupon   endpoint.Endpoint
+	CreateCustomer endpoint.Endpoint
 	CreateState    endpoint.Endpoint
 }
 
@@ -36,11 +37,12 @@ func NewEndpoints(s Service) *Endpoints {
 		CreateBook:     NewCreateBookEndpoint(s),
 		ListBooks:      NewListBooksEndpoint(s),
 		ShowBook:       NewShowBookEndpoint(s),
+		CreateCart:     NewCreateCartEndpoint(s),
 		CreateCategory: NewCreateCategoryEndpoint(s),
 		ShowCategory:   NewShowCategoryEndpoint(s),
-		CreateCustomer: NewCreateCustomerEndpoint(s),
-		CreateCart:     NewCreateCartEndpoint(s),
 		CreateCountry:  NewCreateCountryEndpoint(s),
+		CreateCoupon:   NewCreateCouponEndpoint(s),
+		CreateCustomer: NewCreateCustomerEndpoint(s),
 		CreateState:    NewCreateStateEndpoint(s),
 	}
 }
@@ -52,11 +54,12 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.CreateBook = m(e.CreateBook)
 	e.ListBooks = m(e.ListBooks)
 	e.ShowBook = m(e.ShowBook)
+	e.CreateCart = m(e.CreateCart)
 	e.CreateCategory = m(e.CreateCategory)
 	e.ShowCategory = m(e.ShowCategory)
-	e.CreateCustomer = m(e.CreateCustomer)
-	e.CreateCart = m(e.CreateCart)
 	e.CreateCountry = m(e.CreateCountry)
+	e.CreateCoupon = m(e.CreateCoupon)
+	e.CreateCustomer = m(e.CreateCustomer)
 	e.CreateState = m(e.CreateState)
 }
 
@@ -104,6 +107,15 @@ func NewShowBookEndpoint(s Service) endpoint.Endpoint {
 	}
 }
 
+// NewCreateCartEndpoint returns an endpoint function that calls the method
+// "create_cart" of service "catalog".
+func NewCreateCartEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCartDTO)
+		return s.CreateCart(ctx, p)
+	}
+}
+
 // NewCreateCategoryEndpoint returns an endpoint function that calls the method
 // "create_category" of service "catalog".
 func NewCreateCategoryEndpoint(s Service) endpoint.Endpoint {
@@ -122,30 +134,30 @@ func NewShowCategoryEndpoint(s Service) endpoint.Endpoint {
 	}
 }
 
-// NewCreateCustomerEndpoint returns an endpoint function that calls the method
-// "create_customer" of service "catalog".
-func NewCreateCustomerEndpoint(s Service) endpoint.Endpoint {
-	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*CreateCustomerDTO)
-		return s.CreateCustomer(ctx, p)
-	}
-}
-
-// NewCreateCartEndpoint returns an endpoint function that calls the method
-// "create_cart" of service "catalog".
-func NewCreateCartEndpoint(s Service) endpoint.Endpoint {
-	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*CreateCartDTO)
-		return s.CreateCart(ctx, p)
-	}
-}
-
 // NewCreateCountryEndpoint returns an endpoint function that calls the method
 // "create_country" of service "catalog".
 func NewCreateCountryEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateCountryDTO)
 		return s.CreateCountry(ctx, p)
+	}
+}
+
+// NewCreateCouponEndpoint returns an endpoint function that calls the method
+// "create_coupon" of service "catalog".
+func NewCreateCouponEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCouponDTO)
+		return s.CreateCoupon(ctx, p)
+	}
+}
+
+// NewCreateCustomerEndpoint returns an endpoint function that calls the method
+// "create_customer" of service "catalog".
+func NewCreateCustomerEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCustomerDTO)
+		return s.CreateCustomer(ctx, p)
 	}
 }
 

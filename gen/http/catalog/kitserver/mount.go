@@ -73,6 +73,18 @@ func MountShowBookHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/books/{id}", f)
 }
 
+// MountCreateCartHandler configures the mux to serve the "catalog" service
+// "create_cart" endpoint.
+func MountCreateCartHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/carts", f)
+}
+
 // MountCreateCategoryHandler configures the mux to serve the "catalog" service
 // "create_category" endpoint.
 func MountCreateCategoryHandler(mux goahttp.Muxer, h http.Handler) {
@@ -97,30 +109,6 @@ func MountShowCategoryHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/categories/{id}", f)
 }
 
-// MountCreateCustomerHandler configures the mux to serve the "catalog" service
-// "create_customer" endpoint.
-func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
-	if !ok {
-		f = func(w http.ResponseWriter, r *http.Request) {
-			h.ServeHTTP(w, r)
-		}
-	}
-	mux.Handle("POST", "/customers", f)
-}
-
-// MountCreateCartHandler configures the mux to serve the "catalog" service
-// "create_cart" endpoint.
-func MountCreateCartHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
-	if !ok {
-		f = func(w http.ResponseWriter, r *http.Request) {
-			h.ServeHTTP(w, r)
-		}
-	}
-	mux.Handle("POST", "/carts", f)
-}
-
 // MountCreateCountryHandler configures the mux to serve the "catalog" service
 // "create_country" endpoint.
 func MountCreateCountryHandler(mux goahttp.Muxer, h http.Handler) {
@@ -131,6 +119,30 @@ func MountCreateCountryHandler(mux goahttp.Muxer, h http.Handler) {
 		}
 	}
 	mux.Handle("POST", "/countries", f)
+}
+
+// MountCreateCouponHandler configures the mux to serve the "catalog" service
+// "create_coupon" endpoint.
+func MountCreateCouponHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/coupons", f)
+}
+
+// MountCreateCustomerHandler configures the mux to serve the "catalog" service
+// "create_customer" endpoint.
+func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/customers", f)
 }
 
 // MountCreateStateHandler configures the mux to serve the "catalog" service

@@ -23,12 +23,16 @@ func ValidationMiddleware(repo *gorm.DB) endpoint.Middleware {
 				if err := CreateActorValidation(repo, dto); err != nil {
 					return nil, err
 				}
+			case *catalogGen.CreateBookDTO:
+				if err := CreateBookValidation(repo, dto); err != nil {
+					return nil, err
+				}
 			case *catalogGen.CreateCategoryDTO:
 				if err := CreateCategoryValidation(repo, dto); err != nil {
 					return nil, err
 				}
-			case *catalogGen.CreateBookDTO:
-				if err := BookValidation(repo, dto); err != nil {
+			case *catalogGen.CreateCouponDTO:
+				if err := CreateCouponValidation(repo, dto); err != nil {
 					return nil, err
 				}
 			}
@@ -57,7 +61,7 @@ func CreateCategoryValidation(repo *gorm.DB, dto *catalogGen.CreateCategoryDTO) 
 	return nil
 }
 
-func BookValidation(repo *gorm.DB, dto *catalogGen.CreateBookDTO) error {
+func CreateBookValidation(repo *gorm.DB, dto *catalogGen.CreateBookDTO) error {
 	if err := fieldShouldBeUnique(repo, "title", strings.TrimSpace(dto.Title), catalog.Book{}); err != nil {
 		return err
 	}
@@ -83,15 +87,43 @@ func BookValidation(repo *gorm.DB, dto *catalogGen.CreateBookDTO) error {
 	return nil
 }
 
+func CreateCouponValidation(repo *gorm.DB, dto *catalogGen.CreateCouponDTO) error {
+	if err := fieldShouldBeUnique(repo, "code", strings.TrimSpace(dto.Code), catalog.Coupon{}); err != nil {
+		return err
+	}
+	if dto.Discount <= 0 {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the '%s' %s", "body.discount", "should be in the future"),
+		}
+	}
+	issue, err := time.Parse(time.RFC3339, dto.Validity)
+	if err != nil {
+		return err
+	}
+	today := time.Now()
+	if today.After(issue) {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the 'body.discount' value %v", coreDomain.ErrIsNotValid),
+		}
+	}
+	return nil
+}
+
 func fieldShouldBeUnique(repo *gorm.DB, fieldName, fieldValue string, result interface{}) error {
 	query := fmt.Sprintf("%s = ?", fieldName)
 	var rows int64
 	switch v := result.(type) {
 	case catalog.Actor:
 		rows = repo.Where(query, fieldValue).First(&v).RowsAffected
+	case catalog.Book:
+		rows = repo.Where(query, fieldValue).First(&v).RowsAffected
 	case catalog.Category:
 		rows = repo.Where(query, fieldValue).First(&v).RowsAffected
-	case catalog.Book:
+	case catalog.Coupon:
 		rows = repo.Where(query, fieldValue).First(&v).RowsAffected
 	default:
 		return fmt.Errorf("uniqueness validation: type %w", coreDomain.ErrIsNotValid)
