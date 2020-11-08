@@ -678,6 +678,94 @@ func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder, 
 	}
 }
 
+// BuildCreateCartRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "create_cart" endpoint
+func (c *Client) BuildCreateCartRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateCartCatalogPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "create_cart", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateCartRequest returns an encoder for requests sent to the catalog
+// create_cart server.
+func EncodeCreateCartRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.CreateCartDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "create_cart", "*catalog.CreateCartDTO", v)
+		}
+		body := NewCreateCartRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "create_cart", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreateCartResponse returns a decoder for responses returned by the
+// catalog create_cart endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+// DecodeCreateCartResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeCreateCartResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreateCartResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_cart", err)
+			}
+			err = ValidateCreateCartResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_cart", err)
+			}
+			res := NewCreateCartCartDTOCreated(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreateCartInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_cart", err)
+			}
+			err = ValidateCreateCartInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_cart", err)
+			}
+			return nil, NewCreateCartInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "create_cart", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildCreateCountryRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "create_country" endpoint
 func (c *Client) BuildCreateCountryRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -919,6 +1007,39 @@ func unmarshalAddressDTOResponseBodyToCatalogAddressDTO(v *AddressDTOResponseBod
 		CountryID:  *v.CountryID,
 		StateID:    *v.StateID,
 		Cep:        *v.Cep,
+	}
+
+	return res
+}
+
+// marshalCatalogItemDTOToItemDTORequestBody builds a value of type
+// *ItemDTORequestBody from a value of type *catalog.ItemDTO.
+func marshalCatalogItemDTOToItemDTORequestBody(v *catalog.ItemDTO) *ItemDTORequestBody {
+	res := &ItemDTORequestBody{
+		BookID: v.BookID,
+		Amount: v.Amount,
+	}
+
+	return res
+}
+
+// marshalItemDTORequestBodyToCatalogItemDTO builds a value of type
+// *catalog.ItemDTO from a value of type *ItemDTORequestBody.
+func marshalItemDTORequestBodyToCatalogItemDTO(v *ItemDTORequestBody) *catalog.ItemDTO {
+	res := &catalog.ItemDTO{
+		BookID: v.BookID,
+		Amount: v.Amount,
+	}
+
+	return res
+}
+
+// unmarshalItemDTOResponseBodyToCatalogItemDTO builds a value of type
+// *catalog.ItemDTO from a value of type *ItemDTOResponseBody.
+func unmarshalItemDTOResponseBodyToCatalogItemDTO(v *ItemDTOResponseBody) *catalog.ItemDTO {
+	res := &catalog.ItemDTO{
+		BookID: *v.BookID,
+		Amount: *v.Amount,
 	}
 
 	return res

@@ -51,6 +51,11 @@ func CreateCustomerCatalogPath() string {
 	return "/customers"
 }
 
+// CreateCartCatalogPath returns the URL path to the catalog service create_cart HTTP endpoint.
+func CreateCartCatalogPath() string {
+	return "/carts"
+}
+
 // CreateCountryCatalogPath returns the URL path to the catalog service create_country HTTP endpoint.
 func CreateCountryCatalogPath() string {
 	return "/countries"

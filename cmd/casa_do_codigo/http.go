@@ -53,6 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 		catalogCreateCategoryHandler *kitHttp.Server
 		catalogShowCategoryHandler   *kitHttp.Server
 		catalogCreateCustomerHandler *kitHttp.Server
+		catalogCreateCartHandler     *kitHttp.Server
 		catalogCreateCountryHandler  *kitHttp.Server
 		catalogCreateStateHandler    *kitHttp.Server
 		catalogServer                *catalogSvr.Server
@@ -106,6 +107,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeCreateCustomerResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCustomerError(enc, nil)),
 		)
+		catalogCreateCartHandler = kitHttp.NewServer(
+			endpoint.Endpoint(catalogEndpoints.CreateCart),
+			catalogKitSvr.DecodeCreateCartRequest(mux, dec),
+			catalogKitSvr.EncodeCreateCartResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCartError(enc, nil)),
+		)
 		catalogCreateCountryHandler = kitHttp.NewServer(
 			endpoint.Endpoint(catalogEndpoints.CreateCountry),
 			catalogKitSvr.DecodeCreateCountryRequest(mux, dec),
@@ -130,6 +137,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
 	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
 	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
+	catalogKitSvr.MountCreateCartHandler(mux, catalogCreateCartHandler)
 	catalogKitSvr.MountCreateCountryHandler(mux, catalogCreateCountryHandler)
 	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
 

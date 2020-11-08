@@ -457,6 +457,71 @@ func EncodeCreateCustomerError(encoder func(context.Context, http.ResponseWriter
 	}
 }
 
+// EncodeCreateCartResponse returns an encoder for responses returned by the
+// catalog create_cart endpoint.
+func EncodeCreateCartResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*catalog.CartDTO)
+		enc := encoder(ctx, w)
+		body := NewCreateCartResponseBody(res)
+		w.WriteHeader(http.StatusCreated)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeCreateCartRequest returns a decoder for requests sent to the catalog
+// create_cart endpoint.
+func DecodeCreateCartRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body CreateCartRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreateCartRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreateCartDTO(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeCreateCartError returns an encoder for errors returned by the
+// create_cart catalog endpoint.
+func EncodeCreateCartError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_fields":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateCartInvalidFieldsResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_fields")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeCreateCountryResponse returns an encoder for responses returned by the
 // catalog create_country endpoint.
 func EncodeCreateCountryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -641,6 +706,28 @@ func marshalCatalogAddressDTOToAddressDTOResponseBody(v *catalog.AddressDTO) *Ad
 		CountryID:  v.CountryID,
 		StateID:    v.StateID,
 		Cep:        v.Cep,
+	}
+
+	return res
+}
+
+// unmarshalItemDTORequestBodyToCatalogItemDTO builds a value of type
+// *catalog.ItemDTO from a value of type *ItemDTORequestBody.
+func unmarshalItemDTORequestBodyToCatalogItemDTO(v *ItemDTORequestBody) *catalog.ItemDTO {
+	res := &catalog.ItemDTO{
+		BookID: *v.BookID,
+		Amount: *v.Amount,
+	}
+
+	return res
+}
+
+// marshalCatalogItemDTOToItemDTOResponseBody builds a value of type
+// *ItemDTOResponseBody from a value of type *catalog.ItemDTO.
+func marshalCatalogItemDTOToItemDTOResponseBody(v *catalog.ItemDTO) *ItemDTOResponseBody {
+	res := &ItemDTOResponseBody{
+		BookID: v.BookID,
+		Amount: v.Amount,
 	}
 
 	return res

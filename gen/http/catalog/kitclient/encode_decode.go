@@ -124,6 +124,24 @@ func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder) 
 	}
 }
 
+// EncodeCreateCartRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog create_cart requests.
+func EncodeCreateCartRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeCreateCartRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeCreateCartResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog create_cart responses.
+func DecodeCreateCartResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeCreateCartResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // EncodeCreateCountryRequest returns a go-kit EncodeRequestFunc suitable for
 // encoding catalog create_country requests.
 func EncodeCreateCountryRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {

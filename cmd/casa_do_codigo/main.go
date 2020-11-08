@@ -55,9 +55,11 @@ func main() {
 		}
 		if err := repo.AutoMigrate(
 			&catalog.Actor{},
-			&catalog.Category{},
 			&catalog.Book{},
+			&catalog.Cart{},
+			&catalog.Category{},
 			&catalog.Country{},
+			&catalog.Customer{},
 			&catalog.State{},
 		); err != nil {
 			log.Fatalf("db init: %v", err)

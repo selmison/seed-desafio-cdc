@@ -28,6 +28,7 @@ type Server struct {
 	CreateCategory http.Handler
 	ShowCategory   http.Handler
 	CreateCustomer http.Handler
+	CreateCart     http.Handler
 	CreateCountry  http.Handler
 	CreateState    http.Handler
 }
@@ -73,6 +74,7 @@ func New(
 			{"CreateCategory", "POST", "/categories"},
 			{"ShowCategory", "GET", "/categories/{id}"},
 			{"CreateCustomer", "POST", "/customers"},
+			{"CreateCart", "POST", "/carts"},
 			{"CreateCountry", "POST", "/countries"},
 			{"CreateState", "POST", "/states"},
 		},
@@ -84,6 +86,7 @@ func New(
 		CreateCategory: NewCreateCategoryHandler(e.CreateCategory, mux, decoder, encoder, errhandler, formatter),
 		ShowCategory:   NewShowCategoryHandler(e.ShowCategory, mux, decoder, encoder, errhandler, formatter),
 		CreateCustomer: NewCreateCustomerHandler(e.CreateCustomer, mux, decoder, encoder, errhandler, formatter),
+		CreateCart:     NewCreateCartHandler(e.CreateCart, mux, decoder, encoder, errhandler, formatter),
 		CreateCountry:  NewCreateCountryHandler(e.CreateCountry, mux, decoder, encoder, errhandler, formatter),
 		CreateState:    NewCreateStateHandler(e.CreateState, mux, decoder, encoder, errhandler, formatter),
 	}
@@ -102,6 +105,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreateCategory = m(s.CreateCategory)
 	s.ShowCategory = m(s.ShowCategory)
 	s.CreateCustomer = m(s.CreateCustomer)
+	s.CreateCart = m(s.CreateCart)
 	s.CreateCountry = m(s.CreateCountry)
 	s.CreateState = m(s.CreateState)
 }
@@ -116,6 +120,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreateCategoryHandler(mux, h.CreateCategory)
 	MountShowCategoryHandler(mux, h.ShowCategory)
 	MountCreateCustomerHandler(mux, h.CreateCustomer)
+	MountCreateCartHandler(mux, h.CreateCart)
 	MountCreateCountryHandler(mux, h.CreateCountry)
 	MountCreateStateHandler(mux, h.CreateState)
 }
@@ -500,6 +505,57 @@ func NewCreateCustomerHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create_customer")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCreateCartHandler configures the mux to serve the "catalog" service
+// "create_cart" endpoint.
+func MountCreateCartHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/carts", f)
+}
+
+// NewCreateCartHandler creates a HTTP handler which loads the HTTP request and
+// calls the "catalog" service "create_cart" endpoint.
+func NewCreateCartHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateCartRequest(mux, decoder)
+		encodeResponse = EncodeCreateCartResponse(encoder)
+		encodeError    = EncodeCreateCartError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "create_cart")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
 		payload, err := decodeRequest(r)
 		if err != nil {

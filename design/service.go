@@ -85,6 +85,16 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("create_cart", func() {
+		Payload(CreateCartDTO)
+		Result(CartDTO)
+		HTTP(func() {
+			POST("/carts")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 	Method("create_country", func() {
 		Payload(CreateCountryDTO)
 		Result(CountryDTO)

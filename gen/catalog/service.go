@@ -31,6 +31,8 @@ type Service interface {
 	ShowCategory(context.Context, *ShowByIDDTO) (res *CategoryDTO, err error)
 	// CreateCustomer implements create_customer.
 	CreateCustomer(context.Context, *CreateCustomerDTO) (res *CustomerDTO, err error)
+	// CreateCart implements create_cart.
+	CreateCart(context.Context, *CreateCartDTO) (res *CartDTO, err error)
 	// CreateCountry implements create_country.
 	CreateCountry(context.Context, *CreateCountryDTO) (res *CountryDTO, err error)
 	// CreateState implements create_state.
@@ -45,7 +47,7 @@ const ServiceName = "catalog"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [10]string{"create_actor", "show_actor", "create_book", "list_books", "show_book", "create_category", "show_category", "create_customer", "create_country", "create_state"}
+var MethodNames = [11]string{"create_actor", "show_actor", "create_book", "list_books", "show_book", "create_category", "show_category", "create_customer", "create_cart", "create_country", "create_state"}
 
 // CreateActorDTO is the payload type of the catalog service create_actor
 // method.
@@ -118,6 +120,7 @@ type CreateCustomerDTO struct {
 	Document  string
 	Address   *AddressDTO
 	Phone     string
+	CartIds   []string
 }
 
 // CustomerDTO is the result type of the catalog service create_customer method.
@@ -129,6 +132,22 @@ type CustomerDTO struct {
 	Document  string
 	Address   *AddressDTO
 	Phone     string
+	CartIds   []string
+}
+
+// CreateCartDTO is the payload type of the catalog service create_cart method.
+type CreateCartDTO struct {
+	Total      float32
+	Items      []*ItemDTO
+	CustomerID string
+}
+
+// CartDTO is the result type of the catalog service create_cart method.
+type CartDTO struct {
+	ID         string
+	Total      float32
+	Items      []*ItemDTO
+	CustomerID string
 }
 
 // CreateCountryDTO is the payload type of the catalog service create_country
@@ -166,6 +185,12 @@ type AddressDTO struct {
 	CountryID  string
 	StateID    string
 	Cep        string
+}
+
+// Item Type
+type ItemDTO struct {
+	BookID string
+	Amount int32
 }
 
 // MakeInvalidFields builds a goa.ServiceError from an error.

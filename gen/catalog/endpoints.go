@@ -23,6 +23,7 @@ type Endpoints struct {
 	CreateCategory endpoint.Endpoint
 	ShowCategory   endpoint.Endpoint
 	CreateCustomer endpoint.Endpoint
+	CreateCart     endpoint.Endpoint
 	CreateCountry  endpoint.Endpoint
 	CreateState    endpoint.Endpoint
 }
@@ -38,6 +39,7 @@ func NewEndpoints(s Service) *Endpoints {
 		CreateCategory: NewCreateCategoryEndpoint(s),
 		ShowCategory:   NewShowCategoryEndpoint(s),
 		CreateCustomer: NewCreateCustomerEndpoint(s),
+		CreateCart:     NewCreateCartEndpoint(s),
 		CreateCountry:  NewCreateCountryEndpoint(s),
 		CreateState:    NewCreateStateEndpoint(s),
 	}
@@ -53,6 +55,7 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.CreateCategory = m(e.CreateCategory)
 	e.ShowCategory = m(e.ShowCategory)
 	e.CreateCustomer = m(e.CreateCustomer)
+	e.CreateCart = m(e.CreateCart)
 	e.CreateCountry = m(e.CreateCountry)
 	e.CreateState = m(e.CreateState)
 }
@@ -125,6 +128,15 @@ func NewCreateCustomerEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateCustomerDTO)
 		return s.CreateCustomer(ctx, p)
+	}
+}
+
+// NewCreateCartEndpoint returns an endpoint function that calls the method
+// "create_cart" of service "catalog".
+func NewCreateCartEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateCartDTO)
+		return s.CreateCart(ctx, p)
 	}
 }
 

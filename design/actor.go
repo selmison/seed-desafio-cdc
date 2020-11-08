@@ -18,7 +18,6 @@ var ActorDTO = Type("ActorDTO", func() {
 	Attribute("created_at", String)
 	Required("id", "name", "email", "description", "created_at")
 })
-var ActorIDsDTO = ArrayOf(String)
 
 var CreateActorDTO = Type("CreateActorDTO", func() {
 	Description("New Actor Type")

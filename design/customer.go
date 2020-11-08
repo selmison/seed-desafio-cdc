@@ -16,6 +16,7 @@ var CustomerDTO = Type("CustomerDTO", func() {
 	Attribute("document", String)
 	Attribute("address", AddressDTO)
 	Attribute("phone", String)
+	Attribute("cart_ids", ArrayOf(String))
 	Required("id", "first_name", "last_name", "email", "document", "address", "phone")
 })
 
@@ -29,6 +30,7 @@ var CreateCustomerDTO = Type("CreateCustomerDTO", func() {
 	Attribute("document", String)
 	Attribute("address", AddressDTO)
 	Attribute("phone", String)
+	Attribute("cart_ids", ArrayOf(String))
 	Required("first_name", "last_name", "email", "document", "address", "phone")
 })
 

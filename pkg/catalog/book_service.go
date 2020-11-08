@@ -17,15 +17,15 @@ func (s *service) CreateBook(_ context.Context, dto *catalogGen.CreateBookDTO) (
 	if err := s.logger.Log("info", fmt.Sprintf("books.create_book")); err != nil {
 		log.Printf("kit/log error: %v\n", err)
 	}
-	book := s.mapCreateBookDTOToBook(*dto)
+	book := mapCreateBookDTOToBook(*dto)
 	if err := book.Validate(); err != nil {
 		return nil, err
 	}
 	if result := s.repo.Create(&book); result.Error != nil {
 		return nil, result.Error
 	}
-	actorIDs := s.mapActorsToIDs(book.Actors)
-	categoryIDs := s.mapCategoriesToIDs(book.Categories)
+	actorIDs := mapActorsToIDs(book.Actors)
+	categoryIDs := mapCategoriesToIDs(book.Categories)
 	return &catalogGen.BookDTO{
 		ID:          book.ID,
 		Title:       book.Title,
