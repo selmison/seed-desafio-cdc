@@ -23,16 +23,16 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `catalog (create-actor|show-actor|create-book|list-books|show-book|create-category|show-category|create-customer|create-cart|create-country|create-state)
+	return `catalog (create-actor|show-actor|create-book|list-books|show-book|create-cart|create-category|show-category|create-country|create-coupon|create-customer|create-state)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` catalog create-actor --body '{
-      "description": "te3",
-      "email": "hildegard_cruickshank@stroman.net",
-      "name": "Voluptates deleniti."
+      "description": "df5",
+      "email": "boris@boehm.net",
+      "name": "Quis fuga voluptas dolorum."
    }'` + "\n" +
 		""
 }
@@ -63,20 +63,23 @@ func ParseEndpoint(
 		catalogShowBookFlags  = flag.NewFlagSet("show-book", flag.ExitOnError)
 		catalogShowBookIDFlag = catalogShowBookFlags.String("id", "REQUIRED", "ID")
 
+		catalogCreateCartFlags    = flag.NewFlagSet("create-cart", flag.ExitOnError)
+		catalogCreateCartBodyFlag = catalogCreateCartFlags.String("body", "REQUIRED", "")
+
 		catalogCreateCategoryFlags    = flag.NewFlagSet("create-category", flag.ExitOnError)
 		catalogCreateCategoryBodyFlag = catalogCreateCategoryFlags.String("body", "REQUIRED", "")
 
 		catalogShowCategoryFlags  = flag.NewFlagSet("show-category", flag.ExitOnError)
 		catalogShowCategoryIDFlag = catalogShowCategoryFlags.String("id", "REQUIRED", "ID")
 
-		catalogCreateCustomerFlags    = flag.NewFlagSet("create-customer", flag.ExitOnError)
-		catalogCreateCustomerBodyFlag = catalogCreateCustomerFlags.String("body", "REQUIRED", "")
-
-		catalogCreateCartFlags    = flag.NewFlagSet("create-cart", flag.ExitOnError)
-		catalogCreateCartBodyFlag = catalogCreateCartFlags.String("body", "REQUIRED", "")
-
 		catalogCreateCountryFlags    = flag.NewFlagSet("create-country", flag.ExitOnError)
 		catalogCreateCountryBodyFlag = catalogCreateCountryFlags.String("body", "REQUIRED", "")
+
+		catalogCreateCouponFlags    = flag.NewFlagSet("create-coupon", flag.ExitOnError)
+		catalogCreateCouponBodyFlag = catalogCreateCouponFlags.String("body", "REQUIRED", "")
+
+		catalogCreateCustomerFlags    = flag.NewFlagSet("create-customer", flag.ExitOnError)
+		catalogCreateCustomerBodyFlag = catalogCreateCustomerFlags.String("body", "REQUIRED", "")
 
 		catalogCreateStateFlags    = flag.NewFlagSet("create-state", flag.ExitOnError)
 		catalogCreateStateBodyFlag = catalogCreateStateFlags.String("body", "REQUIRED", "")
@@ -87,11 +90,12 @@ func ParseEndpoint(
 	catalogCreateBookFlags.Usage = catalogCreateBookUsage
 	catalogListBooksFlags.Usage = catalogListBooksUsage
 	catalogShowBookFlags.Usage = catalogShowBookUsage
+	catalogCreateCartFlags.Usage = catalogCreateCartUsage
 	catalogCreateCategoryFlags.Usage = catalogCreateCategoryUsage
 	catalogShowCategoryFlags.Usage = catalogShowCategoryUsage
-	catalogCreateCustomerFlags.Usage = catalogCreateCustomerUsage
-	catalogCreateCartFlags.Usage = catalogCreateCartUsage
 	catalogCreateCountryFlags.Usage = catalogCreateCountryUsage
+	catalogCreateCouponFlags.Usage = catalogCreateCouponUsage
+	catalogCreateCustomerFlags.Usage = catalogCreateCustomerUsage
 	catalogCreateStateFlags.Usage = catalogCreateStateUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
@@ -143,20 +147,23 @@ func ParseEndpoint(
 			case "show-book":
 				epf = catalogShowBookFlags
 
+			case "create-cart":
+				epf = catalogCreateCartFlags
+
 			case "create-category":
 				epf = catalogCreateCategoryFlags
 
 			case "show-category":
 				epf = catalogShowCategoryFlags
 
-			case "create-customer":
-				epf = catalogCreateCustomerFlags
-
-			case "create-cart":
-				epf = catalogCreateCartFlags
-
 			case "create-country":
 				epf = catalogCreateCountryFlags
+
+			case "create-coupon":
+				epf = catalogCreateCouponFlags
+
+			case "create-customer":
+				epf = catalogCreateCustomerFlags
 
 			case "create-state":
 				epf = catalogCreateStateFlags
@@ -201,21 +208,24 @@ func ParseEndpoint(
 			case "show-book":
 				endpoint = c.ShowBook()
 				data, err = catalogc.BuildShowBookPayload(*catalogShowBookIDFlag)
+			case "create-cart":
+				endpoint = c.CreateCart()
+				data, err = catalogc.BuildCreateCartPayload(*catalogCreateCartBodyFlag)
 			case "create-category":
 				endpoint = c.CreateCategory()
 				data, err = catalogc.BuildCreateCategoryPayload(*catalogCreateCategoryBodyFlag)
 			case "show-category":
 				endpoint = c.ShowCategory()
 				data, err = catalogc.BuildShowCategoryPayload(*catalogShowCategoryIDFlag)
-			case "create-customer":
-				endpoint = c.CreateCustomer()
-				data, err = catalogc.BuildCreateCustomerPayload(*catalogCreateCustomerBodyFlag)
-			case "create-cart":
-				endpoint = c.CreateCart()
-				data, err = catalogc.BuildCreateCartPayload(*catalogCreateCartBodyFlag)
 			case "create-country":
 				endpoint = c.CreateCountry()
 				data, err = catalogc.BuildCreateCountryPayload(*catalogCreateCountryBodyFlag)
+			case "create-coupon":
+				endpoint = c.CreateCoupon()
+				data, err = catalogc.BuildCreateCouponPayload(*catalogCreateCouponBodyFlag)
+			case "create-customer":
+				endpoint = c.CreateCustomer()
+				data, err = catalogc.BuildCreateCustomerPayload(*catalogCreateCustomerBodyFlag)
 			case "create-state":
 				endpoint = c.CreateState()
 				data, err = catalogc.BuildCreateStatePayload(*catalogCreateStateBodyFlag)
@@ -241,11 +251,12 @@ COMMAND:
     create-book: CreateBook implements create_book.
     list-books: ListBooks implements list_books.
     show-book: ShowBook implements show_book.
+    create-cart: CreateCart implements create_cart.
     create-category: CreateCategory implements create_category.
     show-category: ShowCategory implements show_category.
-    create-customer: CreateCustomer implements create_customer.
-    create-cart: CreateCart implements create_cart.
     create-country: CreateCountry implements create_country.
+    create-coupon: CreateCoupon implements create_coupon.
+    create-customer: CreateCustomer implements create_customer.
     create-state: CreateState implements create_state.
 
 Additional help:
@@ -260,9 +271,9 @@ CreateActor implements create_actor.
 
 Example:
     `+os.Args[0]+` catalog create-actor --body '{
-      "description": "te3",
-      "email": "hildegard_cruickshank@stroman.net",
-      "name": "Voluptates deleniti."
+      "description": "df5",
+      "email": "boris@boehm.net",
+      "name": "Quis fuga voluptas dolorum."
    }'
 `, os.Args[0])
 }
@@ -274,7 +285,7 @@ ShowActor implements show_actor.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-actor --id "Tempore expedita rerum."
+    `+os.Args[0]+` catalog show-actor --id "Sunt illum optio."
 `, os.Args[0])
 }
 
@@ -287,22 +298,22 @@ CreateBook implements create_book.
 Example:
     `+os.Args[0]+` catalog create-book --body '{
       "actor_ids": [
-         "Et necessitatibus impedit quam.",
-         "Commodi similique et.",
-         "Provident at hic quibusdam sint et.",
-         "Atque assumenda dolor quia et dolore unde."
+         "In autem eum.",
+         "Ab veritatis officiis accusamus quibusdam aut eum."
       ],
       "category_ids": [
-         "Sit sequi.",
-         "Sed sed dicta facere officia."
+         "Assumenda dolor quia et dolore.",
+         "Incidunt ipsum rerum quia ducimus voluptatum.",
+         "Dignissimos et occaecati dolorem.",
+         "Eum sit est."
       ],
-      "isbn": "Accusantium a expedita illo.",
-      "issue": "Perferendis perspiciatis.",
-      "pages": 3951472581591739083,
-      "price": 20.86182,
-      "summary": "Est asperiores provident inventore.",
-      "synopsis": "n1z",
-      "title": "Provident ducimus."
+      "isbn": "Et ut provident at hic.",
+      "issue": "Sint et.",
+      "pages": 8812144099905341790,
+      "price": 20.14946,
+      "summary": "Magnam et necessitatibus impedit quam.",
+      "synopsis": "vwd",
+      "title": "Sequi aliquid sed."
    }'
 `, os.Args[0])
 }
@@ -324,7 +335,39 @@ ShowBook implements show_book.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-book --id "Inventore eum aut eos aut."
+    `+os.Args[0]+` catalog show-book --id "Commodi vel ipsa unde."
+`, os.Args[0])
+}
+
+func catalogCreateCartUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-cart -body JSON
+
+CreateCart implements create_cart.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` catalog create-cart --body '{
+      "customer_id": "Iusto nihil cupiditate voluptatem ut ut corporis.",
+      "items": [
+         {
+            "amount": 1682166100,
+            "book_id": "Occaecati quibusdam non."
+         },
+         {
+            "amount": 1682166100,
+            "book_id": "Occaecati quibusdam non."
+         },
+         {
+            "amount": 1682166100,
+            "book_id": "Occaecati quibusdam non."
+         },
+         {
+            "amount": 1682166100,
+            "book_id": "Occaecati quibusdam non."
+         }
+      ],
+      "total": 0.49038583
+   }'
 `, os.Args[0])
 }
 
@@ -336,7 +379,7 @@ CreateCategory implements create_category.
 
 Example:
     `+os.Args[0]+` catalog create-category --body '{
-      "name": "Quis est."
+      "name": "Doloribus voluptas dicta."
    }'
 `, os.Args[0])
 }
@@ -348,7 +391,35 @@ ShowCategory implements show_category.
     -id STRING: ID
 
 Example:
-    `+os.Args[0]+` catalog show-category --id "Doloremque doloremque at nemo."
+    `+os.Args[0]+` catalog show-category --id "Excepturi voluptas."
+`, os.Args[0])
+}
+
+func catalogCreateCountryUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-country -body JSON
+
+CreateCountry implements create_country.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` catalog create-country --body '{
+      "name": "Quaerat cumque."
+   }'
+`, os.Args[0])
+}
+
+func catalogCreateCouponUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-coupon -body JSON
+
+CreateCoupon implements create_coupon.
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` catalog create-coupon --body '{
+      "code": "Sit et est atque dolor.",
+      "discount": 0.59967625,
+      "validity": "Quo voluptate quidem earum."
+   }'
 `, os.Args[0])
 }
 
@@ -361,69 +432,24 @@ CreateCustomer implements create_customer.
 Example:
     `+os.Args[0]+` catalog create-customer --body '{
       "address": {
-         "address": "Recusandae occaecati animi.",
-         "cep": "Quis fugit corporis aliquid beatae sequi.",
-         "city": "Placeat sit et est atque.",
-         "complement": "Et vitae.",
-         "country_id": "Rem consectetur quo voluptate.",
-         "state_id": "Earum esse enim doloremque."
+         "address": "Molestiae aut ut.",
+         "cep": "Adipisci quas aut quis culpa dolor nam.",
+         "city": "Nam facilis.",
+         "complement": "Libero consequatur eveniet expedita dolore quod.",
+         "country_id": "Libero ut culpa recusandae et rem.",
+         "state_id": "Et dolore enim quia est nobis architecto."
       },
       "cart_ids": [
-         "Ad sed incidunt similique.",
-         "Autem dolorem consequatur dicta commodi earum et.",
-         "Eaque doloribus rerum.",
-         "Nostrum veniam."
+         "Mollitia rerum ullam.",
+         "Deserunt error ea tempore minus omnis aspernatur.",
+         "Ut qui et eius dolore.",
+         "Deserunt expedita ratione."
       ],
-      "document": "Nesciunt assumenda aperiam excepturi harum enim vero.",
-      "email": "orie@stark.name",
-      "first_name": "Delectus et et ea officiis.",
-      "last_name": "Voluptas dicta.",
-      "phone": "Placeat aut hic iure voluptatem."
-   }'
-`, os.Args[0])
-}
-
-func catalogCreateCartUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-cart -body JSON
-
-CreateCart implements create_cart.
-    -body JSON: 
-
-Example:
-    `+os.Args[0]+` catalog create-cart --body '{
-      "customer_id": "Voluptatem deserunt expedita minus quia nobis reprehenderit.",
-      "items": [
-         {
-            "amount": 1131047539,
-            "book_id": "Corporis maiores labore autem occaecati eligendi fugit."
-         },
-         {
-            "amount": 1131047539,
-            "book_id": "Corporis maiores labore autem occaecati eligendi fugit."
-         },
-         {
-            "amount": 1131047539,
-            "book_id": "Corporis maiores labore autem occaecati eligendi fugit."
-         },
-         {
-            "amount": 1131047539,
-            "book_id": "Corporis maiores labore autem occaecati eligendi fugit."
-         }
-      ],
-      "total": 0.4391943
-   }'
-`, os.Args[0])
-}
-
-func catalogCreateCountryUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] catalog create-country -body JSON
-
-CreateCountry implements create_country.
-    -body JSON: 
-
-Example:
-    `+os.Args[0]+` catalog create-country --body '{
-      "name": "Ullam minus enim possimus eligendi."
+      "document": "Laudantium voluptate quis velit necessitatibus recusandae non.",
+      "email": "joy@orn.org",
+      "first_name": "At autem dolorem consequatur dicta.",
+      "last_name": "Earum et.",
+      "phone": "Sit nisi molestiae aliquid nesciunt."
    }'
 `, os.Args[0])
 }
@@ -436,8 +462,8 @@ CreateState implements create_state.
 
 Example:
     `+os.Args[0]+` catalog create-state --body '{
-      "country_id": "Dolorum neque ut ex ex voluptas inventore.",
-      "name": "Eaque recusandae alias itaque ipsa et."
+      "country_id": "Corporis atque nostrum qui dolor aspernatur.",
+      "name": "Eos neque sint qui id."
    }'
 `, os.Args[0])
 }

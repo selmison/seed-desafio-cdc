@@ -25,11 +25,12 @@ type Server struct {
 	CreateBook     http.Handler
 	ListBooks      http.Handler
 	ShowBook       http.Handler
+	CreateCart     http.Handler
 	CreateCategory http.Handler
 	ShowCategory   http.Handler
-	CreateCustomer http.Handler
-	CreateCart     http.Handler
 	CreateCountry  http.Handler
+	CreateCoupon   http.Handler
+	CreateCustomer http.Handler
 	CreateState    http.Handler
 }
 
@@ -71,11 +72,12 @@ func New(
 			{"CreateBook", "POST", "/books"},
 			{"ListBooks", "GET", "/books"},
 			{"ShowBook", "GET", "/books/{id}"},
+			{"CreateCart", "POST", "/carts"},
 			{"CreateCategory", "POST", "/categories"},
 			{"ShowCategory", "GET", "/categories/{id}"},
-			{"CreateCustomer", "POST", "/customers"},
-			{"CreateCart", "POST", "/carts"},
 			{"CreateCountry", "POST", "/countries"},
+			{"CreateCoupon", "POST", "/coupons"},
+			{"CreateCustomer", "POST", "/customers"},
 			{"CreateState", "POST", "/states"},
 		},
 		CreateActor:    NewCreateActorHandler(e.CreateActor, mux, decoder, encoder, errhandler, formatter),
@@ -83,11 +85,12 @@ func New(
 		CreateBook:     NewCreateBookHandler(e.CreateBook, mux, decoder, encoder, errhandler, formatter),
 		ListBooks:      NewListBooksHandler(e.ListBooks, mux, decoder, encoder, errhandler, formatter),
 		ShowBook:       NewShowBookHandler(e.ShowBook, mux, decoder, encoder, errhandler, formatter),
+		CreateCart:     NewCreateCartHandler(e.CreateCart, mux, decoder, encoder, errhandler, formatter),
 		CreateCategory: NewCreateCategoryHandler(e.CreateCategory, mux, decoder, encoder, errhandler, formatter),
 		ShowCategory:   NewShowCategoryHandler(e.ShowCategory, mux, decoder, encoder, errhandler, formatter),
-		CreateCustomer: NewCreateCustomerHandler(e.CreateCustomer, mux, decoder, encoder, errhandler, formatter),
-		CreateCart:     NewCreateCartHandler(e.CreateCart, mux, decoder, encoder, errhandler, formatter),
 		CreateCountry:  NewCreateCountryHandler(e.CreateCountry, mux, decoder, encoder, errhandler, formatter),
+		CreateCoupon:   NewCreateCouponHandler(e.CreateCoupon, mux, decoder, encoder, errhandler, formatter),
+		CreateCustomer: NewCreateCustomerHandler(e.CreateCustomer, mux, decoder, encoder, errhandler, formatter),
 		CreateState:    NewCreateStateHandler(e.CreateState, mux, decoder, encoder, errhandler, formatter),
 	}
 }
@@ -102,11 +105,12 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreateBook = m(s.CreateBook)
 	s.ListBooks = m(s.ListBooks)
 	s.ShowBook = m(s.ShowBook)
+	s.CreateCart = m(s.CreateCart)
 	s.CreateCategory = m(s.CreateCategory)
 	s.ShowCategory = m(s.ShowCategory)
-	s.CreateCustomer = m(s.CreateCustomer)
-	s.CreateCart = m(s.CreateCart)
 	s.CreateCountry = m(s.CreateCountry)
+	s.CreateCoupon = m(s.CreateCoupon)
+	s.CreateCustomer = m(s.CreateCustomer)
 	s.CreateState = m(s.CreateState)
 }
 
@@ -117,11 +121,12 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreateBookHandler(mux, h.CreateBook)
 	MountListBooksHandler(mux, h.ListBooks)
 	MountShowBookHandler(mux, h.ShowBook)
+	MountCreateCartHandler(mux, h.CreateCart)
 	MountCreateCategoryHandler(mux, h.CreateCategory)
 	MountShowCategoryHandler(mux, h.ShowCategory)
-	MountCreateCustomerHandler(mux, h.CreateCustomer)
-	MountCreateCartHandler(mux, h.CreateCart)
 	MountCreateCountryHandler(mux, h.CreateCountry)
+	MountCreateCouponHandler(mux, h.CreateCoupon)
+	MountCreateCustomerHandler(mux, h.CreateCustomer)
 	MountCreateStateHandler(mux, h.CreateState)
 }
 
@@ -373,6 +378,57 @@ func NewShowBookHandler(
 	})
 }
 
+// MountCreateCartHandler configures the mux to serve the "catalog" service
+// "create_cart" endpoint.
+func MountCreateCartHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/carts", f)
+}
+
+// NewCreateCartHandler creates a HTTP handler which loads the HTTP request and
+// calls the "catalog" service "create_cart" endpoint.
+func NewCreateCartHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateCartRequest(mux, decoder)
+		encodeResponse = EncodeCreateCartResponse(encoder)
+		encodeError    = EncodeCreateCartError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "create_cart")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
 // MountCreateCategoryHandler configures the mux to serve the "catalog" service
 // "create_category" endpoint.
 func MountCreateCategoryHandler(mux goahttp.Muxer, h http.Handler) {
@@ -475,108 +531,6 @@ func NewShowCategoryHandler(
 	})
 }
 
-// MountCreateCustomerHandler configures the mux to serve the "catalog" service
-// "create_customer" endpoint.
-func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
-	if !ok {
-		f = func(w http.ResponseWriter, r *http.Request) {
-			h.ServeHTTP(w, r)
-		}
-	}
-	mux.Handle("POST", "/customers", f)
-}
-
-// NewCreateCustomerHandler creates a HTTP handler which loads the HTTP request
-// and calls the "catalog" service "create_customer" endpoint.
-func NewCreateCustomerHandler(
-	endpoint endpoint.Endpoint,
-	mux goahttp.Muxer,
-	decoder func(*http.Request) goahttp.Decoder,
-	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	errhandler func(context.Context, http.ResponseWriter, error),
-	formatter func(err error) goahttp.Statuser,
-) http.Handler {
-	var (
-		decodeRequest  = DecodeCreateCustomerRequest(mux, decoder)
-		encodeResponse = EncodeCreateCustomerResponse(encoder)
-		encodeError    = EncodeCreateCustomerError(encoder, formatter)
-	)
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "create_customer")
-		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
-		payload, err := decodeRequest(r)
-		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
-				errhandler(ctx, w, err)
-			}
-			return
-		}
-		res, err := endpoint(ctx, payload)
-		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
-				errhandler(ctx, w, err)
-			}
-			return
-		}
-		if err := encodeResponse(ctx, w, res); err != nil {
-			errhandler(ctx, w, err)
-		}
-	})
-}
-
-// MountCreateCartHandler configures the mux to serve the "catalog" service
-// "create_cart" endpoint.
-func MountCreateCartHandler(mux goahttp.Muxer, h http.Handler) {
-	f, ok := h.(http.HandlerFunc)
-	if !ok {
-		f = func(w http.ResponseWriter, r *http.Request) {
-			h.ServeHTTP(w, r)
-		}
-	}
-	mux.Handle("POST", "/carts", f)
-}
-
-// NewCreateCartHandler creates a HTTP handler which loads the HTTP request and
-// calls the "catalog" service "create_cart" endpoint.
-func NewCreateCartHandler(
-	endpoint endpoint.Endpoint,
-	mux goahttp.Muxer,
-	decoder func(*http.Request) goahttp.Decoder,
-	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	errhandler func(context.Context, http.ResponseWriter, error),
-	formatter func(err error) goahttp.Statuser,
-) http.Handler {
-	var (
-		decodeRequest  = DecodeCreateCartRequest(mux, decoder)
-		encodeResponse = EncodeCreateCartResponse(encoder)
-		encodeError    = EncodeCreateCartError(encoder, formatter)
-	)
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "create_cart")
-		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
-		payload, err := decodeRequest(r)
-		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
-				errhandler(ctx, w, err)
-			}
-			return
-		}
-		res, err := endpoint(ctx, payload)
-		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
-				errhandler(ctx, w, err)
-			}
-			return
-		}
-		if err := encodeResponse(ctx, w, res); err != nil {
-			errhandler(ctx, w, err)
-		}
-	})
-}
-
 // MountCreateCountryHandler configures the mux to serve the "catalog" service
 // "create_country" endpoint.
 func MountCreateCountryHandler(mux goahttp.Muxer, h http.Handler) {
@@ -607,6 +561,108 @@ func NewCreateCountryHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create_country")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCreateCouponHandler configures the mux to serve the "catalog" service
+// "create_coupon" endpoint.
+func MountCreateCouponHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/coupons", f)
+}
+
+// NewCreateCouponHandler creates a HTTP handler which loads the HTTP request
+// and calls the "catalog" service "create_coupon" endpoint.
+func NewCreateCouponHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateCouponRequest(mux, decoder)
+		encodeResponse = EncodeCreateCouponResponse(encoder)
+		encodeError    = EncodeCreateCouponError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "create_coupon")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCreateCustomerHandler configures the mux to serve the "catalog" service
+// "create_customer" endpoint.
+func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/customers", f)
+}
+
+// NewCreateCustomerHandler creates a HTTP handler which loads the HTTP request
+// and calls the "catalog" service "create_customer" endpoint.
+func NewCreateCustomerHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateCustomerRequest(mux, decoder)
+		encodeResponse = EncodeCreateCustomerResponse(encoder)
+		encodeError    = EncodeCreateCustomerError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "create_customer")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
 		payload, err := decodeRequest(r)
 		if err != nil {

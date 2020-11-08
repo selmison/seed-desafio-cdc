@@ -37,6 +37,10 @@ type Client struct {
 	// endpoint.
 	ShowBookDoer goahttp.Doer
 
+	// CreateCart Doer is the HTTP client used to make requests to the create_cart
+	// endpoint.
+	CreateCartDoer goahttp.Doer
+
 	// CreateCategory Doer is the HTTP client used to make requests to the
 	// create_category endpoint.
 	CreateCategoryDoer goahttp.Doer
@@ -45,17 +49,17 @@ type Client struct {
 	// show_category endpoint.
 	ShowCategoryDoer goahttp.Doer
 
-	// CreateCustomer Doer is the HTTP client used to make requests to the
-	// create_customer endpoint.
-	CreateCustomerDoer goahttp.Doer
-
-	// CreateCart Doer is the HTTP client used to make requests to the create_cart
-	// endpoint.
-	CreateCartDoer goahttp.Doer
-
 	// CreateCountry Doer is the HTTP client used to make requests to the
 	// create_country endpoint.
 	CreateCountryDoer goahttp.Doer
+
+	// CreateCoupon Doer is the HTTP client used to make requests to the
+	// create_coupon endpoint.
+	CreateCouponDoer goahttp.Doer
+
+	// CreateCustomer Doer is the HTTP client used to make requests to the
+	// create_customer endpoint.
+	CreateCustomerDoer goahttp.Doer
 
 	// CreateState Doer is the HTTP client used to make requests to the
 	// create_state endpoint.
@@ -86,11 +90,12 @@ func NewClient(
 		CreateBookDoer:      doer,
 		ListBooksDoer:       doer,
 		ShowBookDoer:        doer,
+		CreateCartDoer:      doer,
 		CreateCategoryDoer:  doer,
 		ShowCategoryDoer:    doer,
-		CreateCustomerDoer:  doer,
-		CreateCartDoer:      doer,
 		CreateCountryDoer:   doer,
+		CreateCouponDoer:    doer,
+		CreateCustomerDoer:  doer,
 		CreateStateDoer:     doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
@@ -205,6 +210,30 @@ func (c *Client) ShowBook() endpoint.Endpoint {
 	}
 }
 
+// CreateCart returns an endpoint that makes HTTP requests to the catalog
+// service create_cart server.
+func (c *Client) CreateCart() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateCartRequest(c.encoder)
+		decodeResponse = DecodeCreateCartResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateCartRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateCartDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_cart", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
 // CreateCategory returns an endpoint that makes HTTP requests to the catalog
 // service create_category server.
 func (c *Client) CreateCategory() endpoint.Endpoint {
@@ -248,54 +277,6 @@ func (c *Client) ShowCategory() endpoint.Endpoint {
 	}
 }
 
-// CreateCustomer returns an endpoint that makes HTTP requests to the catalog
-// service create_customer server.
-func (c *Client) CreateCustomer() endpoint.Endpoint {
-	var (
-		encodeRequest  = EncodeCreateCustomerRequest(c.encoder)
-		decodeResponse = DecodeCreateCustomerResponse(c.decoder, c.RestoreResponseBody)
-	)
-	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildCreateCustomerRequest(ctx, v)
-		if err != nil {
-			return nil, err
-		}
-		err = encodeRequest(req, v)
-		if err != nil {
-			return nil, err
-		}
-		resp, err := c.CreateCustomerDoer.Do(req)
-		if err != nil {
-			return nil, goahttp.ErrRequestError("catalog", "create_customer", err)
-		}
-		return decodeResponse(resp)
-	}
-}
-
-// CreateCart returns an endpoint that makes HTTP requests to the catalog
-// service create_cart server.
-func (c *Client) CreateCart() endpoint.Endpoint {
-	var (
-		encodeRequest  = EncodeCreateCartRequest(c.encoder)
-		decodeResponse = DecodeCreateCartResponse(c.decoder, c.RestoreResponseBody)
-	)
-	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildCreateCartRequest(ctx, v)
-		if err != nil {
-			return nil, err
-		}
-		err = encodeRequest(req, v)
-		if err != nil {
-			return nil, err
-		}
-		resp, err := c.CreateCartDoer.Do(req)
-		if err != nil {
-			return nil, goahttp.ErrRequestError("catalog", "create_cart", err)
-		}
-		return decodeResponse(resp)
-	}
-}
-
 // CreateCountry returns an endpoint that makes HTTP requests to the catalog
 // service create_country server.
 func (c *Client) CreateCountry() endpoint.Endpoint {
@@ -315,6 +296,54 @@ func (c *Client) CreateCountry() endpoint.Endpoint {
 		resp, err := c.CreateCountryDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "create_country", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateCoupon returns an endpoint that makes HTTP requests to the catalog
+// service create_coupon server.
+func (c *Client) CreateCoupon() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateCouponRequest(c.encoder)
+		decodeResponse = DecodeCreateCouponResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateCouponRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateCouponDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_coupon", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateCustomer returns an endpoint that makes HTTP requests to the catalog
+// service create_customer server.
+func (c *Client) CreateCustomer() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateCustomerRequest(c.encoder)
+		decodeResponse = DecodeCreateCustomerResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateCustomerRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateCustomerDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_customer", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -16,6 +16,9 @@ import (
 
 // CreateActor implements create.
 func (s *service) CreateActor(_ context.Context, dto *catalogGen.CreateActorDTO) (res *catalogGen.ActorDTO, err error) {
+	if err := s.logger.Log("info", fmt.Sprintf("catalog.create")); err != nil {
+		log.Printf("kit/log error: %v\n", err)
+	}
 	actor := Actor{
 		ID:          uuid.New().String(),
 		Name:        strings.TrimSpace(dto.Name),
@@ -24,9 +27,6 @@ func (s *service) CreateActor(_ context.Context, dto *catalogGen.CreateActorDTO)
 	}
 	if err := actor.Validate(); err != nil {
 		return nil, err
-	}
-	if err := s.logger.Log("info", fmt.Sprintf("catalog.create")); err != nil {
-		log.Printf("kit/log error: %v\n", err)
 	}
 	if result := s.repo.Create(&actor); result.Error != nil {
 		return nil, result.Error

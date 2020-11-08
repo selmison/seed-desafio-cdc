@@ -20,27 +20,29 @@ type Client struct {
 	CreateBookEndpoint     endpoint.Endpoint
 	ListBooksEndpoint      endpoint.Endpoint
 	ShowBookEndpoint       endpoint.Endpoint
+	CreateCartEndpoint     endpoint.Endpoint
 	CreateCategoryEndpoint endpoint.Endpoint
 	ShowCategoryEndpoint   endpoint.Endpoint
-	CreateCustomerEndpoint endpoint.Endpoint
-	CreateCartEndpoint     endpoint.Endpoint
 	CreateCountryEndpoint  endpoint.Endpoint
+	CreateCouponEndpoint   endpoint.Endpoint
+	CreateCustomerEndpoint endpoint.Endpoint
 	CreateStateEndpoint    endpoint.Endpoint
 }
 
 // NewClient initializes a "catalog" service client given the endpoints.
-func NewClient(createActor, showActor, createBook, listBooks, showBook, createCategory, showCategory, createCustomer, createCart, createCountry, createState endpoint.Endpoint) *Client {
+func NewClient(createActor, showActor, createBook, listBooks, showBook, createCart, createCategory, showCategory, createCountry, createCoupon, createCustomer, createState endpoint.Endpoint) *Client {
 	return &Client{
 		CreateActorEndpoint:    createActor,
 		ShowActorEndpoint:      showActor,
 		CreateBookEndpoint:     createBook,
 		ListBooksEndpoint:      listBooks,
 		ShowBookEndpoint:       showBook,
+		CreateCartEndpoint:     createCart,
 		CreateCategoryEndpoint: createCategory,
 		ShowCategoryEndpoint:   showCategory,
-		CreateCustomerEndpoint: createCustomer,
-		CreateCartEndpoint:     createCart,
 		CreateCountryEndpoint:  createCountry,
+		CreateCouponEndpoint:   createCoupon,
+		CreateCustomerEndpoint: createCustomer,
 		CreateStateEndpoint:    createState,
 	}
 }
@@ -95,6 +97,16 @@ func (c *Client) ShowBook(ctx context.Context, p *ShowByIDDTO) (res *BookDTO, er
 	return ires.(*BookDTO), nil
 }
 
+// CreateCart calls the "create_cart" endpoint of the "catalog" service.
+func (c *Client) CreateCart(ctx context.Context, p *CreateCartDTO) (res *CartDTO, err error) {
+	var ires interface{}
+	ires, err = c.CreateCartEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CartDTO), nil
+}
+
 // CreateCategory calls the "create_category" endpoint of the "catalog" service.
 func (c *Client) CreateCategory(ctx context.Context, p *CreateCategoryDTO) (res *CategoryDTO, err error) {
 	var ires interface{}
@@ -115,26 +127,6 @@ func (c *Client) ShowCategory(ctx context.Context, p *ShowByIDDTO) (res *Categor
 	return ires.(*CategoryDTO), nil
 }
 
-// CreateCustomer calls the "create_customer" endpoint of the "catalog" service.
-func (c *Client) CreateCustomer(ctx context.Context, p *CreateCustomerDTO) (res *CustomerDTO, err error) {
-	var ires interface{}
-	ires, err = c.CreateCustomerEndpoint(ctx, p)
-	if err != nil {
-		return
-	}
-	return ires.(*CustomerDTO), nil
-}
-
-// CreateCart calls the "create_cart" endpoint of the "catalog" service.
-func (c *Client) CreateCart(ctx context.Context, p *CreateCartDTO) (res *CartDTO, err error) {
-	var ires interface{}
-	ires, err = c.CreateCartEndpoint(ctx, p)
-	if err != nil {
-		return
-	}
-	return ires.(*CartDTO), nil
-}
-
 // CreateCountry calls the "create_country" endpoint of the "catalog" service.
 func (c *Client) CreateCountry(ctx context.Context, p *CreateCountryDTO) (res *CountryDTO, err error) {
 	var ires interface{}
@@ -143,6 +135,26 @@ func (c *Client) CreateCountry(ctx context.Context, p *CreateCountryDTO) (res *C
 		return
 	}
 	return ires.(*CountryDTO), nil
+}
+
+// CreateCoupon calls the "create_coupon" endpoint of the "catalog" service.
+func (c *Client) CreateCoupon(ctx context.Context, p *CreateCouponDTO) (res *CouponDTO, err error) {
+	var ires interface{}
+	ires, err = c.CreateCouponEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CouponDTO), nil
+}
+
+// CreateCustomer calls the "create_customer" endpoint of the "catalog" service.
+func (c *Client) CreateCustomer(ctx context.Context, p *CreateCustomerDTO) (res *CustomerDTO, err error) {
+	var ires interface{}
+	ires, err = c.CreateCustomerEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CustomerDTO), nil
 }
 
 // CreateState calls the "create_state" endpoint of the "catalog" service.

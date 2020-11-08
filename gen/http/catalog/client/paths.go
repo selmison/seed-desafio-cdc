@@ -36,6 +36,11 @@ func ShowBookCatalogPath(id string) string {
 	return fmt.Sprintf("/books/%v", id)
 }
 
+// CreateCartCatalogPath returns the URL path to the catalog service create_cart HTTP endpoint.
+func CreateCartCatalogPath() string {
+	return "/carts"
+}
+
 // CreateCategoryCatalogPath returns the URL path to the catalog service create_category HTTP endpoint.
 func CreateCategoryCatalogPath() string {
 	return "/categories"
@@ -46,19 +51,19 @@ func ShowCategoryCatalogPath(id string) string {
 	return fmt.Sprintf("/categories/%v", id)
 }
 
-// CreateCustomerCatalogPath returns the URL path to the catalog service create_customer HTTP endpoint.
-func CreateCustomerCatalogPath() string {
-	return "/customers"
-}
-
-// CreateCartCatalogPath returns the URL path to the catalog service create_cart HTTP endpoint.
-func CreateCartCatalogPath() string {
-	return "/carts"
-}
-
 // CreateCountryCatalogPath returns the URL path to the catalog service create_country HTTP endpoint.
 func CreateCountryCatalogPath() string {
 	return "/countries"
+}
+
+// CreateCouponCatalogPath returns the URL path to the catalog service create_coupon HTTP endpoint.
+func CreateCouponCatalogPath() string {
+	return "/coupons"
+}
+
+// CreateCustomerCatalogPath returns the URL path to the catalog service create_customer HTTP endpoint.
+func CreateCustomerCatalogPath() string {
+	return "/customers"
 }
 
 // CreateStateCatalogPath returns the URL path to the catalog service create_state HTTP endpoint.

@@ -56,6 +56,16 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("create_cart", func() {
+		Payload(CreateCartDTO)
+		Result(CartDTO)
+		HTTP(func() {
+			POST("/carts")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 	Method("create_category", func() {
 		Payload(CreateCategoryDTO)
 		Result(CategoryDTO)
@@ -75,31 +85,31 @@ var _ = Service("catalog", func() {
 		})
 	})
 
-	Method("create_customer", func() {
-		Payload(CreateCustomerDTO)
-		Result(CustomerDTO)
-		HTTP(func() {
-			POST("/customers")
-			Response(StatusCreated)
-			Response("invalid_fields", StatusBadRequest)
-		})
-	})
-
-	Method("create_cart", func() {
-		Payload(CreateCartDTO)
-		Result(CartDTO)
-		HTTP(func() {
-			POST("/carts")
-			Response(StatusCreated)
-			Response("invalid_fields", StatusBadRequest)
-		})
-	})
-
 	Method("create_country", func() {
 		Payload(CreateCountryDTO)
 		Result(CountryDTO)
 		HTTP(func() {
 			POST("/countries")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("create_coupon", func() {
+		Payload(CreateCouponDTO)
+		Result(CouponDTO)
+		HTTP(func() {
+			POST("/coupons")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("create_customer", func() {
+		Payload(CreateCustomerDTO)
+		Result(CustomerDTO)
+		HTTP(func() {
+			POST("/customers")
 			Response(StatusCreated)
 			Response("invalid_fields", StatusBadRequest)
 		})

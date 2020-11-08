@@ -79,6 +79,24 @@ func DecodeShowBookResponse(decoder func(*http.Response) goahttp.Decoder) kithtt
 	}
 }
 
+// EncodeCreateCartRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog create_cart requests.
+func EncodeCreateCartRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeCreateCartRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeCreateCartResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog create_cart responses.
+func DecodeCreateCartResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeCreateCartResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // EncodeCreateCategoryRequest returns a go-kit EncodeRequestFunc suitable for
 // encoding catalog create_category requests.
 func EncodeCreateCategoryRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
@@ -106,42 +124,6 @@ func DecodeShowCategoryResponse(decoder func(*http.Response) goahttp.Decoder) ki
 	}
 }
 
-// EncodeCreateCustomerRequest returns a go-kit EncodeRequestFunc suitable for
-// encoding catalog create_customer requests.
-func EncodeCreateCustomerRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
-	enc := client.EncodeCreateCustomerRequest(encoder)
-	return func(_ context.Context, r *http.Request, v interface{}) error {
-		return enc(r, v)
-	}
-}
-
-// DecodeCreateCustomerResponse returns a go-kit DecodeResponseFunc suitable
-// for decoding catalog create_customer responses.
-func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
-	dec := client.DecodeCreateCustomerResponse(decoder, false)
-	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
-		return dec(resp)
-	}
-}
-
-// EncodeCreateCartRequest returns a go-kit EncodeRequestFunc suitable for
-// encoding catalog create_cart requests.
-func EncodeCreateCartRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
-	enc := client.EncodeCreateCartRequest(encoder)
-	return func(_ context.Context, r *http.Request, v interface{}) error {
-		return enc(r, v)
-	}
-}
-
-// DecodeCreateCartResponse returns a go-kit DecodeResponseFunc suitable for
-// decoding catalog create_cart responses.
-func DecodeCreateCartResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
-	dec := client.DecodeCreateCartResponse(decoder, false)
-	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
-		return dec(resp)
-	}
-}
-
 // EncodeCreateCountryRequest returns a go-kit EncodeRequestFunc suitable for
 // encoding catalog create_country requests.
 func EncodeCreateCountryRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
@@ -155,6 +137,42 @@ func EncodeCreateCountryRequest(encoder func(*http.Request) goahttp.Encoder) kit
 // decoding catalog create_country responses.
 func DecodeCreateCountryResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
 	dec := client.DecodeCreateCountryResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// EncodeCreateCouponRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog create_coupon requests.
+func EncodeCreateCouponRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeCreateCouponRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeCreateCouponResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog create_coupon responses.
+func DecodeCreateCouponResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeCreateCouponResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// EncodeCreateCustomerRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog create_customer requests.
+func EncodeCreateCustomerRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeCreateCustomerRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeCreateCustomerResponse returns a go-kit DecodeResponseFunc suitable
+// for decoding catalog create_customer responses.
+func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeCreateCustomerResponse(decoder, false)
 	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
 		return dec(resp)
 	}
