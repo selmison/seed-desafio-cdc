@@ -13,6 +13,7 @@ import (
 	"syscall"
 
 	kitLog "github.com/go-kit/kit/log"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
@@ -28,6 +29,7 @@ func main() {
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
+		dbDriverF = flag.String("db-driver", "sqlite", "db driver")
 		dsnF      = flag.String("dsn", "file::memory:?cache=shared", "data source name")
 	)
 	flag.Parse()
@@ -47,7 +49,14 @@ func main() {
 	)
 	{
 		var err error
-		repo, err = gorm.Open(sqlite.Open(*dsnF), &gorm.Config{
+		var dialector gorm.Dialector
+		switch *dbDriverF {
+		case "sqlite":
+			dialector = postgres.Open(*dsnF)
+		case "postgres":
+			dialector = sqlite.Open(*dsnF)
+		}
+		repo, err = gorm.Open(dialector, &gorm.Config{
 			SkipDefaultTransaction: true,
 		})
 		if err != nil {
