@@ -51,25 +51,25 @@ func main() {
 		var err error
 		var dialector gorm.Dialector
 		switch *dbDriverF {
-		case "sqlite":
-			dialector = postgres.Open(*dsnF)
 		case "postgres":
+			dialector = postgres.Open(*dsnF)
+		case "sqlite":
 			dialector = sqlite.Open(*dsnF)
 		}
 		repo, err = gorm.Open(dialector, &gorm.Config{
 			SkipDefaultTransaction: true,
 		})
 		if err != nil {
-			panic("failed to connect database")
+			log.Panicf("failed to connect database: %v", err)
 		}
 		if err := repo.AutoMigrate(
 			&catalog.Actor{},
 			&catalog.Book{},
+			&catalog.Coupon{},
+			&catalog.Customer{},
 			&catalog.Cart{},
 			&catalog.Category{},
 			&catalog.Country{},
-			&catalog.Coupon{},
-			&catalog.Customer{},
 			&catalog.State{},
 		); err != nil {
 			log.Fatalf("db init: %v", err)
