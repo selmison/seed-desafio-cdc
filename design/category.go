@@ -12,6 +12,8 @@ var CategoryDTO = Type("CategoryDTO", func() {
 	Required("id", "name")
 })
 
+var CategoriesDTO = ArrayOf(CategoryDTO)
+
 var CreateCategoryDTO = Type("CreateCategoryDTO", func() {
 	Description("New Category Type")
 	Attribute("name", String)

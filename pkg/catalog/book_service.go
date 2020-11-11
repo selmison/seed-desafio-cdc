@@ -40,7 +40,7 @@ func (s *service) CreateBook(_ context.Context, dto *catalogGen.CreateBookDTO) (
 	}, nil
 }
 
-// ListBook implements list_book.
+// ListBooks implements list_book.
 func (s *service) ListBooks(context.Context) (res []*catalogGen.BookDTO, err error) {
 	if err := s.logger.Log("info", fmt.Sprintf("books.list_books")); err != nil {
 		log.Printf("kit/log error: %v\n", err)

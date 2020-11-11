@@ -13,6 +13,8 @@ var CountryDTO = Type("CountryDTO", func() {
 	Required("id", "name")
 })
 
+var CountriesDTO = ArrayOf(CountryDTO)
+
 var CreateCountryDTO = Type("CreateCountryDTO", func() {
 	Description("New Country Type")
 	Attribute("name", String)

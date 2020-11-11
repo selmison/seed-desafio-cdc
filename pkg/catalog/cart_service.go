@@ -21,9 +21,8 @@ func (s *service) CreateCart(_ context.Context, dto *catalogGen.CreateCartDTO) (
 		return nil, result.Error
 	}
 	return &catalogGen.CartDTO{
-		ID:         cart.ID,
-		Total:      cart.Total,
-		Items:      dto.Items,
-		CustomerID: cart.CustomerID,
+		ID:    cart.ID,
+		Total: cart.Total(),
+		Items: dto.Items,
 	}, nil
 }

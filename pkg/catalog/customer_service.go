@@ -30,11 +30,9 @@ func (s *service) CreateCustomer(ctx context.Context, dto *catalogGen.CreateCust
 			Address:    customer.Address.Address,
 			Complement: customer.Address.Complement,
 			City:       customer.Address.City,
-			CountryID:  customer.Address.CountryID,
 			StateID:    customer.Address.StateID,
 			Cep:        customer.Address.Cep,
 		},
-		Phone:   customer.Phone,
-		CartIds: mapCartsToIDs(customer.Carts),
+		Phone: customer.Phone,
 	}, nil
 }

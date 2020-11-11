@@ -10,12 +10,9 @@ import (
 
 func mapAddressDTOToAddress(dto catalogGen.AddressDTO, customerID string) Address {
 	return Address{
-		CustomerID: customerID,
 		Address:    dto.Address,
 		Complement: dto.Complement,
 		City:       dto.City,
-		CountryID:  dto.CountryID,
-		Country:    Country{ID: dto.CountryID},
 		StateID:    dto.StateID,
 		State:      State{ID: dto.StateID},
 		Cep:        dto.Cep,
@@ -47,10 +44,8 @@ func mapCreateBookDTOToBook(dto catalogGen.CreateBookDTO) Book {
 func mapCreateCartDTOToCart(dto catalogGen.CreateCartDTO) Cart {
 	id := uuid.New().String()
 	return Cart{
-		ID:         id,
-		Total:      dto.Total,
-		Items:      mapItemsDTOToItems(dto.Items, id),
-		CustomerID: dto.CustomerID,
+		ID:    id,
+		Items: mapItemsDTOToItems(dto.Items, id),
 	}
 }
 
@@ -64,7 +59,6 @@ func mapCreateCustomerDTOToCustomer(dto catalogGen.CreateCustomerDTO) Customer {
 		Document:  dto.Document,
 		Address:   mapAddressDTOToAddress(*dto.Address, id),
 		Phone:     dto.Phone,
-		Carts:     mapIDsToCarts(dto.CartIds),
 	}
 	return customer
 }
@@ -104,6 +98,41 @@ func (s *service) mapBookToBookDTO(book Book) (*catalogGen.BookDTO, error) {
 		CategoryIds: categoryIDs,
 		ActorIds:    actorIDs,
 	}, nil
+}
+
+func mapCustomerToCustomerDTO(customer Customer) *catalogGen.CustomerDTO {
+	return &catalogGen.CustomerDTO{
+		ID:        customer.ID,
+		FirstName: customer.FirstName,
+		LastName:  customer.LastName,
+		Email:     customer.Email,
+		Document:  customer.Document,
+		Address: &catalogGen.AddressDTO{
+			Address:    customer.Address.Address,
+			Complement: customer.Address.Complement,
+			City:       customer.Address.City,
+			StateID:    customer.Address.StateID,
+			Cep:        customer.Address.Cep,
+		},
+		Phone: customer.Phone,
+	}
+}
+
+func mapCartToCartDTO(cart Cart) *catalogGen.CartDTO {
+	itemDTOs := make([]*catalogGen.ItemDTO, len(cart.Items))
+	for i, item := range cart.Items {
+		itemDTOs[i] = &catalogGen.ItemDTO{
+			BookID: item.BookID,
+			Amount: item.Amount,
+		}
+	}
+	return &catalogGen.CartDTO{
+		ID:         cart.ID,
+		Total:      cart.Total(),
+		Items:      itemDTOs,
+		CustomerID: "",
+		CouponID:   nil,
+	}
 }
 
 func mapIDsToActors(ids []string) []*Actor {

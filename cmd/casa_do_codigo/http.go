@@ -8,7 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kitHttp "github.com/go-kit/kit/transport/http"
 	goaHttp "goa.design/goa/v3/http"
@@ -46,108 +45,152 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	// responses.
 	var (
 		catalogCreateActorHandler    *kitHttp.Server
+		catalogListActorsHandler     *kitHttp.Server
 		catalogShowActorHandler      *kitHttp.Server
 		catalogCreateBookHandler     *kitHttp.Server
 		catalogListBooksHandler      *kitHttp.Server
 		catalogShowBookHandler       *kitHttp.Server
 		catalogCreateCartHandler     *kitHttp.Server
 		catalogCreateCategoryHandler *kitHttp.Server
+		catalogListCategoriesHandler *kitHttp.Server
 		catalogShowCategoryHandler   *kitHttp.Server
 		catalogCreateCountryHandler  *kitHttp.Server
+		catalogListCountriesHandler  *kitHttp.Server
+		catalogShowCountryHandler    *kitHttp.Server
 		catalogCreateCouponHandler   *kitHttp.Server
 		catalogCreateCustomerHandler *kitHttp.Server
+		catalogCreatePurchaseHandler *kitHttp.Server
 		catalogCreateStateHandler    *kitHttp.Server
+		catalogListStatesHandler     *kitHttp.Server
 		catalogServer                *catalogSvr.Server
 	)
 	{
 		eh := errorHandler(logger)
 		catalogCreateActorHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateActor),
+			catalogEndpoints.CreateActor,
 			catalogKitSvr.DecodeCreateActorRequest(mux, dec),
 			catalogKitSvr.EncodeCreateActorResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateActorError(enc, nil)),
 		)
+		catalogListActorsHandler = kitHttp.NewServer(
+			catalogEndpoints.ListActors,
+			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
+			catalogKitSvr.EncodeListActorsResponse(enc),
+		)
 		catalogShowActorHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.ShowActor),
+			catalogEndpoints.ShowActor,
 			catalogKitSvr.DecodeShowActorRequest(mux, dec),
 			catalogKitSvr.EncodeShowActorResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowActorError(enc, nil)),
 		)
 		catalogCreateBookHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateBook),
+			catalogEndpoints.CreateBook,
 			catalogKitSvr.DecodeCreateBookRequest(mux, dec),
 			catalogKitSvr.EncodeCreateBookResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateBookError(enc, nil)),
 		)
 		catalogListBooksHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.ListBooks),
+			catalogEndpoints.ListBooks,
 			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
 			catalogKitSvr.EncodeListBooksResponse(enc),
 		)
 		catalogShowBookHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.ShowBook),
+			catalogEndpoints.ShowBook,
 			catalogKitSvr.DecodeShowBookRequest(mux, dec),
 			catalogKitSvr.EncodeShowBookResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowBookError(enc, nil)),
 		)
 		catalogCreateCartHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCart),
+			catalogEndpoints.CreateCart,
 			catalogKitSvr.DecodeCreateCartRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCartResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCartError(enc, nil)),
 		)
 		catalogCreateCategoryHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCategory),
+			catalogEndpoints.CreateCategory,
 			catalogKitSvr.DecodeCreateCategoryRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCategoryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCategoryError(enc, nil)),
 		)
+		catalogListCategoriesHandler = kitHttp.NewServer(
+			catalogEndpoints.ListCategories,
+			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
+			catalogKitSvr.EncodeListCategoriesResponse(enc),
+		)
 		catalogShowCategoryHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.ShowCategory),
+			catalogEndpoints.ShowCategory,
 			catalogKitSvr.DecodeShowCategoryRequest(mux, dec),
 			catalogKitSvr.EncodeShowCategoryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCategoryError(enc, nil)),
 		)
 		catalogCreateCountryHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCountry),
+			catalogEndpoints.CreateCountry,
 			catalogKitSvr.DecodeCreateCountryRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCountryResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCountryError(enc, nil)),
 		)
+		catalogListCountriesHandler = kitHttp.NewServer(
+			catalogEndpoints.ListCountries,
+			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
+			catalogKitSvr.EncodeListCountriesResponse(enc),
+		)
+		catalogShowCountryHandler = kitHttp.NewServer(
+			catalogEndpoints.ShowCountry,
+			catalogKitSvr.DecodeShowCountryRequest(mux, dec),
+			catalogKitSvr.EncodeShowCountryResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowCountryError(enc, nil)),
+		)
 		catalogCreateCouponHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCoupon),
+			catalogEndpoints.CreateCoupon,
 			catalogKitSvr.DecodeCreateCouponRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCouponResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCouponError(enc, nil)),
 		)
 		catalogCreateCustomerHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateCustomer),
+			catalogEndpoints.CreateCustomer,
 			catalogKitSvr.DecodeCreateCustomerRequest(mux, dec),
 			catalogKitSvr.EncodeCreateCustomerResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateCustomerError(enc, nil)),
 		)
+		catalogCreatePurchaseHandler = kitHttp.NewServer(
+			catalogEndpoints.CreatePurchase,
+			catalogKitSvr.DecodeCreatePurchaseRequest(mux, dec),
+			catalogKitSvr.EncodeCreatePurchaseResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreatePurchaseError(enc, nil)),
+		)
 		catalogCreateStateHandler = kitHttp.NewServer(
-			endpoint.Endpoint(catalogEndpoints.CreateState),
+			catalogEndpoints.CreateState,
 			catalogKitSvr.DecodeCreateStateRequest(mux, dec),
 			catalogKitSvr.EncodeCreateStateResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreateStateError(enc, nil)),
+		)
+		catalogListStatesHandler = kitHttp.NewServer(
+			catalogEndpoints.ListStates,
+			func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
+			catalogKitSvr.EncodeListStatesResponse(enc),
 		)
 		catalogServer = catalogSvr.New(catalogEndpoints, mux, dec, enc, eh, nil)
 	}
 
 	// Configure the mux.
 	catalogKitSvr.MountCreateActorHandler(mux, catalogCreateActorHandler)
+	catalogKitSvr.MountListActorsHandler(mux, catalogListActorsHandler)
 	catalogKitSvr.MountShowActorHandler(mux, catalogShowActorHandler)
 	catalogKitSvr.MountCreateBookHandler(mux, catalogCreateBookHandler)
 	catalogKitSvr.MountListBooksHandler(mux, catalogListBooksHandler)
 	catalogKitSvr.MountShowBookHandler(mux, catalogShowBookHandler)
 	catalogKitSvr.MountCreateCartHandler(mux, catalogCreateCartHandler)
 	catalogKitSvr.MountCreateCategoryHandler(mux, catalogCreateCategoryHandler)
+	catalogKitSvr.MountListCategoriesHandler(mux, catalogListCategoriesHandler)
 	catalogKitSvr.MountShowCategoryHandler(mux, catalogShowCategoryHandler)
 	catalogKitSvr.MountCreateCountryHandler(mux, catalogCreateCountryHandler)
+	catalogKitSvr.MountListCountriesHandler(mux, catalogListCountriesHandler)
+	catalogKitSvr.MountShowCountryHandler(mux, catalogShowCountryHandler)
 	catalogKitSvr.MountCreateCouponHandler(mux, catalogCreateCouponHandler)
 	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
+	catalogKitSvr.MountCreatePurchaseHandler(mux, catalogCreatePurchaseHandler)
 	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
+	catalogKitSvr.MountListStatesHandler(mux, catalogListStatesHandler)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

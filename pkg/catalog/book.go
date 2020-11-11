@@ -13,7 +13,7 @@ import (
 // Book represents a single book.
 type Book struct {
 	gorm.Model
-	ID         string `gorm:"primarykey"`
+	ID         string `gorm:"primaryKey"`
 	Title      string `gorm:"unique" validate:"required,not_blank"`
 	Synopsis   string `validate:"required,not_blank,max=500"`
 	Summary    string
@@ -30,7 +30,7 @@ func (a *Book) Validate() error {
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	return nil

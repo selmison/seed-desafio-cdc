@@ -12,21 +12,20 @@ import (
 
 type Customer struct {
 	gorm.Model
-	ID        string  `gorm:"primarykey"`
+	ID        string  `gorm:"primaryKey"`
 	FirstName string  `validate:"required,not_blank"`
 	LastName  string  `validate:"required,not_blank"`
 	Email     string  `gorm:"unique" validate:"required,not_blank"`
 	Document  string  `validate:"required,not_blank"`
-	Address   Address `gorm:"foreignKey:CustomerID" validate:"required"`
+	Address   Address `gorm:"embedded"`
 	Phone     string  `validate:"required,not_blank"`
-	Carts     []*Cart
 }
 
 func (c *Customer) Validate() error {
 	if err := coreDomain.Validate.Struct(c); err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	if err := c.Address.Validate(); err != nil {
@@ -36,15 +35,12 @@ func (c *Customer) Validate() error {
 }
 
 type Address struct {
-	CustomerID string  `gorm:"primarykey"`
-	Address    string  `validate:"required,not_blank"`
-	Complement string  `validate:"required,not_blank"`
-	City       string  `validate:"required,not_blank"`
-	CountryID  string  `validate:"required,not_blank"`
-	Country    Country `validate:"required"`
-	StateID    string  `validate:"required,not_blank"`
-	State      State   `validate:"required"`
-	Cep        string  `validate:"required,not_blank"`
+	Address    string `validate:"required,not_blank"`
+	Complement string `validate:"required,not_blank"`
+	City       string `validate:"required,not_blank"`
+	StateID    string `validate:"required,not_blank"`
+	State      State  `validate:"-"`
+	Cep        string `validate:"required,not_blank"`
 }
 
 func (a *Address) Validate() error {
@@ -52,7 +48,7 @@ func (a *Address) Validate() error {
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	return nil

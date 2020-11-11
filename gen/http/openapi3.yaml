@@ -8,6 +8,57 @@ servers:
   description: hosts for Casa do Código Service.
 paths:
   /actors:
+    get:
+      tags:
+      - catalog
+      summary: list_actors catalog
+      operationId: catalog#list_actors
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActorDTO'
+                example:
+                - created_at: Provident ducimus.
+                  description: hjq
+                  email: nasir_larson@hoppewitting.name
+                  id: Nisi accusantium esse error autem dolorem.
+                  name: Sunt illum optio.
+                - created_at: Provident ducimus.
+                  description: hjq
+                  email: nasir_larson@hoppewitting.name
+                  id: Nisi accusantium esse error autem dolorem.
+                  name: Sunt illum optio.
+                - created_at: Provident ducimus.
+                  description: hjq
+                  email: nasir_larson@hoppewitting.name
+                  id: Nisi accusantium esse error autem dolorem.
+                  name: Sunt illum optio.
+              example:
+              - created_at: Provident ducimus.
+                description: hjq
+                email: nasir_larson@hoppewitting.name
+                id: Nisi accusantium esse error autem dolorem.
+                name: Sunt illum optio.
+              - created_at: Provident ducimus.
+                description: hjq
+                email: nasir_larson@hoppewitting.name
+                id: Nisi accusantium esse error autem dolorem.
+                name: Sunt illum optio.
+              - created_at: Provident ducimus.
+                description: hjq
+                email: nasir_larson@hoppewitting.name
+                id: Nisi accusantium esse error autem dolorem.
+                name: Sunt illum optio.
+              - created_at: Provident ducimus.
+                description: hjq
+                email: nasir_larson@hoppewitting.name
+                id: Nisi accusantium esse error autem dolorem.
+                name: Sunt illum optio.
     post:
       tags:
       - catalog
@@ -20,9 +71,9 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateActorRequestBody'
             example:
-              description: df5
-              email: boris@boehm.net
-              name: Quis fuga voluptas dolorum.
+              description: ij9
+              email: xzavier.dickens@jacobsonernser.info
+              name: Minima non consequatur corporis molestias natus.
       responses:
         "201":
           description: ""
@@ -31,11 +82,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActorDTO'
               example:
-                created_at: Error provident dolorem tempore expedita rerum.
-                description: sin
-                email: ruby@kuvalis.info
-                id: Labore recusandae sit.
-                name: Vel dolor molestiae doloremque quisquam dolorem.
+                created_at: Tempore expedita rerum.
+                description: tzs
+                email: adelia@bins.com
+                id: Doloremque quisquam dolorem illum.
+                name: Ut magnam ea.
         "400":
           description: ""
           content:
@@ -63,8 +114,8 @@ paths:
         schema:
           type: string
           description: ID
-          example: Est et voluptatem.
-        example: Quidem sit illo aut incidunt.
+          example: Fuga a aliquid ea et at.
+        example: Similique dolor velit maxime accusamus unde sint.
       responses:
         "200":
           description: ""
@@ -73,11 +124,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActorDTO'
               example:
-                created_at: A expedita illo ut perferendis.
-                description: 6zv
-                email: vinnie@kling.biz
-                id: Dolores aut omnis occaecati quia aperiam nisi.
-                name: Exercitationem eos autem corporis dolores.
+                created_at: Dolorum in autem.
+                description: d7k
+                email: arnoldo.stroman@mraz.name
+                id: Expedita illo ut.
+                name: Perspiciatis consequatur.
         "404":
           description: ""
           content:
@@ -85,12 +136,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
+                temporary: false
+                timeout: false
   /books:
     get:
       tags:
@@ -108,142 +159,118 @@ paths:
                   $ref: '#/components/schemas/BookDTO'
                 example:
                 - actor_ids:
-                  - Eum aut eos aut.
-                  - Ab perferendis voluptatibus error ullam natus.
-                  - Molestiae ipsam totam quia quae aut hic.
-                  - Quis nobis.
+                  - Et quo ullam eum consequatur rem.
+                  - Voluptates sed amet.
+                  - Labore possimus asperiores.
+                  - Ea officiis voluptatem est.
                   category_ids:
-                  - Quis aut iste qui possimus sunt eum.
-                  - Sit recusandae laudantium iste eum libero voluptatum.
-                  - Placeat molestiae.
-                  id: Dolor iste qui aspernatur velit nobis.
-                  isbn: Odit impedit fugiat itaque cum.
-                  issue: Quisquam sint at et minima est et.
-                  pages: 3692961263830674922
-                  price: 20.471115
-                  summary: Voluptas velit eligendi.
-                  synopsis: gbx
-                  title: Dolores dolor officia quaerat error autem harum.
+                  - In nam quo cupiditate minus tempore.
+                  - Animi commodi vel ipsa unde delectus esse.
+                  id: Placeat molestiae.
+                  isbn: Quae aut hic.
+                  issue: Quis nobis.
+                  pages: 355225830913899073
+                  price: 20.90174
+                  summary: Ullam natus magni molestiae.
+                  synopsis: zke
+                  title: Inventore eum aut eos aut.
                 - actor_ids:
-                  - Eum aut eos aut.
-                  - Ab perferendis voluptatibus error ullam natus.
-                  - Molestiae ipsam totam quia quae aut hic.
-                  - Quis nobis.
+                  - Et quo ullam eum consequatur rem.
+                  - Voluptates sed amet.
+                  - Labore possimus asperiores.
+                  - Ea officiis voluptatem est.
                   category_ids:
-                  - Quis aut iste qui possimus sunt eum.
-                  - Sit recusandae laudantium iste eum libero voluptatum.
-                  - Placeat molestiae.
-                  id: Dolor iste qui aspernatur velit nobis.
-                  isbn: Odit impedit fugiat itaque cum.
-                  issue: Quisquam sint at et minima est et.
-                  pages: 3692961263830674922
-                  price: 20.471115
-                  summary: Voluptas velit eligendi.
-                  synopsis: gbx
-                  title: Dolores dolor officia quaerat error autem harum.
+                  - In nam quo cupiditate minus tempore.
+                  - Animi commodi vel ipsa unde delectus esse.
+                  id: Placeat molestiae.
+                  isbn: Quae aut hic.
+                  issue: Quis nobis.
+                  pages: 355225830913899073
+                  price: 20.90174
+                  summary: Ullam natus magni molestiae.
+                  synopsis: zke
+                  title: Inventore eum aut eos aut.
                 - actor_ids:
-                  - Eum aut eos aut.
-                  - Ab perferendis voluptatibus error ullam natus.
-                  - Molestiae ipsam totam quia quae aut hic.
-                  - Quis nobis.
+                  - Et quo ullam eum consequatur rem.
+                  - Voluptates sed amet.
+                  - Labore possimus asperiores.
+                  - Ea officiis voluptatem est.
                   category_ids:
-                  - Quis aut iste qui possimus sunt eum.
-                  - Sit recusandae laudantium iste eum libero voluptatum.
-                  - Placeat molestiae.
-                  id: Dolor iste qui aspernatur velit nobis.
-                  isbn: Odit impedit fugiat itaque cum.
-                  issue: Quisquam sint at et minima est et.
-                  pages: 3692961263830674922
-                  price: 20.471115
-                  summary: Voluptas velit eligendi.
-                  synopsis: gbx
-                  title: Dolores dolor officia quaerat error autem harum.
+                  - In nam quo cupiditate minus tempore.
+                  - Animi commodi vel ipsa unde delectus esse.
+                  id: Placeat molestiae.
+                  isbn: Quae aut hic.
+                  issue: Quis nobis.
+                  pages: 355225830913899073
+                  price: 20.90174
+                  summary: Ullam natus magni molestiae.
+                  synopsis: zke
+                  title: Inventore eum aut eos aut.
                 - actor_ids:
-                  - Eum aut eos aut.
-                  - Ab perferendis voluptatibus error ullam natus.
-                  - Molestiae ipsam totam quia quae aut hic.
-                  - Quis nobis.
+                  - Et quo ullam eum consequatur rem.
+                  - Voluptates sed amet.
+                  - Labore possimus asperiores.
+                  - Ea officiis voluptatem est.
                   category_ids:
-                  - Quis aut iste qui possimus sunt eum.
-                  - Sit recusandae laudantium iste eum libero voluptatum.
-                  - Placeat molestiae.
-                  id: Dolor iste qui aspernatur velit nobis.
-                  isbn: Odit impedit fugiat itaque cum.
-                  issue: Quisquam sint at et minima est et.
-                  pages: 3692961263830674922
-                  price: 20.471115
-                  summary: Voluptas velit eligendi.
-                  synopsis: gbx
-                  title: Dolores dolor officia quaerat error autem harum.
+                  - In nam quo cupiditate minus tempore.
+                  - Animi commodi vel ipsa unde delectus esse.
+                  id: Placeat molestiae.
+                  isbn: Quae aut hic.
+                  issue: Quis nobis.
+                  pages: 355225830913899073
+                  price: 20.90174
+                  summary: Ullam natus magni molestiae.
+                  synopsis: zke
+                  title: Inventore eum aut eos aut.
               example:
               - actor_ids:
-                - Eum aut eos aut.
-                - Ab perferendis voluptatibus error ullam natus.
-                - Molestiae ipsam totam quia quae aut hic.
-                - Quis nobis.
+                - Et quo ullam eum consequatur rem.
+                - Voluptates sed amet.
+                - Labore possimus asperiores.
+                - Ea officiis voluptatem est.
                 category_ids:
-                - Quis aut iste qui possimus sunt eum.
-                - Sit recusandae laudantium iste eum libero voluptatum.
-                - Placeat molestiae.
-                id: Dolor iste qui aspernatur velit nobis.
-                isbn: Odit impedit fugiat itaque cum.
-                issue: Quisquam sint at et minima est et.
-                pages: 3692961263830674922
-                price: 20.471115
-                summary: Voluptas velit eligendi.
-                synopsis: gbx
-                title: Dolores dolor officia quaerat error autem harum.
+                - In nam quo cupiditate minus tempore.
+                - Animi commodi vel ipsa unde delectus esse.
+                id: Placeat molestiae.
+                isbn: Quae aut hic.
+                issue: Quis nobis.
+                pages: 355225830913899073
+                price: 20.90174
+                summary: Ullam natus magni molestiae.
+                synopsis: zke
+                title: Inventore eum aut eos aut.
               - actor_ids:
-                - Eum aut eos aut.
-                - Ab perferendis voluptatibus error ullam natus.
-                - Molestiae ipsam totam quia quae aut hic.
-                - Quis nobis.
+                - Et quo ullam eum consequatur rem.
+                - Voluptates sed amet.
+                - Labore possimus asperiores.
+                - Ea officiis voluptatem est.
                 category_ids:
-                - Quis aut iste qui possimus sunt eum.
-                - Sit recusandae laudantium iste eum libero voluptatum.
-                - Placeat molestiae.
-                id: Dolor iste qui aspernatur velit nobis.
-                isbn: Odit impedit fugiat itaque cum.
-                issue: Quisquam sint at et minima est et.
-                pages: 3692961263830674922
-                price: 20.471115
-                summary: Voluptas velit eligendi.
-                synopsis: gbx
-                title: Dolores dolor officia quaerat error autem harum.
+                - In nam quo cupiditate minus tempore.
+                - Animi commodi vel ipsa unde delectus esse.
+                id: Placeat molestiae.
+                isbn: Quae aut hic.
+                issue: Quis nobis.
+                pages: 355225830913899073
+                price: 20.90174
+                summary: Ullam natus magni molestiae.
+                synopsis: zke
+                title: Inventore eum aut eos aut.
               - actor_ids:
-                - Eum aut eos aut.
-                - Ab perferendis voluptatibus error ullam natus.
-                - Molestiae ipsam totam quia quae aut hic.
-                - Quis nobis.
+                - Et quo ullam eum consequatur rem.
+                - Voluptates sed amet.
+                - Labore possimus asperiores.
+                - Ea officiis voluptatem est.
                 category_ids:
-                - Quis aut iste qui possimus sunt eum.
-                - Sit recusandae laudantium iste eum libero voluptatum.
-                - Placeat molestiae.
-                id: Dolor iste qui aspernatur velit nobis.
-                isbn: Odit impedit fugiat itaque cum.
-                issue: Quisquam sint at et minima est et.
-                pages: 3692961263830674922
-                price: 20.471115
-                summary: Voluptas velit eligendi.
-                synopsis: gbx
-                title: Dolores dolor officia quaerat error autem harum.
-              - actor_ids:
-                - Eum aut eos aut.
-                - Ab perferendis voluptatibus error ullam natus.
-                - Molestiae ipsam totam quia quae aut hic.
-                - Quis nobis.
-                category_ids:
-                - Quis aut iste qui possimus sunt eum.
-                - Sit recusandae laudantium iste eum libero voluptatum.
-                - Placeat molestiae.
-                id: Dolor iste qui aspernatur velit nobis.
-                isbn: Odit impedit fugiat itaque cum.
-                issue: Quisquam sint at et minima est et.
-                pages: 3692961263830674922
-                price: 20.471115
-                summary: Voluptas velit eligendi.
-                synopsis: gbx
-                title: Dolores dolor officia quaerat error autem harum.
+                - In nam quo cupiditate minus tempore.
+                - Animi commodi vel ipsa unde delectus esse.
+                id: Placeat molestiae.
+                isbn: Quae aut hic.
+                issue: Quis nobis.
+                pages: 355225830913899073
+                price: 20.90174
+                summary: Ullam natus magni molestiae.
+                synopsis: zke
+                title: Inventore eum aut eos aut.
     post:
       tags:
       - catalog
@@ -257,20 +284,21 @@ paths:
               $ref: '#/components/schemas/CreateBookRequestBody'
             example:
               actor_ids:
-              - In autem eum.
-              - Ab veritatis officiis accusamus quibusdam aut eum.
+              - Fugit ut praesentium.
+              - Hic est soluta.
+              - Et accusantium ipsa commodi corporis excepturi.
               category_ids:
-              - Assumenda dolor quia et dolore.
-              - Incidunt ipsum rerum quia ducimus voluptatum.
-              - Dignissimos et occaecati dolorem.
-              - Eum sit est.
-              isbn: Et ut provident at hic.
-              issue: Sint et.
-              pages: 8812144099905341790
-              price: 20.14946
-              summary: Magnam et necessitatibus impedit quam.
-              synopsis: vwd
-              title: Sequi aliquid sed.
+              - Quae perferendis adipisci excepturi.
+              - Qui repellat dolor delectus.
+              - Distinctio iusto corporis eum amet.
+              - Tempora alias quis.
+              isbn: Quia distinctio.
+              issue: Quasi harum nam.
+              pages: 6926372662986759706
+              price: 20.820534
+              summary: Ullam facere minima cupiditate consectetur.
+              synopsis: nbr
+              title: Officiis accusamus quibusdam aut eum.
       responses:
         "201":
           description: ""
@@ -280,22 +308,21 @@ paths:
                 $ref: '#/components/schemas/BookDTO'
               example:
                 actor_ids:
-                - Accusantium ipsa commodi corporis excepturi.
-                - Necessitatibus ab mollitia.
-                - Porro quis explicabo sit.
-                - Eum odit aspernatur a.
+                - Fugiat itaque cum dolor quisquam sint at.
+                - Minima est et.
+                - Ut quis aut iste qui.
+                - Sunt eum quisquam sit recusandae laudantium iste.
                 category_ids:
-                - Tempora alias quis.
-                - Qui fugit ut praesentium.
-                - Hic est soluta.
-                id: Dolor quia aliquam aliquid ullam facere.
-                isbn: Perferendis adipisci excepturi qui qui repellat dolor.
-                issue: Fugiat distinctio iusto corporis eum.
-                pages: 4724853152887151523
-                price: 20.799353
-                summary: Et quasi harum nam.
-                synopsis: 66i
-                title: Cupiditate consectetur.
+                - Autem harum facilis debitis velit velit mollitia.
+                - Velit eligendi asperiores quibusdam dicta.
+                id: Necessitatibus ab mollitia.
+                isbn: Qui aspernatur velit nobis voluptatem.
+                issue: Dolor officia.
+                pages: 1436892520498150648
+                price: 20.232424
+                summary: Dolores quod nisi.
+                synopsis: tnw
+                title: Porro quis explicabo sit.
         "400":
           description: ""
           content:
@@ -307,7 +334,7 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
                 timeout: false
   /books/{id}:
     get:
@@ -323,8 +350,8 @@ paths:
         schema:
           type: string
           description: ID
-          example: Non ad ipsam libero rerum eaque.
-        example: Commodi itaque.
+          example: Mollitia veniam quisquam inventore quod.
+        example: Quia tempora libero dolore voluptate ipsum occaecati.
       responses:
         "200":
           description: ""
@@ -334,19 +361,19 @@ paths:
                 $ref: '#/components/schemas/BookDTO'
               example:
                 actor_ids:
-                - Voluptate voluptatem veniam laudantium.
-                - Vero nam.
+                - Qui voluptatem dolorem ut omnis non.
+                - Veritatis corrupti sit delectus et.
                 category_ids:
-                - Officia eum veritatis nam est qui.
-                - Rerum commodi.
-                id: Esse laboriosam asperiores et quo.
-                isbn: Non fuga reprehenderit aut sequi.
-                issue: Quasi voluptatum.
-                pages: 8084748301012457223
-                price: 20.72649
-                summary: Ea officiis voluptatem est.
-                synopsis: k3d
-                title: Eum consequatur rem sunt voluptates sed amet.
+                - Consequatur ut.
+                - Doloremque at nemo pariatur vel quo.
+                id: Officia eum veritatis nam est qui.
+                isbn: Est corporis tempore ut occaecati quibusdam non.
+                issue: Quis iusto nihil cupiditate voluptatem ut.
+                pages: 1869063487689757644
+                price: 20.754091
+                summary: Laudantium quibusdam vero.
+                synopsis: 66u
+                title: Rerum commodi.
         "404":
           description: ""
           content:
@@ -354,12 +381,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: true
-                timeout: false
+                timeout: true
   /carts:
     post:
       tags:
@@ -373,17 +400,16 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCartRequestBody'
             example:
-              customer_id: Iusto nihil cupiditate voluptatem ut ut corporis.
+              coupon_id: Amet consequatur.
+              customer_id: Sed maiores qui incidunt rem rem quia.
               items:
-              - amount: 1682166100
-                book_id: Occaecati quibusdam non.
-              - amount: 1682166100
-                book_id: Occaecati quibusdam non.
-              - amount: 1682166100
-                book_id: Occaecati quibusdam non.
-              - amount: 1682166100
-                book_id: Occaecati quibusdam non.
-              total: 0.49038583
+              - amount: 295474085
+                book_id: Eos accusamus.
+              - amount: 295474085
+                book_id: Eos accusamus.
+              - amount: 295474085
+                book_id: Eos accusamus.
+              total: 0.9235589
       responses:
         "201":
           description: ""
@@ -392,16 +418,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/CartDTO'
               example:
-                customer_id: Omnis non nam veritatis corrupti sit delectus.
-                id: Quo sed qui.
+                coupon_id: Perferendis quaerat.
+                customer_id: Corrupti ut et.
+                id: Ratione facilis corrupti eos consectetur repellat animi.
                 items:
-                - amount: 1496435812
-                  book_id: Ut doloremque doloremque at nemo pariatur.
-                - amount: 1496435812
-                  book_id: Ut doloremque doloremque at nemo pariatur.
-                - amount: 1496435812
-                  book_id: Ut doloremque doloremque at nemo pariatur.
-                total: 0.12400658
+                - amount: 821791573
+                  book_id: Eos ut repellat est praesentium nostrum excepturi.
+                - amount: 821791573
+                  book_id: Eos ut repellat est praesentium nostrum excepturi.
+                total: 0.9908139
         "400":
           description: ""
           content:
@@ -413,9 +438,37 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: true
   /categories:
+    get:
+      tags:
+      - catalog
+      summary: list_categories catalog
+      operationId: catalog#list_categories
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+                example:
+                - id: Dolor rem.
+                  name: Quo voluptate quidem earum.
+                - id: Dolor rem.
+                  name: Quo voluptate quidem earum.
+              example:
+              - id: Dolor rem.
+                name: Quo voluptate quidem earum.
+              - id: Dolor rem.
+                name: Quo voluptate quidem earum.
+              - id: Dolor rem.
+                name: Quo voluptate quidem earum.
+              - id: Dolor rem.
+                name: Quo voluptate quidem earum.
     post:
       tags:
       - catalog
@@ -428,7 +481,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCategoryRequestBody'
             example:
-              name: Doloribus voluptas dicta.
+              name: Itaque nesciunt assumenda aperiam excepturi harum enim.
       responses:
         "201":
           description: ""
@@ -437,8 +490,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
               example:
-                id: Accusamus repudiandae sed sed maiores qui.
-                name: Rem rem.
+                id: Illo recusandae occaecati animi iste.
+                name: Vitae et placeat.
         "400":
           description: ""
           content:
@@ -466,8 +519,8 @@ paths:
         schema:
           type: string
           description: ID
-          example: Eius nisi consequatur.
-        example: Qui odio dolores.
+          example: Assumenda quam quo qui officia architecto.
+        example: Iste corporis in voluptatem aliquid magnam.
       responses:
         "200":
           description: ""
@@ -476,8 +529,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
               example:
-                id: Ratione facilis corrupti eos consectetur repellat animi.
-                name: Tenetur ex corrupti.
+                id: Quia ad sed incidunt similique at autem.
+                name: Consequatur dicta commodi.
         "404":
           description: ""
           content:
@@ -485,13 +538,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: true
-                timeout: true
+                timeout: false
   /countries:
+    get:
+      tags:
+      - catalog
+      summary: list_countries catalog
+      operationId: catalog#list_countries
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryDTO'
+                example:
+                - id: Expedita corrupti.
+                  name: Dolorem soluta fugiat deleniti nobis quam.
+                  state_ids: Qui eos vel quidem nostrum qui.
+                - id: Expedita corrupti.
+                  name: Dolorem soluta fugiat deleniti nobis quam.
+                  state_ids: Qui eos vel quidem nostrum qui.
+              example:
+              - id: Expedita corrupti.
+                name: Dolorem soluta fugiat deleniti nobis quam.
+                state_ids: Qui eos vel quidem nostrum qui.
+              - id: Expedita corrupti.
+                name: Dolorem soluta fugiat deleniti nobis quam.
+                state_ids: Qui eos vel quidem nostrum qui.
     post:
       tags:
       - catalog
@@ -504,7 +585,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCategoryRequestBody'
             example:
-              name: Quaerat cumque.
+              name: Doloribus rerum corporis nostrum veniam.
       responses:
         "201":
           description: ""
@@ -513,9 +594,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CountryDTO'
               example:
-                id: Sit magni itaque.
-                name: Assumenda aperiam excepturi harum enim.
-                state_ids: Illo recusandae occaecati animi iste.
+                id: Quisquam dolorem nobis totam.
+                name: Autem accusantium.
+                state_ids: Qui inventore eligendi tenetur dolores provident.
         "400":
           description: ""
           content:
@@ -527,8 +608,48 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
+                temporary: false
+                timeout: false
+  /countries/{id}:
+    get:
+      tags:
+      - catalog
+      summary: show_country catalog
+      operationId: catalog#show_country
+      parameters:
+      - name: id
+        in: path
+        description: ID
+        required: true
+        schema:
+          type: string
+          description: ID
+          example: Nulla quibusdam qui.
+        example: Praesentium voluptatum porro.
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDTO'
+              example:
+                id: Ut soluta.
+                name: Consequatur eveniet expedita dolore quod ratione.
+                state_ids: Facilis asperiores.
+        "404":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: false
+                timeout: false
   /coupons:
     post:
       tags:
@@ -542,9 +663,9 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateCouponRequestBody'
             example:
-              code: Sit et est atque dolor.
-              discount: 0.59967625
-              validity: Quo voluptate quidem earum.
+              code: Et rem distinctio et dolore enim.
+              discount: 0.45933485
+              validity: Nobis architecto voluptatem adipisci quas aut.
       responses:
         "201":
           description: ""
@@ -553,10 +674,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CouponDTO'
               example:
-                code: Fugit corporis aliquid beatae sequi in placeat.
-                discount: 0.74422586
-                id: Enim doloremque facere.
-                validity: Iure voluptatem magnam quia.
+                code: Nesciunt et.
+                discount: 0.9911175
+                id: Culpa dolor nam incidunt sit nisi molestiae.
+                validity: Rerum ullam non deserunt error ea.
         "400":
           description: ""
           content:
@@ -569,7 +690,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
-                timeout: true
+                timeout: false
   /customers:
     post:
       tags:
@@ -584,22 +705,20 @@ paths:
               $ref: '#/components/schemas/CreateCustomerRequestBody'
             example:
               address:
-                address: Molestiae aut ut.
-                cep: Adipisci quas aut quis culpa dolor nam.
-                city: Nam facilis.
-                complement: Libero consequatur eveniet expedita dolore quod.
-                country_id: Libero ut culpa recusandae et rem.
-                state_id: Et dolore enim quia est nobis architecto.
+                address: Voluptates quia non.
+                cep: Itaque ipsa et quae dolorum.
+                city: Asperiores et inventore asperiores doloribus commodi.
+                complement: Totam dolor.
+                state_id: Ad veniam natus eaque recusandae.
               cart_ids:
-              - Mollitia rerum ullam.
-              - Deserunt error ea tempore minus omnis aspernatur.
-              - Ut qui et eius dolore.
-              - Deserunt expedita ratione.
-              document: Laudantium voluptate quis velit necessitatibus recusandae non.
-              email: joy@orn.org
-              first_name: At autem dolorem consequatur dicta.
-              last_name: Earum et.
-              phone: Sit nisi molestiae aliquid nesciunt.
+              - Omnis facere veniam porro.
+              - Animi sed eos iure.
+              - Quaerat corporis harum praesentium consequatur dolor quam.
+              document: Minus enim possimus eligendi est recusandae sed.
+              email: bessie_kub@spinka.info
+              first_name: Dicta ut.
+              last_name: Et eius dolore quia deserunt expedita.
+              phone: Ut ex ex.
       responses:
         "201":
           description: ""
@@ -609,21 +728,185 @@ paths:
                 $ref: '#/components/schemas/CustomerDTO'
               example:
                 address:
-                  address: Culpa omnis nihil.
-                  cep: Itaque necessitatibus voluptatem.
-                  city: Enim voluptatem deserunt.
-                  complement: Corporis maiores labore autem occaecati eligendi fugit.
-                  country_id: Minus quia nobis reprehenderit cupiditate quos.
-                  state_id: Aliquid ipsam hic beatae.
+                  address: Sint dignissimos.
+                  cep: Sint qui id.
+                  city: Perspiciatis et ducimus.
+                  complement: Dolores qui doloremque provident id ut tenetur.
+                  state_id: Laboriosam qui ea eius eos.
                 cart_ids:
-                - Qui doloremque provident id ut.
-                - Omnis perspiciatis et ducimus eaque.
-                document: Quaerat corporis harum praesentium consequatur dolor quam.
-                email: roger@funk.org
-                first_name: Quo sint id adipisci sed sit ullam.
-                id: Neque eum et natus.
-                last_name: Enim possimus eligendi est.
-                phone: Sint dignissimos.
+                - Quo quisquam ut.
+                - Fugiat non.
+                - Fuga sed accusantium rerum cum ab nam.
+                document: Modi doloremque.
+                email: haleigh@baumbach.net
+                first_name: Dolores voluptatem.
+                id: Corporis atque nostrum qui dolor aspernatur.
+                last_name: Non delectus quaerat fugiat facilis.
+                phone: Porro illum sapiente deleniti quo et porro.
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+  /purchases:
+    post:
+      tags:
+      - catalog
+      summary: create_purchase catalog
+      operationId: catalog#create_purchase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePurchaseRequestBody'
+            example:
+              cart:
+                coupon_id: Minima ullam occaecati qui.
+                customer_id: Qui aut maxime asperiores et adipisci.
+                items:
+                - amount: 295474085
+                  book_id: Eos accusamus.
+                - amount: 295474085
+                  book_id: Eos accusamus.
+                total: 0.5975442
+              customer:
+                address:
+                  address: Voluptates quia non.
+                  cep: Itaque ipsa et quae dolorum.
+                  city: Asperiores et inventore asperiores doloribus commodi.
+                  complement: Totam dolor.
+                  state_id: Ad veniam natus eaque recusandae.
+                cart_ids:
+                - A sed est est numquam est distinctio.
+                - Necessitatibus rerum modi earum non vel eos.
+                - Optio error et qui eaque.
+                - Sequi quos qui id consequatur tempora.
+                document: Pariatur sequi eveniet.
+                email: janick.schmeler@von.biz
+                first_name: Aliquam vitae sit odit porro.
+                last_name: Quas et non non.
+                phone: Et aperiam expedita voluptatibus reprehenderit error facere.
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseDTO'
+              example:
+                cart:
+                  coupon_id: Ut quia vero.
+                  customer_id: Illo cupiditate placeat recusandae consequatur.
+                  id: Ut quis odit eos amet.
+                  items:
+                  - amount: 821791573
+                    book_id: Eos ut repellat est praesentium nostrum excepturi.
+                  - amount: 821791573
+                    book_id: Eos ut repellat est praesentium nostrum excepturi.
+                  - amount: 821791573
+                    book_id: Eos ut repellat est praesentium nostrum excepturi.
+                  total: 0.38355023
+                customer:
+                  address:
+                    address: Sint dignissimos.
+                    cep: Sint qui id.
+                    city: Perspiciatis et ducimus.
+                    complement: Dolores qui doloremque provident id ut tenetur.
+                    state_id: Laboriosam qui ea eius eos.
+                  cart_ids:
+                  - Minus dolorum.
+                  - Et alias amet molestiae.
+                  - Doloribus modi impedit.
+                  - Voluptatibus omnis.
+                  document: Ipsam iure aliquid nisi qui nemo ab.
+                  email: cameron.tremblay@wolf.biz
+                  first_name: Eos temporibus ut ut veritatis dolore.
+                  id: Voluptatibus excepturi aut numquam ea id.
+                  last_name: Voluptatem est labore praesentium sint molestias officiis.
+                  phone: Tempore praesentium repellendus pariatur.
+                id: Libero veritatis.
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: false
+                timeout: false
+  /states:
+    get:
+      tags:
+      - catalog
+      summary: list_states catalog
+      operationId: catalog#list_states
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StateDTO'
+                example:
+                - country_id: Et dicta.
+                  id: Eos molestiae.
+                  name: Id adipisci aut aut.
+                - country_id: Et dicta.
+                  id: Eos molestiae.
+                  name: Id adipisci aut aut.
+                - country_id: Et dicta.
+                  id: Eos molestiae.
+                  name: Id adipisci aut aut.
+              example:
+              - country_id: Et dicta.
+                id: Eos molestiae.
+                name: Id adipisci aut aut.
+              - country_id: Et dicta.
+                id: Eos molestiae.
+                name: Id adipisci aut aut.
+              - country_id: Et dicta.
+                id: Eos molestiae.
+                name: Id adipisci aut aut.
+    post:
+      tags:
+      - catalog
+      summary: create_state catalog
+      operationId: catalog#create_state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStateRequestBody'
+            example:
+              country_id: Aliquid quaerat quaerat veritatis.
+              name: Molestiae qui ducimus qui quae nostrum dicta.
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateDTO'
+              example:
+                country_id: Ut repellat quo corrupti accusantium provident.
+                id: Id corporis consequatur recusandae ut molestias.
+                name: Corrupti quibusdam fugit sit repellendus.
         "400":
           description: ""
           content:
@@ -637,33 +920,34 @@ paths:
                 name: bad_request
                 temporary: true
                 timeout: false
-  /states:
-    post:
+  /states/{id}:
+    get:
       tags:
       - catalog
-      summary: create_state catalog
-      operationId: catalog#create_state
-      requestBody:
+      summary: show_state catalog
+      operationId: catalog#show_state
+      parameters:
+      - name: id
+        in: path
+        description: ID
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStateRequestBody'
-            example:
-              country_id: Corporis atque nostrum qui dolor aspernatur.
-              name: Eos neque sint qui id.
+        schema:
+          type: string
+          description: ID
+          example: Voluptatem nesciunt fuga qui.
+        example: Ad qui ducimus rem voluptatem consequatur sit.
       responses:
-        "201":
+        "200":
           description: ""
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/StateDTO'
               example:
-                country_id: Enim quo officiis.
-                id: Dolores voluptatem.
-                name: Non delectus quaerat fugiat facilis.
-        "400":
+                country_id: A qui consequatur enim culpa odit quibusdam.
+                id: Magni ab.
+                name: Consequatur aspernatur nisi et.
+        "404":
           description: ""
           content:
             application/vnd.goa.error:
@@ -674,8 +958,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
+                temporary: true
+                timeout: true
   /swagger.json:
     get:
       tags:
@@ -692,27 +976,27 @@ components:
       properties:
         created_at:
           type: string
-          example: Ex quam aut optio.
+          example: Eius inventore consequatur.
         description:
           type: string
-          example: 98w
+          example: qaj
           maxLength: 400
         email:
           type: string
-          example: lavern@sawayn.biz
+          example: nolan.rosenbaum@ernserswaniawski.biz
           format: email
         id:
           type: string
-          example: Ea asperiores cupiditate aliquam itaque inventore aperiam.
+          example: Adipisci fugiat dolor nam.
         name:
           type: string
-          example: Cumque numquam qui consequatur ad.
+          example: Nulla aliquam impedit fugiat in.
       example:
-        created_at: Et dolor recusandae numquam laboriosam suscipit.
-        description: ihg
-        email: vivien_johns@kutch.name
-        id: Illum ea quos.
-        name: Sapiente repellat hic est et veniam nihil.
+        created_at: Eligendi quo molestiae.
+        description: xbl
+        email: robin@bartell.name
+        id: Aspernatur autem.
+        name: Aut aliquid esse iure aut.
       required:
       - id
       - name
@@ -724,35 +1008,30 @@ components:
       properties:
         address:
           type: string
-          example: Quo est est dolorum nemo.
+          example: Fuga ea repellendus nihil qui facilis possimus.
         cep:
           type: string
-          example: Sed repudiandae iure molestiae.
+          example: Non voluptates quisquam dolorem odit autem.
         city:
           type: string
-          example: Quod nostrum quaerat nemo eius.
+          example: Corporis soluta sint eum.
         complement:
           type: string
-          example: Temporibus ab reprehenderit.
-        country_id:
-          type: string
-          example: Perferendis est consequatur at.
+          example: Qui aperiam pariatur perspiciatis nulla error aut.
         state_id:
           type: string
-          example: Laboriosam ipsum architecto qui omnis voluptatem.
+          example: Et est est deleniti sunt earum.
       description: Address Type
       example:
-        address: Dolor maiores est.
-        cep: Qui accusamus asperiores vitae et.
-        city: Rem sequi asperiores non labore sit dignissimos.
-        complement: Quibusdam ut est iste.
-        country_id: Est ipsam impedit molestiae porro.
-        state_id: Excepturi assumenda et explicabo sed.
+        address: Necessitatibus consequatur corporis quia dolorem ratione error.
+        cep: Quisquam quia et.
+        city: Id consequatur corporis sed voluptas rerum eos.
+        complement: Dolores placeat.
+        state_id: Est qui perspiciatis nisi atque dolores consequatur.
       required:
       - address
       - complement
       - city
-      - country_id
       - state_id
       - cep
     BookDTO:
@@ -762,66 +1041,61 @@ components:
           type: array
           items:
             type: string
-            example: Aut expedita.
+            example: Aut a.
           example:
-          - Autem alias hic ducimus et eveniet.
-          - Repudiandae eos dolorem ullam veniam non aut.
-          - Illo incidunt quibusdam commodi quasi doloremque.
-          - Earum rerum enim tempore qui dolore.
+          - Eos iusto consequatur odio ex excepturi dolore.
+          - Omnis quia perferendis eligendi provident praesentium.
+          - Repudiandae a.
         category_ids:
           type: array
           items:
             type: string
-            example: Perferendis nesciunt.
+            example: Adipisci magnam.
           example:
-          - Itaque mollitia porro impedit architecto natus est.
-          - Minus debitis nihil labore optio.
-          - Voluptatum nulla error natus ut minima.
+          - Qui esse sit commodi non.
+          - Neque minima dicta.
         id:
           type: string
-          example: Nostrum sed eius est velit.
+          example: Ea harum ducimus enim.
         isbn:
           type: string
-          example: Tempora et.
+          example: Rerum voluptate tempora ad aut temporibus.
         issue:
           type: string
-          example: Non voluptate eos aut.
+          example: Ullam animi a et.
         pages:
           type: integer
-          example: 6941906146793493319
+          example: 553675435758365256
           minimum: 100
         price:
           type: number
-          example: 20.862757
+          example: 20.633503
           minimum: 20
         summary:
           type: string
-          example: Velit provident laboriosam dolore tempore qui.
+          example: Sed suscipit veritatis dolorum dolor pariatur fugit.
         synopsis:
           type: string
-          example: 3h0
+          example: t42
           maxLength: 500
         title:
           type: string
-          example: Inventore veniam amet ea eos porro.
+          example: Vitae culpa architecto est.
       example:
         actor_ids:
-        - Omnis velit quidem.
-        - Hic consequatur.
-        - Vitae totam suscipit et.
-        - Aut quidem quisquam.
+        - Ut suscipit praesentium sit.
+        - Aut quos assumenda quam ex saepe quo.
         category_ids:
-        - Aut beatae et pariatur distinctio inventore.
-        - Libero doloribus alias ipsa.
-        - Deserunt quo fugit rerum quis quaerat repellat.
-        id: Deserunt adipisci.
-        isbn: Rerum placeat.
-        issue: Fuga nobis.
-        pages: 8348892686055520885
-        price: 20.147593
-        summary: Eveniet ex molestiae ducimus in.
-        synopsis: oo2
-        title: Rerum rerum.
+        - Voluptatem vitae.
+        - Et sunt et adipisci consequatur cum sint.
+        id: Sed aut aut nobis et ut.
+        isbn: Laborum quos mollitia sint voluptas.
+        issue: Facilis et.
+        pages: 8537349346179817021
+        price: 20.81822
+        summary: Inventore repellendus modi.
+        synopsis: ozq
+        title: Repellat officiis deleniti eligendi vero ut.
       required:
       - id
       - title
@@ -835,40 +1109,40 @@ components:
     CartDTO:
       type: object
       properties:
+        coupon_id:
+          type: string
+          example: Earum enim est numquam.
         customer_id:
           type: string
-          example: Corporis quam.
+          example: Iure dignissimos fugiat in sapiente.
         id:
           type: string
-          example: Quam repellat qui est.
+          example: Et similique facere.
         items:
           type: array
           items:
             $ref: '#/components/schemas/ItemDTO'
           example:
-          - amount: 1496435812
-            book_id: Ut doloremque doloremque at nemo pariatur.
-          - amount: 1496435812
-            book_id: Ut doloremque doloremque at nemo pariatur.
-          - amount: 1496435812
-            book_id: Ut doloremque doloremque at nemo pariatur.
+          - amount: 821791573
+            book_id: Eos ut repellat est praesentium nostrum excepturi.
+          - amount: 821791573
+            book_id: Eos ut repellat est praesentium nostrum excepturi.
         total:
           type: number
-          example: 0.97122514
+          example: 0.1280852
           format: float
       example:
-        customer_id: Quae aut.
-        id: Dolorem consequatur et aut.
+        coupon_id: Et dolorem.
+        customer_id: Ex aspernatur libero sed ut.
+        id: Omnis aut.
         items:
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
-        total: 0.86912155
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        total: 0.31035373
       required:
       - id
       - total
@@ -879,13 +1153,13 @@ components:
       properties:
         id:
           type: string
-          example: Iusto labore voluptas laborum.
+          example: Et culpa modi minus aut asperiores possimus.
         name:
           type: string
-          example: Iure nihil nostrum soluta.
+          example: Voluptatem hic.
       example:
-        id: Officia est.
-        name: Optio consequatur.
+        id: Tenetur et quam.
+        name: Quam nisi ad sed.
       required:
       - id
       - name
@@ -894,17 +1168,17 @@ components:
       properties:
         id:
           type: string
-          example: Dolorem reprehenderit pariatur voluptatem eum.
+          example: Quisquam illum sint porro necessitatibus et.
         name:
           type: string
-          example: Eius ab reiciendis atque et at.
+          example: Recusandae porro.
         state_ids:
           type: string
-          example: Voluptates dicta nihil a.
+          example: Doloribus rerum quam.
       example:
-        id: Itaque voluptate.
-        name: Sed nemo eius accusantium dolor et libero.
-        state_ids: Et quidem totam voluptatum iste nam.
+        id: Ex eum dolores dolore.
+        name: Sed inventore vel nemo nisi pariatur.
+        state_ids: Et rerum aut suscipit et laboriosam dolore.
       required:
       - id
       - name
@@ -913,22 +1187,22 @@ components:
       properties:
         code:
           type: string
-          example: Sit impedit expedita facilis porro.
+          example: Veritatis qui.
         discount:
           type: number
-          example: 0.030300518
+          example: 0.4355258
           minimum: 0
         id:
           type: string
-          example: Maiores impedit quod et.
+          example: Et ullam amet magni accusantium sit cupiditate.
         validity:
           type: string
-          example: Id vel ut dolor voluptatem.
+          example: Sed sunt qui.
       example:
-        code: Rerum ut quis expedita vel.
-        discount: 0.89822626
-        id: Quos repellat iusto hic.
-        validity: Veniam ut molestiae temporibus ut voluptatem.
+        code: Iusto qui reprehenderit ab.
+        discount: 0.046442788
+        id: At delectus praesentium id sunt.
+        validity: Necessitatibus atque fugit molestias sint et non.
       required:
       - id
       - code
@@ -939,19 +1213,19 @@ components:
       properties:
         description:
           type: string
-          example: 2tc
+          example: d68
           maxLength: 400
         email:
           type: string
-          example: diego@baumbach.net
+          example: dane_rosenbaum@rogahn.biz
           format: email
         name:
           type: string
-          example: Est est et.
+          example: Fugit in vel voluptate provident cupiditate est.
       example:
-        description: bqj
-        email: travon@cummerata.org
-        name: Omnis aut est tenetur quibusdam est.
+        description: 1fm
+        email: braden@parker.name
+        name: Ipsam autem placeat facilis officia libero provident.
       required:
       - name
       - email
@@ -963,60 +1237,60 @@ components:
           type: array
           items:
             type: string
-            example: Consequuntur quia quae ex veniam aut.
+            example: Dolore tempore ea rem nostrum eius voluptatum.
           example:
-          - Cum est debitis.
-          - Totam voluptate ex doloremque.
-          - Aut exercitationem ipsam consectetur.
+          - Eum qui.
+          - Iusto necessitatibus qui mollitia voluptatum.
         category_ids:
           type: array
           items:
             type: string
-            example: Eum et accusantium.
+            example: Et est esse.
           example:
-          - Sed praesentium velit.
-          - Sed maxime reiciendis reprehenderit tempora.
+          - Dolore quae ipsa voluptatem.
+          - Earum earum velit hic corrupti quidem ut.
+          - Voluptas quisquam.
+          - Illum nisi.
         isbn:
           type: string
-          example: Iusto dolores quos provident iure.
+          example: Deleniti consequatur fuga occaecati vero.
         issue:
           type: string
-          example: Architecto quibusdam.
+          example: Vel illum impedit ut culpa possimus.
         pages:
           type: integer
-          example: 1132235040867492842
+          example: 6018431926814167223
           minimum: 100
         price:
           type: number
-          example: 20.921015
+          example: 20.129646
           minimum: 20
         summary:
           type: string
-          example: Quia nam.
+          example: Aut et quis ea.
         synopsis:
           type: string
-          example: pc8
+          example: iv6
           maxLength: 500
         title:
           type: string
-          example: Veritatis quis in libero perspiciatis repellat.
+          example: Eum provident similique dolor occaecati labore.
       example:
         actor_ids:
-        - Molestiae nisi qui iste ut aut vel.
-        - Non reiciendis aut et.
-        - Sunt perspiciatis eos illum aut amet impedit.
+        - Debitis nisi sit suscipit vel qui maxime.
+        - Distinctio velit maiores enim et.
+        - Labore rerum aut suscipit.
+        - Quo tempore omnis.
         category_ids:
-        - Atque ad eius nihil doloremque recusandae.
-        - Nulla dolor inventore facilis quasi optio.
-        - Aut qui.
-        - Ut facere.
-        isbn: Repudiandae consequatur.
-        issue: Quasi voluptatem est blanditiis ad.
-        pages: 2019419108953976683
-        price: 20.803469
-        summary: Cupiditate quia.
-        synopsis: e2p
-        title: Illum consectetur quasi.
+        - Quaerat vel labore aut fugit.
+        - Eum nesciunt veniam et praesentium sint odit.
+        isbn: Ipsa recusandae quod cum odit aspernatur sapiente.
+        issue: Quia voluptatibus.
+        pages: 3091709158429207809
+        price: 20.995544
+        summary: Nobis consequatur dolores.
+        synopsis: exi
+        title: In mollitia totam saepe dignissimos fugit.
       required:
       - title
       - synopsis
@@ -1029,48 +1303,51 @@ components:
     CreateCartRequestBody:
       type: object
       properties:
+        coupon_id:
+          type: string
+          example: Iste sunt.
         customer_id:
           type: string
-          example: Rerum et eaque rem.
+          example: Provident tempore occaecati.
         items:
           type: array
           items:
             $ref: '#/components/schemas/ItemDTO'
           example:
-          - amount: 1682166100
-            book_id: Occaecati quibusdam non.
-          - amount: 1682166100
-            book_id: Occaecati quibusdam non.
-          - amount: 1682166100
-            book_id: Occaecati quibusdam non.
+          - amount: 295474085
+            book_id: Eos accusamus.
+          - amount: 295474085
+            book_id: Eos accusamus.
+          - amount: 295474085
+            book_id: Eos accusamus.
+          - amount: 295474085
+            book_id: Eos accusamus.
         total:
           type: number
-          example: 0.7439847
+          example: 0.90209204
           format: float
       example:
-        customer_id: Aut nulla totam molestias.
+        coupon_id: Maiores incidunt et cum ab.
+        customer_id: Ab aperiam veritatis accusamus fugiat asperiores eligendi.
         items:
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        total: 0.2459852
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        total: 0.92404485
       required:
       - total
       - items
-      - customer_id
     CreateCategoryRequestBody:
       type: object
       properties:
         name:
           type: string
-          example: Quidem est quo architecto.
+          example: Adipisci voluptatem unde.
       example:
-        name: Quae veniam qui et dignissimos.
+        name: Dolores reiciendis.
       required:
       - name
     CreateCouponRequestBody:
@@ -1078,18 +1355,18 @@ components:
       properties:
         code:
           type: string
-          example: Provident magnam in.
+          example: Ut error eveniet.
         discount:
           type: number
-          example: 0.4003768
+          example: 0.52843434
           minimum: 0
         validity:
           type: string
-          example: Dolore qui recusandae veniam.
+          example: Saepe explicabo et voluptas.
       example:
-        code: Quibusdam repellendus.
-        discount: 0.8712553
-        validity: Quos sequi numquam et explicabo.
+        code: Aspernatur repellat sunt explicabo in quidem.
+        discount: 0.6974517
+        validity: Molestias quam deleniti sed fuga.
       required:
       - code
       - discount
@@ -1103,45 +1380,43 @@ components:
           type: array
           items:
             type: string
-            example: Aperiam temporibus.
+            example: A officia alias.
           example:
-          - Minima eius eos omnis.
-          - Qui ut repellendus inventore adipisci velit.
-          - Totam doloribus debitis enim.
-          - Sunt architecto ipsum.
+          - Quae id aut animi maiores ipsum ea.
+          - Minus et eius corporis iure voluptate.
+          - Perferendis reiciendis ab minima corporis praesentium.
         document:
           type: string
-          example: Alias vel consequatur ut dolorem.
+          example: Eum debitis.
         email:
           type: string
-          example: kaden_swaniawski@kautzerhyatt.name
+          example: fredrick@stromanohara.biz
           format: email
         first_name:
           type: string
-          example: Est sunt qui ratione aperiam labore ad.
+          example: Sunt labore facere neque et commodi.
         last_name:
           type: string
-          example: Aut voluptate quasi deleniti quia sit.
+          example: Autem facilis quia.
         phone:
           type: string
-          example: Nobis numquam maxime vel non.
+          example: Est unde est consequuntur assumenda deserunt.
       example:
         address:
-          address: Molestiae aut ut.
-          cep: Adipisci quas aut quis culpa dolor nam.
-          city: Nam facilis.
-          complement: Libero consequatur eveniet expedita dolore quod.
-          country_id: Libero ut culpa recusandae et rem.
-          state_id: Et dolore enim quia est nobis architecto.
+          address: Voluptates quia non.
+          cep: Itaque ipsa et quae dolorum.
+          city: Asperiores et inventore asperiores doloribus commodi.
+          complement: Totam dolor.
+          state_id: Ad veniam natus eaque recusandae.
         cart_ids:
-        - Ratione ducimus perspiciatis saepe cumque.
-        - Dolor deserunt inventore.
-        - Totam rerum perspiciatis doloribus consequatur illum.
-        document: Quibusdam vitae odio necessitatibus.
-        email: einar.bartoletti@rowe.biz
-        first_name: Dolor non neque culpa ut.
-        last_name: Enim dicta a in quibusdam.
-        phone: Natus eligendi.
+        - Libero amet odio.
+        - Atque dolore.
+        - Voluptatum dicta alias.
+        document: Et cupiditate.
+        email: adolphus@westbatz.name
+        first_name: Doloribus minus.
+        last_name: Aut blanditiis aut.
+        phone: Velit praesentium excepturi eaque voluptates sint.
       required:
       - first_name
       - last_name
@@ -1149,18 +1424,55 @@ components:
       - document
       - address
       - phone
+    CreatePurchaseRequestBody:
+      type: object
+      properties:
+        cart:
+          $ref: '#/components/schemas/CreateCartRequestBody'
+        customer:
+          $ref: '#/components/schemas/CreateCustomerRequestBody'
+      example:
+        cart:
+          coupon_id: Minima ullam occaecati qui.
+          customer_id: Qui aut maxime asperiores et adipisci.
+          items:
+          - amount: 295474085
+            book_id: Eos accusamus.
+          - amount: 295474085
+            book_id: Eos accusamus.
+          total: 0.5975442
+        customer:
+          address:
+            address: Voluptates quia non.
+            cep: Itaque ipsa et quae dolorum.
+            city: Asperiores et inventore asperiores doloribus commodi.
+            complement: Totam dolor.
+            state_id: Ad veniam natus eaque recusandae.
+          cart_ids:
+          - A sed est est numquam est distinctio.
+          - Necessitatibus rerum modi earum non vel eos.
+          - Optio error et qui eaque.
+          - Sequi quos qui id consequatur tempora.
+          document: Pariatur sequi eveniet.
+          email: janick.schmeler@von.biz
+          first_name: Aliquam vitae sit odit porro.
+          last_name: Quas et non non.
+          phone: Et aperiam expedita voluptatibus reprehenderit error facere.
+      required:
+      - customer
+      - cart
     CreateStateRequestBody:
       type: object
       properties:
         country_id:
           type: string
-          example: Repellat repellat.
+          example: Omnis consequuntur.
         name:
           type: string
-          example: Saepe aspernatur repellat fuga aliquid aliquam et.
+          example: Adipisci in consequatur.
       example:
-        country_id: Dignissimos rerum repellendus omnis.
-        name: Dolore ipsa sit nihil.
+        country_id: Odit ea.
+        name: Voluptate sapiente perferendis vero.
       required:
       - name
       - country_id
@@ -1173,48 +1485,45 @@ components:
           type: array
           items:
             type: string
-            example: Voluptatem ipsum.
+            example: Harum suscipit ut reiciendis.
           example:
-          - Quia voluptas debitis dolorem in id.
-          - Commodi eligendi.
+          - Dolor voluptatem dolore sunt vel adipisci.
+          - Atque voluptate dolore quam eveniet impedit autem.
         document:
           type: string
-          example: Consequatur sint ratione quia quisquam sed ut.
+          example: Quia eius officia rerum ratione enim consectetur.
         email:
           type: string
-          example: josie@kertzmannsporer.biz
+          example: jaclyn@altenwerthcollier.net
           format: email
         first_name:
           type: string
-          example: Sed quis et.
+          example: Illo consequatur rem eligendi architecto dolorem accusantium.
         id:
           type: string
-          example: Laborum adipisci.
+          example: Assumenda vel optio.
         last_name:
           type: string
-          example: Autem dolorem et.
+          example: Repellat ea reiciendis.
         phone:
           type: string
-          example: Ut et impedit eveniet ut.
+          example: Perspiciatis dicta minus.
       example:
         address:
-          address: Culpa omnis nihil.
-          cep: Itaque necessitatibus voluptatem.
-          city: Enim voluptatem deserunt.
-          complement: Corporis maiores labore autem occaecati eligendi fugit.
-          country_id: Minus quia nobis reprehenderit cupiditate quos.
-          state_id: Aliquid ipsam hic beatae.
+          address: Sint dignissimos.
+          cep: Sint qui id.
+          city: Perspiciatis et ducimus.
+          complement: Dolores qui doloremque provident id ut tenetur.
+          state_id: Laboriosam qui ea eius eos.
         cart_ids:
-        - Officiis et quia.
-        - Vel eaque.
-        - Reprehenderit accusantium tempore sit consequatur quae.
-        - Qui veniam est quo reprehenderit.
-        document: Fugit in vel voluptate provident cupiditate est.
-        email: jamaal@reinger.com
-        first_name: Amet ut quos asperiores similique numquam.
-        id: Ut et atque error velit aliquam.
-        last_name: Nulla corrupti excepturi voluptas est ullam.
-        phone: Beatae et maxime id quis.
+        - Impedit et inventore et.
+        - Temporibus sint consequatur.
+        document: Cum nostrum.
+        email: walton.donnelly@cormier.info
+        first_name: Voluptatum deserunt ex recusandae ut corrupti rem.
+        id: Vero animi.
+        last_name: Ex quos laborum enim neque in.
+        phone: Assumenda sit.
       required:
       - id
       - first_name
@@ -1251,11 +1560,11 @@ components:
           description: Is the error a timeout?
           example: false
       example:
-        fault: false
+        fault: true
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
-        temporary: true
+        temporary: false
         timeout: false
       required:
       - name
@@ -1269,34 +1578,80 @@ components:
       properties:
         amount:
           type: integer
-          example: 216993904
-          format: int32
+          example: 1816822233
+          minimum: 0
         book_id:
           type: string
-          example: Facilis quia eos eum exercitationem.
+          example: Repellendus quasi temporibus blanditiis dolorem ipsa.
       description: Item Type
       example:
-        amount: 139988390
-        book_id: In nam sint non.
+        amount: 149870523
+        book_id: Corporis veniam in.
       required:
       - book_id
       - amount
+    PurchaseDTO:
+      type: object
+      properties:
+        cart:
+          $ref: '#/components/schemas/CartDTO'
+        customer:
+          $ref: '#/components/schemas/CustomerDTO'
+        id:
+          type: string
+          example: Quam est iusto quae ipsam dolores.
+      example:
+        cart:
+          coupon_id: Ut quia vero.
+          customer_id: Illo cupiditate placeat recusandae consequatur.
+          id: Ut quis odit eos amet.
+          items:
+          - amount: 821791573
+            book_id: Eos ut repellat est praesentium nostrum excepturi.
+          - amount: 821791573
+            book_id: Eos ut repellat est praesentium nostrum excepturi.
+          - amount: 821791573
+            book_id: Eos ut repellat est praesentium nostrum excepturi.
+          total: 0.38355023
+        customer:
+          address:
+            address: Sint dignissimos.
+            cep: Sint qui id.
+            city: Perspiciatis et ducimus.
+            complement: Dolores qui doloremque provident id ut tenetur.
+            state_id: Laboriosam qui ea eius eos.
+          cart_ids:
+          - Minus dolorum.
+          - Et alias amet molestiae.
+          - Doloribus modi impedit.
+          - Voluptatibus omnis.
+          document: Ipsam iure aliquid nisi qui nemo ab.
+          email: cameron.tremblay@wolf.biz
+          first_name: Eos temporibus ut ut veritatis dolore.
+          id: Voluptatibus excepturi aut numquam ea id.
+          last_name: Voluptatem est labore praesentium sint molestias officiis.
+          phone: Tempore praesentium repellendus pariatur.
+        id: Ratione dolores vel et sint.
+      required:
+      - id
+      - customer
+      - cart
     StateDTO:
       type: object
       properties:
         country_id:
           type: string
-          example: Nesciunt culpa saepe iste error ut et.
+          example: Sint consectetur similique velit aut tempora a.
         id:
           type: string
-          example: Numquam ipsam autem placeat.
+          example: Voluptate iure quibusdam.
         name:
           type: string
-          example: Officia libero provident.
+          example: Saepe id numquam aperiam.
       example:
-        country_id: Aliquid est.
-        id: Perspiciatis voluptatem eveniet.
-        name: Quos ipsam qui.
+        country_id: Maiores blanditiis voluptate.
+        id: Et debitis enim non sed unde consequatur.
+        name: Saepe consectetur eius adipisci.
       required:
       - id
       - name

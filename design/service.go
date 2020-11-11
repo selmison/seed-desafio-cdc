@@ -21,6 +21,13 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("list_actors", func() {
+		Result(ActorsDTO)
+		HTTP(func() {
+			GET("/actors")
+		})
+	})
+
 	Method("show_actor", func() {
 		Payload(ShowByIDDTO)
 		Result(ActorDTO)
@@ -76,6 +83,13 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("list_categories", func() {
+		Result(CategoriesDTO)
+		HTTP(func() {
+			GET("/categories")
+		})
+	})
+
 	Method("show_category", func() {
 		Payload(ShowByIDDTO)
 		Result(CategoryDTO)
@@ -92,6 +106,22 @@ var _ = Service("catalog", func() {
 			POST("/countries")
 			Response(StatusCreated)
 			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("list_countries", func() {
+		Result(CountriesDTO)
+		HTTP(func() {
+			GET("/countries")
+		})
+	})
+
+	Method("show_country", func() {
+		Payload(ShowByIDDTO)
+		Result(CountryDTO)
+		HTTP(func() {
+			GET("/countries/{id}")
+			Response("not_found", StatusNotFound)
 		})
 	})
 
@@ -115,6 +145,16 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("create_purchase", func() {
+		Payload(CreatePurchaseDTO)
+		Result(PurchaseDTO)
+		HTTP(func() {
+			POST("/purchases")
+			Response(StatusCreated)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 	Method("create_state", func() {
 		Payload(CreateStateDTO)
 		Result(StateDTO)
@@ -122,6 +162,22 @@ var _ = Service("catalog", func() {
 			POST("/states")
 			Response(StatusCreated)
 			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("list_states", func() {
+		Result(StatesDTO)
+		HTTP(func() {
+			GET("/states")
+		})
+	})
+
+	Method("show_state", func() {
+		Payload(ShowByIDDTO)
+		Result(StateDTO)
+		HTTP(func() {
+			GET("/states/{id}")
+			Response("not_found", StatusNotFound)
 		})
 	})
 

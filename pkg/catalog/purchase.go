@@ -10,17 +10,18 @@ import (
 	coreDomain "github.com/selmison/seed-desafio-cdc/pkg/core/domain"
 )
 
-// State represents a single state.
-type State struct {
+// Purchase represents a single purchase.
+type Purchase struct {
 	gorm.Model
-	ID        string `gorm:"primaryKey"`
-	Name      string `validate:"required,not_blank"`
-	CountryID string `validate:"required,not_blank"`
+	ID         string `gorm:"primaryKey"`
+	CustomerID string `gorm:"not null"`
+	Customer   Customer
+	CartID     string `gorm:"not null"`
+	Cart       Cart
 }
 
-func (a *State) Validate() error {
-	err := coreDomain.Validate.Struct(a)
-	if err != nil {
+func (p *Purchase) Validate() error {
+	if err := coreDomain.Validate.Struct(p); err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
 			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),

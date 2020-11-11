@@ -16,51 +16,72 @@ import (
 // Endpoints wraps the "catalog" service endpoints.
 type Endpoints struct {
 	CreateActor    endpoint.Endpoint
+	ListActors     endpoint.Endpoint
 	ShowActor      endpoint.Endpoint
 	CreateBook     endpoint.Endpoint
 	ListBooks      endpoint.Endpoint
 	ShowBook       endpoint.Endpoint
 	CreateCart     endpoint.Endpoint
 	CreateCategory endpoint.Endpoint
+	ListCategories endpoint.Endpoint
 	ShowCategory   endpoint.Endpoint
 	CreateCountry  endpoint.Endpoint
+	ListCountries  endpoint.Endpoint
+	ShowCountry    endpoint.Endpoint
 	CreateCoupon   endpoint.Endpoint
 	CreateCustomer endpoint.Endpoint
+	CreatePurchase endpoint.Endpoint
 	CreateState    endpoint.Endpoint
+	ListStates     endpoint.Endpoint
+	ShowState      endpoint.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "catalog" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		CreateActor:    NewCreateActorEndpoint(s),
+		ListActors:     NewListActorsEndpoint(s),
 		ShowActor:      NewShowActorEndpoint(s),
 		CreateBook:     NewCreateBookEndpoint(s),
 		ListBooks:      NewListBooksEndpoint(s),
 		ShowBook:       NewShowBookEndpoint(s),
 		CreateCart:     NewCreateCartEndpoint(s),
 		CreateCategory: NewCreateCategoryEndpoint(s),
+		ListCategories: NewListCategoriesEndpoint(s),
 		ShowCategory:   NewShowCategoryEndpoint(s),
 		CreateCountry:  NewCreateCountryEndpoint(s),
+		ListCountries:  NewListCountriesEndpoint(s),
+		ShowCountry:    NewShowCountryEndpoint(s),
 		CreateCoupon:   NewCreateCouponEndpoint(s),
 		CreateCustomer: NewCreateCustomerEndpoint(s),
+		CreatePurchase: NewCreatePurchaseEndpoint(s),
 		CreateState:    NewCreateStateEndpoint(s),
+		ListStates:     NewListStatesEndpoint(s),
+		ShowState:      NewShowStateEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "catalog" service endpoints.
 func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.CreateActor = m(e.CreateActor)
+	e.ListActors = m(e.ListActors)
 	e.ShowActor = m(e.ShowActor)
 	e.CreateBook = m(e.CreateBook)
 	e.ListBooks = m(e.ListBooks)
 	e.ShowBook = m(e.ShowBook)
 	e.CreateCart = m(e.CreateCart)
 	e.CreateCategory = m(e.CreateCategory)
+	e.ListCategories = m(e.ListCategories)
 	e.ShowCategory = m(e.ShowCategory)
 	e.CreateCountry = m(e.CreateCountry)
+	e.ListCountries = m(e.ListCountries)
+	e.ShowCountry = m(e.ShowCountry)
 	e.CreateCoupon = m(e.CreateCoupon)
 	e.CreateCustomer = m(e.CreateCustomer)
+	e.CreatePurchase = m(e.CreatePurchase)
 	e.CreateState = m(e.CreateState)
+	e.ListStates = m(e.ListStates)
+	e.ShowState = m(e.ShowState)
 }
 
 // NewCreateActorEndpoint returns an endpoint function that calls the method
@@ -69,6 +90,14 @@ func NewCreateActorEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateActorDTO)
 		return s.CreateActor(ctx, p)
+	}
+}
+
+// NewListActorsEndpoint returns an endpoint function that calls the method
+// "list_actors" of service "catalog".
+func NewListActorsEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListActors(ctx)
 	}
 }
 
@@ -125,6 +154,14 @@ func NewCreateCategoryEndpoint(s Service) endpoint.Endpoint {
 	}
 }
 
+// NewListCategoriesEndpoint returns an endpoint function that calls the method
+// "list_categories" of service "catalog".
+func NewListCategoriesEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListCategories(ctx)
+	}
+}
+
 // NewShowCategoryEndpoint returns an endpoint function that calls the method
 // "show_category" of service "catalog".
 func NewShowCategoryEndpoint(s Service) endpoint.Endpoint {
@@ -140,6 +177,23 @@ func NewCreateCountryEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateCountryDTO)
 		return s.CreateCountry(ctx, p)
+	}
+}
+
+// NewListCountriesEndpoint returns an endpoint function that calls the method
+// "list_countries" of service "catalog".
+func NewListCountriesEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListCountries(ctx)
+	}
+}
+
+// NewShowCountryEndpoint returns an endpoint function that calls the method
+// "show_country" of service "catalog".
+func NewShowCountryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*ShowByIDDTO)
+		return s.ShowCountry(ctx, p)
 	}
 }
 
@@ -161,11 +215,37 @@ func NewCreateCustomerEndpoint(s Service) endpoint.Endpoint {
 	}
 }
 
+// NewCreatePurchaseEndpoint returns an endpoint function that calls the method
+// "create_purchase" of service "catalog".
+func NewCreatePurchaseEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreatePurchaseDTO)
+		return s.CreatePurchase(ctx, p)
+	}
+}
+
 // NewCreateStateEndpoint returns an endpoint function that calls the method
 // "create_state" of service "catalog".
 func NewCreateStateEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreateStateDTO)
 		return s.CreateState(ctx, p)
+	}
+}
+
+// NewListStatesEndpoint returns an endpoint function that calls the method
+// "list_states" of service "catalog".
+func NewListStatesEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListStates(ctx)
+	}
+}
+
+// NewShowStateEndpoint returns an endpoint function that calls the method
+// "show_state" of service "catalog".
+func NewShowStateEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*ShowByIDDTO)
+		return s.ShowState(ctx, p)
 	}
 }

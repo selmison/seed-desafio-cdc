@@ -21,6 +21,10 @@ type Client struct {
 	// create_actor endpoint.
 	CreateActorDoer goahttp.Doer
 
+	// ListActors Doer is the HTTP client used to make requests to the list_actors
+	// endpoint.
+	ListActorsDoer goahttp.Doer
+
 	// ShowActor Doer is the HTTP client used to make requests to the show_actor
 	// endpoint.
 	ShowActorDoer goahttp.Doer
@@ -45,6 +49,10 @@ type Client struct {
 	// create_category endpoint.
 	CreateCategoryDoer goahttp.Doer
 
+	// ListCategories Doer is the HTTP client used to make requests to the
+	// list_categories endpoint.
+	ListCategoriesDoer goahttp.Doer
+
 	// ShowCategory Doer is the HTTP client used to make requests to the
 	// show_category endpoint.
 	ShowCategoryDoer goahttp.Doer
@@ -52,6 +60,14 @@ type Client struct {
 	// CreateCountry Doer is the HTTP client used to make requests to the
 	// create_country endpoint.
 	CreateCountryDoer goahttp.Doer
+
+	// ListCountries Doer is the HTTP client used to make requests to the
+	// list_countries endpoint.
+	ListCountriesDoer goahttp.Doer
+
+	// ShowCountry Doer is the HTTP client used to make requests to the
+	// show_country endpoint.
+	ShowCountryDoer goahttp.Doer
 
 	// CreateCoupon Doer is the HTTP client used to make requests to the
 	// create_coupon endpoint.
@@ -61,9 +77,21 @@ type Client struct {
 	// create_customer endpoint.
 	CreateCustomerDoer goahttp.Doer
 
+	// CreatePurchase Doer is the HTTP client used to make requests to the
+	// create_purchase endpoint.
+	CreatePurchaseDoer goahttp.Doer
+
 	// CreateState Doer is the HTTP client used to make requests to the
 	// create_state endpoint.
 	CreateStateDoer goahttp.Doer
+
+	// ListStates Doer is the HTTP client used to make requests to the list_states
+	// endpoint.
+	ListStatesDoer goahttp.Doer
+
+	// ShowState Doer is the HTTP client used to make requests to the show_state
+	// endpoint.
+	ShowStateDoer goahttp.Doer
 
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
@@ -86,17 +114,24 @@ func NewClient(
 ) *Client {
 	return &Client{
 		CreateActorDoer:     doer,
+		ListActorsDoer:      doer,
 		ShowActorDoer:       doer,
 		CreateBookDoer:      doer,
 		ListBooksDoer:       doer,
 		ShowBookDoer:        doer,
 		CreateCartDoer:      doer,
 		CreateCategoryDoer:  doer,
+		ListCategoriesDoer:  doer,
 		ShowCategoryDoer:    doer,
 		CreateCountryDoer:   doer,
+		ListCountriesDoer:   doer,
+		ShowCountryDoer:     doer,
 		CreateCouponDoer:    doer,
 		CreateCustomerDoer:  doer,
+		CreatePurchaseDoer:  doer,
 		CreateStateDoer:     doer,
+		ListStatesDoer:      doer,
+		ShowStateDoer:       doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -124,6 +159,25 @@ func (c *Client) CreateActor() endpoint.Endpoint {
 		resp, err := c.CreateActorDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "create_actor", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListActors returns an endpoint that makes HTTP requests to the catalog
+// service list_actors server.
+func (c *Client) ListActors() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeListActorsResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildListActorsRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListActorsDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "list_actors", err)
 		}
 		return decodeResponse(resp)
 	}
@@ -258,6 +312,25 @@ func (c *Client) CreateCategory() endpoint.Endpoint {
 	}
 }
 
+// ListCategories returns an endpoint that makes HTTP requests to the catalog
+// service list_categories server.
+func (c *Client) ListCategories() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeListCategoriesResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildListCategoriesRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListCategoriesDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "list_categories", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
 // ShowCategory returns an endpoint that makes HTTP requests to the catalog
 // service show_category server.
 func (c *Client) ShowCategory() endpoint.Endpoint {
@@ -296,6 +369,44 @@ func (c *Client) CreateCountry() endpoint.Endpoint {
 		resp, err := c.CreateCountryDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "create_country", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListCountries returns an endpoint that makes HTTP requests to the catalog
+// service list_countries server.
+func (c *Client) ListCountries() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeListCountriesResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildListCountriesRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListCountriesDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "list_countries", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ShowCountry returns an endpoint that makes HTTP requests to the catalog
+// service show_country server.
+func (c *Client) ShowCountry() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeShowCountryResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildShowCountryRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ShowCountryDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "show_country", err)
 		}
 		return decodeResponse(resp)
 	}
@@ -349,6 +460,30 @@ func (c *Client) CreateCustomer() endpoint.Endpoint {
 	}
 }
 
+// CreatePurchase returns an endpoint that makes HTTP requests to the catalog
+// service create_purchase server.
+func (c *Client) CreatePurchase() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeCreatePurchaseRequest(c.encoder)
+		decodeResponse = DecodeCreatePurchaseResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreatePurchaseRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreatePurchaseDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "create_purchase", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
 // CreateState returns an endpoint that makes HTTP requests to the catalog
 // service create_state server.
 func (c *Client) CreateState() endpoint.Endpoint {
@@ -368,6 +503,44 @@ func (c *Client) CreateState() endpoint.Endpoint {
 		resp, err := c.CreateStateDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "create_state", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListStates returns an endpoint that makes HTTP requests to the catalog
+// service list_states server.
+func (c *Client) ListStates() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeListStatesResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildListStatesRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListStatesDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "list_states", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ShowState returns an endpoint that makes HTTP requests to the catalog
+// service show_state server.
+func (c *Client) ShowState() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeShowStateResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildShowStateRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ShowStateDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "show_state", err)
 		}
 		return decodeResponse(resp)
 	}

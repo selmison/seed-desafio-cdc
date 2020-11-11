@@ -82,6 +82,18 @@ func EncodeCreateActorError(encoder func(context.Context, http.ResponseWriter) g
 	}
 }
 
+// EncodeListActorsResponse returns an encoder for responses returned by the
+// catalog list_actors endpoint.
+func EncodeListActorsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.([]*catalog.ActorDTO)
+		enc := encoder(ctx, w)
+		body := NewListActorsResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
 // EncodeShowActorResponse returns an encoder for responses returned by the
 // catalog show_actor endpoint.
 func EncodeShowActorResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -401,6 +413,18 @@ func EncodeCreateCategoryError(encoder func(context.Context, http.ResponseWriter
 	}
 }
 
+// EncodeListCategoriesResponse returns an encoder for responses returned by
+// the catalog list_categories endpoint.
+func EncodeListCategoriesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.([]*catalog.CategoryDTO)
+		enc := encoder(ctx, w)
+		body := NewListCategoriesResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
 // EncodeShowCategoryResponse returns an encoder for responses returned by the
 // catalog show_category endpoint.
 func EncodeShowCategoryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -515,6 +539,74 @@ func EncodeCreateCountryError(encoder func(context.Context, http.ResponseWriter)
 			}
 			w.Header().Set("goa-error", "invalid_fields")
 			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeListCountriesResponse returns an encoder for responses returned by the
+// catalog list_countries endpoint.
+func EncodeListCountriesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.([]*catalog.CountryDTO)
+		enc := encoder(ctx, w)
+		body := NewListCountriesResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// EncodeShowCountryResponse returns an encoder for responses returned by the
+// catalog show_country endpoint.
+func EncodeShowCountryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*catalog.CountryDTO)
+		enc := encoder(ctx, w)
+		body := NewShowCountryResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeShowCountryRequest returns a decoder for requests sent to the catalog
+// show_country endpoint.
+func DecodeShowCountryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			id string
+
+			params = mux.Vars(r)
+		)
+		id = params["id"]
+		payload := NewShowCountryShowByIDDTO(id)
+
+		return payload, nil
+	}
+}
+
+// EncodeShowCountryError returns an encoder for errors returned by the
+// show_country catalog endpoint.
+func EncodeShowCountryError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewShowCountryNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", "not_found")
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -652,6 +744,71 @@ func EncodeCreateCustomerError(encoder func(context.Context, http.ResponseWriter
 	}
 }
 
+// EncodeCreatePurchaseResponse returns an encoder for responses returned by
+// the catalog create_purchase endpoint.
+func EncodeCreatePurchaseResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*catalog.PurchaseDTO)
+		enc := encoder(ctx, w)
+		body := NewCreatePurchaseResponseBody(res)
+		w.WriteHeader(http.StatusCreated)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeCreatePurchaseRequest returns a decoder for requests sent to the
+// catalog create_purchase endpoint.
+func DecodeCreatePurchaseRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body CreatePurchaseRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreatePurchaseRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreatePurchaseDTO(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeCreatePurchaseError returns an encoder for errors returned by the
+// create_purchase catalog endpoint.
+func EncodeCreatePurchaseError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_fields":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreatePurchaseInvalidFieldsResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_fields")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeCreateStateResponse returns an encoder for responses returned by the
 // catalog create_state endpoint.
 func EncodeCreateStateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -717,6 +874,88 @@ func EncodeCreateStateError(encoder func(context.Context, http.ResponseWriter) g
 	}
 }
 
+// EncodeListStatesResponse returns an encoder for responses returned by the
+// catalog list_states endpoint.
+func EncodeListStatesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.([]*catalog.StateDTO)
+		enc := encoder(ctx, w)
+		body := NewListStatesResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// EncodeShowStateResponse returns an encoder for responses returned by the
+// catalog show_state endpoint.
+func EncodeShowStateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*catalog.StateDTO)
+		enc := encoder(ctx, w)
+		body := NewShowStateResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeShowStateRequest returns a decoder for requests sent to the catalog
+// show_state endpoint.
+func DecodeShowStateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			id string
+
+			params = mux.Vars(r)
+		)
+		id = params["id"]
+		payload := NewShowStateShowByIDDTO(id)
+
+		return payload, nil
+	}
+}
+
+// EncodeShowStateError returns an encoder for errors returned by the
+// show_state catalog endpoint.
+func EncodeShowStateError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewShowStateNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", "not_found")
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// marshalCatalogActorDTOToActorDTOResponse builds a value of type
+// *ActorDTOResponse from a value of type *catalog.ActorDTO.
+func marshalCatalogActorDTOToActorDTOResponse(v *catalog.ActorDTO) *ActorDTOResponse {
+	res := &ActorDTOResponse{
+		ID:          v.ID,
+		Name:        v.Name,
+		Email:       v.Email,
+		Description: v.Description,
+		CreatedAt:   v.CreatedAt,
+	}
+
+	return res
+}
+
 // marshalCatalogBookDTOToBookDTOResponse builds a value of type
 // *BookDTOResponse from a value of type *catalog.BookDTO.
 func marshalCatalogBookDTOToBookDTOResponse(v *catalog.BookDTO) *BookDTOResponse {
@@ -768,6 +1007,29 @@ func marshalCatalogItemDTOToItemDTOResponseBody(v *catalog.ItemDTO) *ItemDTOResp
 	return res
 }
 
+// marshalCatalogCategoryDTOToCategoryDTOResponse builds a value of type
+// *CategoryDTOResponse from a value of type *catalog.CategoryDTO.
+func marshalCatalogCategoryDTOToCategoryDTOResponse(v *catalog.CategoryDTO) *CategoryDTOResponse {
+	res := &CategoryDTOResponse{
+		ID:   v.ID,
+		Name: v.Name,
+	}
+
+	return res
+}
+
+// marshalCatalogCountryDTOToCountryDTOResponse builds a value of type
+// *CountryDTOResponse from a value of type *catalog.CountryDTO.
+func marshalCatalogCountryDTOToCountryDTOResponse(v *catalog.CountryDTO) *CountryDTOResponse {
+	res := &CountryDTOResponse{
+		ID:       v.ID,
+		Name:     v.Name,
+		StateIds: v.StateIds,
+	}
+
+	return res
+}
+
 // unmarshalAddressDTORequestBodyToCatalogAddressDTO builds a value of type
 // *catalog.AddressDTO from a value of type *AddressDTORequestBody.
 func unmarshalAddressDTORequestBodyToCatalogAddressDTO(v *AddressDTORequestBody) *catalog.AddressDTO {
@@ -775,7 +1037,6 @@ func unmarshalAddressDTORequestBodyToCatalogAddressDTO(v *AddressDTORequestBody)
 		Address:    *v.Address,
 		Complement: *v.Complement,
 		City:       *v.City,
-		CountryID:  *v.CountryID,
 		StateID:    *v.StateID,
 		Cep:        *v.Cep,
 	}
@@ -790,9 +1051,101 @@ func marshalCatalogAddressDTOToAddressDTOResponseBody(v *catalog.AddressDTO) *Ad
 		Address:    v.Address,
 		Complement: v.Complement,
 		City:       v.City,
-		CountryID:  v.CountryID,
 		StateID:    v.StateID,
 		Cep:        v.Cep,
+	}
+
+	return res
+}
+
+// unmarshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO builds a
+// value of type *catalog.CreateCustomerDTO from a value of type
+// *CreateCustomerDTORequestBody.
+func unmarshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO(v *CreateCustomerDTORequestBody) *catalog.CreateCustomerDTO {
+	res := &catalog.CreateCustomerDTO{
+		FirstName: *v.FirstName,
+		LastName:  *v.LastName,
+		Email:     *v.Email,
+		Document:  *v.Document,
+		Phone:     *v.Phone,
+	}
+	res.Address = unmarshalAddressDTORequestBodyToCatalogAddressDTO(v.Address)
+	if v.CartIds != nil {
+		res.CartIds = make([]string, len(v.CartIds))
+		for i, val := range v.CartIds {
+			res.CartIds[i] = val
+		}
+	}
+
+	return res
+}
+
+// unmarshalCreateCartDTORequestBodyToCatalogCreateCartDTO builds a value of
+// type *catalog.CreateCartDTO from a value of type *CreateCartDTORequestBody.
+func unmarshalCreateCartDTORequestBodyToCatalogCreateCartDTO(v *CreateCartDTORequestBody) *catalog.CreateCartDTO {
+	res := &catalog.CreateCartDTO{
+		Total:      *v.Total,
+		CustomerID: v.CustomerID,
+		CouponID:   v.CouponID,
+	}
+	res.Items = make([]*catalog.ItemDTO, len(v.Items))
+	for i, val := range v.Items {
+		res.Items[i] = unmarshalItemDTORequestBodyToCatalogItemDTO(val)
+	}
+
+	return res
+}
+
+// marshalCatalogCustomerDTOToCustomerDTOResponseBody builds a value of type
+// *CustomerDTOResponseBody from a value of type *catalog.CustomerDTO.
+func marshalCatalogCustomerDTOToCustomerDTOResponseBody(v *catalog.CustomerDTO) *CustomerDTOResponseBody {
+	res := &CustomerDTOResponseBody{
+		ID:        v.ID,
+		FirstName: v.FirstName,
+		LastName:  v.LastName,
+		Email:     v.Email,
+		Document:  v.Document,
+		Phone:     v.Phone,
+	}
+	if v.Address != nil {
+		res.Address = marshalCatalogAddressDTOToAddressDTOResponseBody(v.Address)
+	}
+	if v.CartIds != nil {
+		res.CartIds = make([]string, len(v.CartIds))
+		for i, val := range v.CartIds {
+			res.CartIds[i] = val
+		}
+	}
+
+	return res
+}
+
+// marshalCatalogCartDTOToCartDTOResponseBody builds a value of type
+// *CartDTOResponseBody from a value of type *catalog.CartDTO.
+func marshalCatalogCartDTOToCartDTOResponseBody(v *catalog.CartDTO) *CartDTOResponseBody {
+	res := &CartDTOResponseBody{
+		ID:         v.ID,
+		Total:      v.Total,
+		CustomerID: v.CustomerID,
+		CouponID:   v.CouponID,
+	}
+	if v.Items != nil {
+		res.Items = make([]*ItemDTOResponseBody, len(v.Items))
+		for i, val := range v.Items {
+			res.Items[i] = marshalCatalogItemDTOToItemDTOResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalCatalogStateDTOToStateDTOResponse builds a value of type
+// *StateDTOResponse from a value of type *catalog.StateDTO.
+func marshalCatalogStateDTOToStateDTOResponse(v *catalog.StateDTO) *StateDTOResponse {
+	res := &StateDTOResponse{
+		ID:        v.ID,
+		Name:      v.Name,
+		CountryID: v.CountryID,
 	}
 
 	return res

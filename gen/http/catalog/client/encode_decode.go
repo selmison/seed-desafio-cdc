@@ -107,6 +107,67 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder, res
 	}
 }
 
+// BuildListActorsRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "list_actors" endpoint
+func (c *Client) BuildListActorsRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListActorsCatalogPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "list_actors", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListActorsResponse returns a decoder for responses returned by the
+// catalog list_actors endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeListActorsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListActorsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "list_actors", err)
+			}
+			for _, e := range body {
+				if e != nil {
+					if err2 := ValidateActorDTOResponse(e); err2 != nil {
+						err = goa.MergeErrors(err, err2)
+					}
+				}
+			}
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "list_actors", err)
+			}
+			res := NewListActorsActorDTOOK(body)
+			return res, nil
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "list_actors", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildShowActorRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "show_actor" endpoint
 func (c *Client) BuildShowActorRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -596,6 +657,67 @@ func DecodeCreateCategoryResponse(decoder func(*http.Response) goahttp.Decoder, 
 	}
 }
 
+// BuildListCategoriesRequest instantiates a HTTP request object with method
+// and path set to call the "catalog" service "list_categories" endpoint
+func (c *Client) BuildListCategoriesRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListCategoriesCatalogPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "list_categories", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListCategoriesResponse returns a decoder for responses returned by the
+// catalog list_categories endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeListCategoriesResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListCategoriesResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "list_categories", err)
+			}
+			for _, e := range body {
+				if e != nil {
+					if err2 := ValidateCategoryDTOResponse(e); err2 != nil {
+						err = goa.MergeErrors(err, err2)
+					}
+				}
+			}
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "list_categories", err)
+			}
+			res := NewListCategoriesCategoryDTOOK(body)
+			return res, nil
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "list_categories", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildShowCategoryRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "show_category" endpoint
 func (c *Client) BuildShowCategoryRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -762,6 +884,149 @@ func DecodeCreateCountryResponse(decoder func(*http.Response) goahttp.Decoder, r
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("catalog", "create_country", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildListCountriesRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "list_countries" endpoint
+func (c *Client) BuildListCountriesRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListCountriesCatalogPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "list_countries", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListCountriesResponse returns a decoder for responses returned by the
+// catalog list_countries endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeListCountriesResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListCountriesResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "list_countries", err)
+			}
+			for _, e := range body {
+				if e != nil {
+					if err2 := ValidateCountryDTOResponse(e); err2 != nil {
+						err = goa.MergeErrors(err, err2)
+					}
+				}
+			}
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "list_countries", err)
+			}
+			res := NewListCountriesCountryDTOOK(body)
+			return res, nil
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "list_countries", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildShowCountryRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "show_country" endpoint
+func (c *Client) BuildShowCountryRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		id string
+	)
+	{
+		p, ok := v.(*catalog.ShowByIDDTO)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("catalog", "show_country", "*catalog.ShowByIDDTO", v)
+		}
+		id = p.ID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowCountryCatalogPath(id)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "show_country", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeShowCountryResponse returns a decoder for responses returned by the
+// catalog show_country endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeShowCountryResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
+func DecodeShowCountryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ShowCountryResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_country", err)
+			}
+			err = ValidateShowCountryResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_country", err)
+			}
+			res := NewShowCountryCountryDTOOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body ShowCountryNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_country", err)
+			}
+			err = ValidateShowCountryNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_country", err)
+			}
+			return nil, NewShowCountryNotFound(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "show_country", resp.StatusCode, string(body))
 		}
 	}
 }
@@ -942,6 +1207,94 @@ func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder, 
 	}
 }
 
+// BuildCreatePurchaseRequest instantiates a HTTP request object with method
+// and path set to call the "catalog" service "create_purchase" endpoint
+func (c *Client) BuildCreatePurchaseRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreatePurchaseCatalogPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "create_purchase", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreatePurchaseRequest returns an encoder for requests sent to the
+// catalog create_purchase server.
+func EncodeCreatePurchaseRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.CreatePurchaseDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "create_purchase", "*catalog.CreatePurchaseDTO", v)
+		}
+		body := NewCreatePurchaseRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "create_purchase", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreatePurchaseResponse returns a decoder for responses returned by the
+// catalog create_purchase endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeCreatePurchaseResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeCreatePurchaseResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreatePurchaseResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_purchase", err)
+			}
+			err = ValidateCreatePurchaseResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_purchase", err)
+			}
+			res := NewCreatePurchasePurchaseDTOCreated(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body CreatePurchaseInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "create_purchase", err)
+			}
+			err = ValidateCreatePurchaseInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "create_purchase", err)
+			}
+			return nil, NewCreatePurchaseInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "create_purchase", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildCreateStateRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "create_state" endpoint
 func (c *Client) BuildCreateStateRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -1030,6 +1383,163 @@ func DecodeCreateStateResponse(decoder func(*http.Response) goahttp.Decoder, res
 	}
 }
 
+// BuildListStatesRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "list_states" endpoint
+func (c *Client) BuildListStatesRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListStatesCatalogPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "list_states", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListStatesResponse returns a decoder for responses returned by the
+// catalog list_states endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeListStatesResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListStatesResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "list_states", err)
+			}
+			for _, e := range body {
+				if e != nil {
+					if err2 := ValidateStateDTOResponse(e); err2 != nil {
+						err = goa.MergeErrors(err, err2)
+					}
+				}
+			}
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "list_states", err)
+			}
+			res := NewListStatesStateDTOOK(body)
+			return res, nil
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "list_states", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildShowStateRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "show_state" endpoint
+func (c *Client) BuildShowStateRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		id string
+	)
+	{
+		p, ok := v.(*catalog.ShowByIDDTO)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("catalog", "show_state", "*catalog.ShowByIDDTO", v)
+		}
+		id = p.ID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowStateCatalogPath(id)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "show_state", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeShowStateResponse returns a decoder for responses returned by the
+// catalog show_state endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+// DecodeShowStateResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
+func DecodeShowStateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ShowStateResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_state", err)
+			}
+			err = ValidateShowStateResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_state", err)
+			}
+			res := NewShowStateStateDTOOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body ShowStateNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_state", err)
+			}
+			err = ValidateShowStateNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_state", err)
+			}
+			return nil, NewShowStateNotFound(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "show_state", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// unmarshalActorDTOResponseToCatalogActorDTO builds a value of type
+// *catalog.ActorDTO from a value of type *ActorDTOResponse.
+func unmarshalActorDTOResponseToCatalogActorDTO(v *ActorDTOResponse) *catalog.ActorDTO {
+	res := &catalog.ActorDTO{
+		ID:          *v.ID,
+		Name:        *v.Name,
+		Email:       *v.Email,
+		Description: *v.Description,
+		CreatedAt:   *v.CreatedAt,
+	}
+
+	return res
+}
+
 // unmarshalBookDTOResponseToCatalogBookDTO builds a value of type
 // *catalog.BookDTO from a value of type *BookDTOResponse.
 func unmarshalBookDTOResponseToCatalogBookDTO(v *BookDTOResponse) *catalog.BookDTO {
@@ -1088,6 +1598,29 @@ func unmarshalItemDTOResponseBodyToCatalogItemDTO(v *ItemDTOResponseBody) *catal
 	return res
 }
 
+// unmarshalCategoryDTOResponseToCatalogCategoryDTO builds a value of type
+// *catalog.CategoryDTO from a value of type *CategoryDTOResponse.
+func unmarshalCategoryDTOResponseToCatalogCategoryDTO(v *CategoryDTOResponse) *catalog.CategoryDTO {
+	res := &catalog.CategoryDTO{
+		ID:   *v.ID,
+		Name: *v.Name,
+	}
+
+	return res
+}
+
+// unmarshalCountryDTOResponseToCatalogCountryDTO builds a value of type
+// *catalog.CountryDTO from a value of type *CountryDTOResponse.
+func unmarshalCountryDTOResponseToCatalogCountryDTO(v *CountryDTOResponse) *catalog.CountryDTO {
+	res := &catalog.CountryDTO{
+		ID:       *v.ID,
+		Name:     *v.Name,
+		StateIds: v.StateIds,
+	}
+
+	return res
+}
+
 // marshalCatalogAddressDTOToAddressDTORequestBody builds a value of type
 // *AddressDTORequestBody from a value of type *catalog.AddressDTO.
 func marshalCatalogAddressDTOToAddressDTORequestBody(v *catalog.AddressDTO) *AddressDTORequestBody {
@@ -1095,7 +1628,6 @@ func marshalCatalogAddressDTOToAddressDTORequestBody(v *catalog.AddressDTO) *Add
 		Address:    v.Address,
 		Complement: v.Complement,
 		City:       v.City,
-		CountryID:  v.CountryID,
 		StateID:    v.StateID,
 		Cep:        v.Cep,
 	}
@@ -1110,7 +1642,6 @@ func marshalAddressDTORequestBodyToCatalogAddressDTO(v *AddressDTORequestBody) *
 		Address:    v.Address,
 		Complement: v.Complement,
 		City:       v.City,
-		CountryID:  v.CountryID,
 		StateID:    v.StateID,
 		Cep:        v.Cep,
 	}
@@ -1125,9 +1656,143 @@ func unmarshalAddressDTOResponseBodyToCatalogAddressDTO(v *AddressDTOResponseBod
 		Address:    *v.Address,
 		Complement: *v.Complement,
 		City:       *v.City,
-		CountryID:  *v.CountryID,
 		StateID:    *v.StateID,
 		Cep:        *v.Cep,
+	}
+
+	return res
+}
+
+// marshalCatalogCreateCustomerDTOToCreateCustomerDTORequestBody builds a value
+// of type *CreateCustomerDTORequestBody from a value of type
+// *catalog.CreateCustomerDTO.
+func marshalCatalogCreateCustomerDTOToCreateCustomerDTORequestBody(v *catalog.CreateCustomerDTO) *CreateCustomerDTORequestBody {
+	res := &CreateCustomerDTORequestBody{
+		FirstName: v.FirstName,
+		LastName:  v.LastName,
+		Email:     v.Email,
+		Document:  v.Document,
+		Phone:     v.Phone,
+	}
+	if v.Address != nil {
+		res.Address = marshalCatalogAddressDTOToAddressDTORequestBody(v.Address)
+	}
+	if v.CartIds != nil {
+		res.CartIds = make([]string, len(v.CartIds))
+		for i, val := range v.CartIds {
+			res.CartIds[i] = val
+		}
+	}
+
+	return res
+}
+
+// marshalCatalogCreateCartDTOToCreateCartDTORequestBody builds a value of type
+// *CreateCartDTORequestBody from a value of type *catalog.CreateCartDTO.
+func marshalCatalogCreateCartDTOToCreateCartDTORequestBody(v *catalog.CreateCartDTO) *CreateCartDTORequestBody {
+	res := &CreateCartDTORequestBody{
+		Total:      v.Total,
+		CustomerID: v.CustomerID,
+		CouponID:   v.CouponID,
+	}
+	if v.Items != nil {
+		res.Items = make([]*ItemDTORequestBody, len(v.Items))
+		for i, val := range v.Items {
+			res.Items[i] = marshalCatalogItemDTOToItemDTORequestBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO builds a value
+// of type *catalog.CreateCustomerDTO from a value of type
+// *CreateCustomerDTORequestBody.
+func marshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO(v *CreateCustomerDTORequestBody) *catalog.CreateCustomerDTO {
+	res := &catalog.CreateCustomerDTO{
+		FirstName: v.FirstName,
+		LastName:  v.LastName,
+		Email:     v.Email,
+		Document:  v.Document,
+		Phone:     v.Phone,
+	}
+	if v.Address != nil {
+		res.Address = marshalAddressDTORequestBodyToCatalogAddressDTO(v.Address)
+	}
+	if v.CartIds != nil {
+		res.CartIds = make([]string, len(v.CartIds))
+		for i, val := range v.CartIds {
+			res.CartIds[i] = val
+		}
+	}
+
+	return res
+}
+
+// marshalCreateCartDTORequestBodyToCatalogCreateCartDTO builds a value of type
+// *catalog.CreateCartDTO from a value of type *CreateCartDTORequestBody.
+func marshalCreateCartDTORequestBodyToCatalogCreateCartDTO(v *CreateCartDTORequestBody) *catalog.CreateCartDTO {
+	res := &catalog.CreateCartDTO{
+		Total:      v.Total,
+		CustomerID: v.CustomerID,
+		CouponID:   v.CouponID,
+	}
+	if v.Items != nil {
+		res.Items = make([]*catalog.ItemDTO, len(v.Items))
+		for i, val := range v.Items {
+			res.Items[i] = marshalItemDTORequestBodyToCatalogItemDTO(val)
+		}
+	}
+
+	return res
+}
+
+// unmarshalCustomerDTOResponseBodyToCatalogCustomerDTO builds a value of type
+// *catalog.CustomerDTO from a value of type *CustomerDTOResponseBody.
+func unmarshalCustomerDTOResponseBodyToCatalogCustomerDTO(v *CustomerDTOResponseBody) *catalog.CustomerDTO {
+	res := &catalog.CustomerDTO{
+		ID:        *v.ID,
+		FirstName: *v.FirstName,
+		LastName:  *v.LastName,
+		Email:     *v.Email,
+		Document:  *v.Document,
+		Phone:     *v.Phone,
+	}
+	res.Address = unmarshalAddressDTOResponseBodyToCatalogAddressDTO(v.Address)
+	if v.CartIds != nil {
+		res.CartIds = make([]string, len(v.CartIds))
+		for i, val := range v.CartIds {
+			res.CartIds[i] = val
+		}
+	}
+
+	return res
+}
+
+// unmarshalCartDTOResponseBodyToCatalogCartDTO builds a value of type
+// *catalog.CartDTO from a value of type *CartDTOResponseBody.
+func unmarshalCartDTOResponseBodyToCatalogCartDTO(v *CartDTOResponseBody) *catalog.CartDTO {
+	res := &catalog.CartDTO{
+		ID:         *v.ID,
+		Total:      *v.Total,
+		CustomerID: *v.CustomerID,
+		CouponID:   v.CouponID,
+	}
+	res.Items = make([]*catalog.ItemDTO, len(v.Items))
+	for i, val := range v.Items {
+		res.Items[i] = unmarshalItemDTOResponseBodyToCatalogItemDTO(val)
+	}
+
+	return res
+}
+
+// unmarshalStateDTOResponseToCatalogStateDTO builds a value of type
+// *catalog.StateDTO from a value of type *StateDTOResponse.
+func unmarshalStateDTOResponseToCatalogStateDTO(v *StateDTOResponse) *catalog.StateDTO {
+	res := &catalog.StateDTO{
+		ID:        *v.ID,
+		Name:      *v.Name,
+		CountryID: *v.CountryID,
 	}
 
 	return res

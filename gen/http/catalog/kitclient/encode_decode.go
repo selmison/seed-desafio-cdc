@@ -34,6 +34,15 @@ func DecodeCreateActorResponse(decoder func(*http.Response) goahttp.Decoder) kit
 	}
 }
 
+// DecodeListActorsResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog list_actors responses.
+func DecodeListActorsResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeListActorsResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // DecodeShowActorResponse returns a go-kit DecodeResponseFunc suitable for
 // decoding catalog show_actor responses.
 func DecodeShowActorResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
@@ -115,6 +124,15 @@ func DecodeCreateCategoryResponse(decoder func(*http.Response) goahttp.Decoder) 
 	}
 }
 
+// DecodeListCategoriesResponse returns a go-kit DecodeResponseFunc suitable
+// for decoding catalog list_categories responses.
+func DecodeListCategoriesResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeListCategoriesResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // DecodeShowCategoryResponse returns a go-kit DecodeResponseFunc suitable for
 // decoding catalog show_category responses.
 func DecodeShowCategoryResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
@@ -137,6 +155,24 @@ func EncodeCreateCountryRequest(encoder func(*http.Request) goahttp.Encoder) kit
 // decoding catalog create_country responses.
 func DecodeCreateCountryResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
 	dec := client.DecodeCreateCountryResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// DecodeListCountriesResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog list_countries responses.
+func DecodeListCountriesResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeListCountriesResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// DecodeShowCountryResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog show_country responses.
+func DecodeShowCountryResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeShowCountryResponse(decoder, false)
 	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
 		return dec(resp)
 	}
@@ -178,6 +214,24 @@ func DecodeCreateCustomerResponse(decoder func(*http.Response) goahttp.Decoder) 
 	}
 }
 
+// EncodeCreatePurchaseRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog create_purchase requests.
+func EncodeCreatePurchaseRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeCreatePurchaseRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeCreatePurchaseResponse returns a go-kit DecodeResponseFunc suitable
+// for decoding catalog create_purchase responses.
+func DecodeCreatePurchaseResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeCreatePurchaseResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // EncodeCreateStateRequest returns a go-kit EncodeRequestFunc suitable for
 // encoding catalog create_state requests.
 func EncodeCreateStateRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
@@ -191,6 +245,24 @@ func EncodeCreateStateRequest(encoder func(*http.Request) goahttp.Encoder) kitht
 // decoding catalog create_state responses.
 func DecodeCreateStateResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
 	dec := client.DecodeCreateStateResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// DecodeListStatesResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog list_states responses.
+func DecodeListStatesResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeListStatesResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// DecodeShowStateResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog show_state responses.
+func DecodeShowStateResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeShowStateResponse(decoder, false)
 	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
 		return dec(resp)
 	}

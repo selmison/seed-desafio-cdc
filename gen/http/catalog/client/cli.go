@@ -24,7 +24,7 @@ func BuildCreateActorPayload(catalogCreateActorBody string) (*catalog.CreateActo
 	{
 		err = json.Unmarshal([]byte(catalogCreateActorBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"df5\",\n      \"email\": \"boris@boehm.net\",\n      \"name\": \"Quis fuga voluptas dolorum.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"ij9\",\n      \"email\": \"xzavier.dickens@jacobsonernser.info\",\n      \"name\": \"Minima non consequatur corporis molestias natus.\"\n   }'")
 		}
 		err = goa.MergeErrors(err, goa.ValidateFormat("body.email", body.Email, goa.FormatEmail))
 
@@ -65,7 +65,7 @@ func BuildCreateBookPayload(catalogCreateBookBody string) (*catalog.CreateBookDT
 	{
 		err = json.Unmarshal([]byte(catalogCreateBookBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_ids\": [\n         \"In autem eum.\",\n         \"Ab veritatis officiis accusamus quibusdam aut eum.\"\n      ],\n      \"category_ids\": [\n         \"Assumenda dolor quia et dolore.\",\n         \"Incidunt ipsum rerum quia ducimus voluptatum.\",\n         \"Dignissimos et occaecati dolorem.\",\n         \"Eum sit est.\"\n      ],\n      \"isbn\": \"Et ut provident at hic.\",\n      \"issue\": \"Sint et.\",\n      \"pages\": 8812144099905341790,\n      \"price\": 20.14946,\n      \"summary\": \"Magnam et necessitatibus impedit quam.\",\n      \"synopsis\": \"vwd\",\n      \"title\": \"Sequi aliquid sed.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"actor_ids\": [\n         \"Fugit ut praesentium.\",\n         \"Hic est soluta.\",\n         \"Et accusantium ipsa commodi corporis excepturi.\"\n      ],\n      \"category_ids\": [\n         \"Quae perferendis adipisci excepturi.\",\n         \"Qui repellat dolor delectus.\",\n         \"Distinctio iusto corporis eum amet.\",\n         \"Tempora alias quis.\"\n      ],\n      \"isbn\": \"Quia distinctio.\",\n      \"issue\": \"Quasi harum nam.\",\n      \"pages\": 6926372662986759706,\n      \"price\": 20.820534,\n      \"summary\": \"Ullam facere minima cupiditate consectetur.\",\n      \"synopsis\": \"nbr\",\n      \"title\": \"Officiis accusamus quibusdam aut eum.\"\n   }'")
 		}
 		if body.CategoryIds == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("category_ids", "body"))
@@ -132,10 +132,17 @@ func BuildCreateCartPayload(catalogCreateCartBody string) (*catalog.CreateCartDT
 	{
 		err = json.Unmarshal([]byte(catalogCreateCartBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"customer_id\": \"Iusto nihil cupiditate voluptatem ut ut corporis.\",\n      \"items\": [\n         {\n            \"amount\": 1682166100,\n            \"book_id\": \"Occaecati quibusdam non.\"\n         },\n         {\n            \"amount\": 1682166100,\n            \"book_id\": \"Occaecati quibusdam non.\"\n         },\n         {\n            \"amount\": 1682166100,\n            \"book_id\": \"Occaecati quibusdam non.\"\n         },\n         {\n            \"amount\": 1682166100,\n            \"book_id\": \"Occaecati quibusdam non.\"\n         }\n      ],\n      \"total\": 0.49038583\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"coupon_id\": \"Amet consequatur.\",\n      \"customer_id\": \"Sed maiores qui incidunt rem rem quia.\",\n      \"items\": [\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         },\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         },\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         }\n      ],\n      \"total\": 0.9235589\n   }'")
 		}
 		if body.Items == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("items", "body"))
+		}
+		for _, e := range body.Items {
+			if e != nil {
+				if err2 := ValidateItemDTORequestBody(e); err2 != nil {
+					err = goa.MergeErrors(err, err2)
+				}
+			}
 		}
 		if err != nil {
 			return nil, err
@@ -144,6 +151,7 @@ func BuildCreateCartPayload(catalogCreateCartBody string) (*catalog.CreateCartDT
 	v := &catalog.CreateCartDTO{
 		Total:      body.Total,
 		CustomerID: body.CustomerID,
+		CouponID:   body.CouponID,
 	}
 	if body.Items != nil {
 		v.Items = make([]*catalog.ItemDTO, len(body.Items))
@@ -163,7 +171,7 @@ func BuildCreateCategoryPayload(catalogCreateCategoryBody string) (*catalog.Crea
 	{
 		err = json.Unmarshal([]byte(catalogCreateCategoryBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Doloribus voluptas dicta.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Itaque nesciunt assumenda aperiam excepturi harum enim.\"\n   }'")
 		}
 	}
 	v := &catalog.CreateCategoryDTO{
@@ -194,12 +202,25 @@ func BuildCreateCountryPayload(catalogCreateCountryBody string) (*catalog.Create
 	{
 		err = json.Unmarshal([]byte(catalogCreateCountryBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Quaerat cumque.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Doloribus rerum corporis nostrum veniam.\"\n   }'")
 		}
 	}
 	v := &catalog.CreateCountryDTO{
 		Name: body.Name,
 	}
+
+	return v, nil
+}
+
+// BuildShowCountryPayload builds the payload for the catalog show_country
+// endpoint from CLI flags.
+func BuildShowCountryPayload(catalogShowCountryID string) (*catalog.ShowByIDDTO, error) {
+	var id string
+	{
+		id = catalogShowCountryID
+	}
+	v := &catalog.ShowByIDDTO{}
+	v.ID = id
 
 	return v, nil
 }
@@ -212,7 +233,7 @@ func BuildCreateCouponPayload(catalogCreateCouponBody string) (*catalog.CreateCo
 	{
 		err = json.Unmarshal([]byte(catalogCreateCouponBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"code\": \"Sit et est atque dolor.\",\n      \"discount\": 0.59967625,\n      \"validity\": \"Quo voluptate quidem earum.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"code\": \"Et rem distinctio et dolore enim.\",\n      \"discount\": 0.45933485,\n      \"validity\": \"Nobis architecto voluptatem adipisci quas aut.\"\n   }'")
 		}
 		if body.Discount < 0 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.discount", body.Discount, 0, true))
@@ -238,7 +259,7 @@ func BuildCreateCustomerPayload(catalogCreateCustomerBody string) (*catalog.Crea
 	{
 		err = json.Unmarshal([]byte(catalogCreateCustomerBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"address\": {\n         \"address\": \"Molestiae aut ut.\",\n         \"cep\": \"Adipisci quas aut quis culpa dolor nam.\",\n         \"city\": \"Nam facilis.\",\n         \"complement\": \"Libero consequatur eveniet expedita dolore quod.\",\n         \"country_id\": \"Libero ut culpa recusandae et rem.\",\n         \"state_id\": \"Et dolore enim quia est nobis architecto.\"\n      },\n      \"cart_ids\": [\n         \"Mollitia rerum ullam.\",\n         \"Deserunt error ea tempore minus omnis aspernatur.\",\n         \"Ut qui et eius dolore.\",\n         \"Deserunt expedita ratione.\"\n      ],\n      \"document\": \"Laudantium voluptate quis velit necessitatibus recusandae non.\",\n      \"email\": \"joy@orn.org\",\n      \"first_name\": \"At autem dolorem consequatur dicta.\",\n      \"last_name\": \"Earum et.\",\n      \"phone\": \"Sit nisi molestiae aliquid nesciunt.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"address\": {\n         \"address\": \"Voluptates quia non.\",\n         \"cep\": \"Itaque ipsa et quae dolorum.\",\n         \"city\": \"Asperiores et inventore asperiores doloribus commodi.\",\n         \"complement\": \"Totam dolor.\",\n         \"state_id\": \"Ad veniam natus eaque recusandae.\"\n      },\n      \"cart_ids\": [\n         \"Omnis facere veniam porro.\",\n         \"Animi sed eos iure.\",\n         \"Quaerat corporis harum praesentium consequatur dolor quam.\"\n      ],\n      \"document\": \"Minus enim possimus eligendi est recusandae sed.\",\n      \"email\": \"bessie_kub@spinka.info\",\n      \"first_name\": \"Dicta ut.\",\n      \"last_name\": \"Et eius dolore quia deserunt expedita.\",\n      \"phone\": \"Ut ex ex.\"\n   }'")
 		}
 		if body.Address == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("address", "body"))
@@ -269,6 +290,47 @@ func BuildCreateCustomerPayload(catalogCreateCustomerBody string) (*catalog.Crea
 	return v, nil
 }
 
+// BuildCreatePurchasePayload builds the payload for the catalog
+// create_purchase endpoint from CLI flags.
+func BuildCreatePurchasePayload(catalogCreatePurchaseBody string) (*catalog.CreatePurchaseDTO, error) {
+	var err error
+	var body CreatePurchaseRequestBody
+	{
+		err = json.Unmarshal([]byte(catalogCreatePurchaseBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cart\": {\n         \"coupon_id\": \"Minima ullam occaecati qui.\",\n         \"customer_id\": \"Qui aut maxime asperiores et adipisci.\",\n         \"items\": [\n            {\n               \"amount\": 295474085,\n               \"book_id\": \"Eos accusamus.\"\n            },\n            {\n               \"amount\": 295474085,\n               \"book_id\": \"Eos accusamus.\"\n            }\n         ],\n         \"total\": 0.5975442\n      },\n      \"customer\": {\n         \"address\": {\n            \"address\": \"Voluptates quia non.\",\n            \"cep\": \"Itaque ipsa et quae dolorum.\",\n            \"city\": \"Asperiores et inventore asperiores doloribus commodi.\",\n            \"complement\": \"Totam dolor.\",\n            \"state_id\": \"Ad veniam natus eaque recusandae.\"\n         },\n         \"cart_ids\": [\n            \"A sed est est numquam est distinctio.\",\n            \"Necessitatibus rerum modi earum non vel eos.\",\n            \"Optio error et qui eaque.\",\n            \"Sequi quos qui id consequatur tempora.\"\n         ],\n         \"document\": \"Pariatur sequi eveniet.\",\n         \"email\": \"janick.schmeler@von.biz\",\n         \"first_name\": \"Aliquam vitae sit odit porro.\",\n         \"last_name\": \"Quas et non non.\",\n         \"phone\": \"Et aperiam expedita voluptatibus reprehenderit error facere.\"\n      }\n   }'")
+		}
+		if body.Customer == nil {
+			err = goa.MergeErrors(err, goa.MissingFieldError("customer", "body"))
+		}
+		if body.Cart == nil {
+			err = goa.MergeErrors(err, goa.MissingFieldError("cart", "body"))
+		}
+		if body.Customer != nil {
+			if err2 := ValidateCreateCustomerDTORequestBody(body.Customer); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+		if body.Cart != nil {
+			if err2 := ValidateCreateCartDTORequestBody(body.Cart); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+		if err != nil {
+			return nil, err
+		}
+	}
+	v := &catalog.CreatePurchaseDTO{}
+	if body.Customer != nil {
+		v.Customer = marshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO(body.Customer)
+	}
+	if body.Cart != nil {
+		v.Cart = marshalCreateCartDTORequestBodyToCatalogCreateCartDTO(body.Cart)
+	}
+
+	return v, nil
+}
+
 // BuildCreateStatePayload builds the payload for the catalog create_state
 // endpoint from CLI flags.
 func BuildCreateStatePayload(catalogCreateStateBody string) (*catalog.CreateStateDTO, error) {
@@ -277,13 +339,26 @@ func BuildCreateStatePayload(catalogCreateStateBody string) (*catalog.CreateStat
 	{
 		err = json.Unmarshal([]byte(catalogCreateStateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"country_id\": \"Corporis atque nostrum qui dolor aspernatur.\",\n      \"name\": \"Eos neque sint qui id.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"country_id\": \"Aliquid quaerat quaerat veritatis.\",\n      \"name\": \"Molestiae qui ducimus qui quae nostrum dicta.\"\n   }'")
 		}
 	}
 	v := &catalog.CreateStateDTO{
 		Name:      body.Name,
 		CountryID: body.CountryID,
 	}
+
+	return v, nil
+}
+
+// BuildShowStatePayload builds the payload for the catalog show_state endpoint
+// from CLI flags.
+func BuildShowStatePayload(catalogShowStateID string) (*catalog.ShowByIDDTO, error) {
+	var id string
+	{
+		id = catalogShowStateID
+	}
+	v := &catalog.ShowByIDDTO{}
+	v.ID = id
 
 	return v, nil
 }

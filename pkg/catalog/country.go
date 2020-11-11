@@ -13,7 +13,7 @@ import (
 // Country represents a single country.
 type Country struct {
 	gorm.Model
-	ID     string `gorm:"primarykey"`
+	ID     string `gorm:"primaryKey"`
 	Name   string `validate:"required,not_blank"`
 	States []State
 }
@@ -23,7 +23,7 @@ func (a *Country) Validate() error {
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	return nil

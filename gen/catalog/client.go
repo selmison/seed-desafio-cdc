@@ -16,34 +16,48 @@ import (
 // Client is the "catalog" service client.
 type Client struct {
 	CreateActorEndpoint    endpoint.Endpoint
+	ListActorsEndpoint     endpoint.Endpoint
 	ShowActorEndpoint      endpoint.Endpoint
 	CreateBookEndpoint     endpoint.Endpoint
 	ListBooksEndpoint      endpoint.Endpoint
 	ShowBookEndpoint       endpoint.Endpoint
 	CreateCartEndpoint     endpoint.Endpoint
 	CreateCategoryEndpoint endpoint.Endpoint
+	ListCategoriesEndpoint endpoint.Endpoint
 	ShowCategoryEndpoint   endpoint.Endpoint
 	CreateCountryEndpoint  endpoint.Endpoint
+	ListCountriesEndpoint  endpoint.Endpoint
+	ShowCountryEndpoint    endpoint.Endpoint
 	CreateCouponEndpoint   endpoint.Endpoint
 	CreateCustomerEndpoint endpoint.Endpoint
+	CreatePurchaseEndpoint endpoint.Endpoint
 	CreateStateEndpoint    endpoint.Endpoint
+	ListStatesEndpoint     endpoint.Endpoint
+	ShowStateEndpoint      endpoint.Endpoint
 }
 
 // NewClient initializes a "catalog" service client given the endpoints.
-func NewClient(createActor, showActor, createBook, listBooks, showBook, createCart, createCategory, showCategory, createCountry, createCoupon, createCustomer, createState endpoint.Endpoint) *Client {
+func NewClient(createActor, listActors, showActor, createBook, listBooks, showBook, createCart, createCategory, listCategories, showCategory, createCountry, listCountries, showCountry, createCoupon, createCustomer, createPurchase, createState, listStates, showState endpoint.Endpoint) *Client {
 	return &Client{
 		CreateActorEndpoint:    createActor,
+		ListActorsEndpoint:     listActors,
 		ShowActorEndpoint:      showActor,
 		CreateBookEndpoint:     createBook,
 		ListBooksEndpoint:      listBooks,
 		ShowBookEndpoint:       showBook,
 		CreateCartEndpoint:     createCart,
 		CreateCategoryEndpoint: createCategory,
+		ListCategoriesEndpoint: listCategories,
 		ShowCategoryEndpoint:   showCategory,
 		CreateCountryEndpoint:  createCountry,
+		ListCountriesEndpoint:  listCountries,
+		ShowCountryEndpoint:    showCountry,
 		CreateCouponEndpoint:   createCoupon,
 		CreateCustomerEndpoint: createCustomer,
+		CreatePurchaseEndpoint: createPurchase,
 		CreateStateEndpoint:    createState,
+		ListStatesEndpoint:     listStates,
+		ShowStateEndpoint:      showState,
 	}
 }
 
@@ -55,6 +69,16 @@ func (c *Client) CreateActor(ctx context.Context, p *CreateActorDTO) (res *Actor
 		return
 	}
 	return ires.(*ActorDTO), nil
+}
+
+// ListActors calls the "list_actors" endpoint of the "catalog" service.
+func (c *Client) ListActors(ctx context.Context) (res []*ActorDTO, err error) {
+	var ires interface{}
+	ires, err = c.ListActorsEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*ActorDTO), nil
 }
 
 // ShowActor calls the "show_actor" endpoint of the "catalog" service.
@@ -117,6 +141,16 @@ func (c *Client) CreateCategory(ctx context.Context, p *CreateCategoryDTO) (res 
 	return ires.(*CategoryDTO), nil
 }
 
+// ListCategories calls the "list_categories" endpoint of the "catalog" service.
+func (c *Client) ListCategories(ctx context.Context) (res []*CategoryDTO, err error) {
+	var ires interface{}
+	ires, err = c.ListCategoriesEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*CategoryDTO), nil
+}
+
 // ShowCategory calls the "show_category" endpoint of the "catalog" service.
 func (c *Client) ShowCategory(ctx context.Context, p *ShowByIDDTO) (res *CategoryDTO, err error) {
 	var ires interface{}
@@ -131,6 +165,26 @@ func (c *Client) ShowCategory(ctx context.Context, p *ShowByIDDTO) (res *Categor
 func (c *Client) CreateCountry(ctx context.Context, p *CreateCountryDTO) (res *CountryDTO, err error) {
 	var ires interface{}
 	ires, err = c.CreateCountryEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CountryDTO), nil
+}
+
+// ListCountries calls the "list_countries" endpoint of the "catalog" service.
+func (c *Client) ListCountries(ctx context.Context) (res []*CountryDTO, err error) {
+	var ires interface{}
+	ires, err = c.ListCountriesEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*CountryDTO), nil
+}
+
+// ShowCountry calls the "show_country" endpoint of the "catalog" service.
+func (c *Client) ShowCountry(ctx context.Context, p *ShowByIDDTO) (res *CountryDTO, err error) {
+	var ires interface{}
+	ires, err = c.ShowCountryEndpoint(ctx, p)
 	if err != nil {
 		return
 	}
@@ -157,10 +211,40 @@ func (c *Client) CreateCustomer(ctx context.Context, p *CreateCustomerDTO) (res 
 	return ires.(*CustomerDTO), nil
 }
 
+// CreatePurchase calls the "create_purchase" endpoint of the "catalog" service.
+func (c *Client) CreatePurchase(ctx context.Context, p *CreatePurchaseDTO) (res *PurchaseDTO, err error) {
+	var ires interface{}
+	ires, err = c.CreatePurchaseEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*PurchaseDTO), nil
+}
+
 // CreateState calls the "create_state" endpoint of the "catalog" service.
 func (c *Client) CreateState(ctx context.Context, p *CreateStateDTO) (res *StateDTO, err error) {
 	var ires interface{}
 	ires, err = c.CreateStateEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*StateDTO), nil
+}
+
+// ListStates calls the "list_states" endpoint of the "catalog" service.
+func (c *Client) ListStates(ctx context.Context) (res []*StateDTO, err error) {
+	var ires interface{}
+	ires, err = c.ListStatesEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.([]*StateDTO), nil
+}
+
+// ShowState calls the "show_state" endpoint of the "catalog" service.
+func (c *Client) ShowState(ctx context.Context, p *ShowByIDDTO) (res *StateDTO, err error) {
+	var ires interface{}
+	ires, err = c.ShowStateEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

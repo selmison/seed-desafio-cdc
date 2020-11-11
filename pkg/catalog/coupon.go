@@ -13,10 +13,11 @@ import (
 // Coupon represents a single actor.
 type Coupon struct {
 	gorm.Model
-	ID       string  `gorm:"primarykey"`
+	ID       string  `gorm:"primaryKey"`
 	Code     string  `gorm:"unique" validate:"required,not_blank"`
 	Discount float32 `validate:"required,gt=0"`
 	Validity string  `validate:"required,not_blank"`
+	Carts    []*Cart
 }
 
 func (a *Coupon) Validate() error {
@@ -24,7 +25,7 @@ func (a *Coupon) Validate() error {
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	return nil

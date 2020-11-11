@@ -25,6 +25,18 @@ func MountCreateActorHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("POST", "/actors", f)
 }
 
+// MountListActorsHandler configures the mux to serve the "catalog" service
+// "list_actors" endpoint.
+func MountListActorsHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/actors", f)
+}
+
 // MountShowActorHandler configures the mux to serve the "catalog" service
 // "show_actor" endpoint.
 func MountShowActorHandler(mux goahttp.Muxer, h http.Handler) {
@@ -97,6 +109,18 @@ func MountCreateCategoryHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("POST", "/categories", f)
 }
 
+// MountListCategoriesHandler configures the mux to serve the "catalog" service
+// "list_categories" endpoint.
+func MountListCategoriesHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/categories", f)
+}
+
 // MountShowCategoryHandler configures the mux to serve the "catalog" service
 // "show_category" endpoint.
 func MountShowCategoryHandler(mux goahttp.Muxer, h http.Handler) {
@@ -119,6 +143,30 @@ func MountCreateCountryHandler(mux goahttp.Muxer, h http.Handler) {
 		}
 	}
 	mux.Handle("POST", "/countries", f)
+}
+
+// MountListCountriesHandler configures the mux to serve the "catalog" service
+// "list_countries" endpoint.
+func MountListCountriesHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/countries", f)
+}
+
+// MountShowCountryHandler configures the mux to serve the "catalog" service
+// "show_country" endpoint.
+func MountShowCountryHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/countries/{id}", f)
 }
 
 // MountCreateCouponHandler configures the mux to serve the "catalog" service
@@ -145,6 +193,18 @@ func MountCreateCustomerHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("POST", "/customers", f)
 }
 
+// MountCreatePurchaseHandler configures the mux to serve the "catalog" service
+// "create_purchase" endpoint.
+func MountCreatePurchaseHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/purchases", f)
+}
+
 // MountCreateStateHandler configures the mux to serve the "catalog" service
 // "create_state" endpoint.
 func MountCreateStateHandler(mux goahttp.Muxer, h http.Handler) {
@@ -155,4 +215,28 @@ func MountCreateStateHandler(mux goahttp.Muxer, h http.Handler) {
 		}
 	}
 	mux.Handle("POST", "/states", f)
+}
+
+// MountListStatesHandler configures the mux to serve the "catalog" service
+// "list_states" endpoint.
+func MountListStatesHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/states", f)
+}
+
+// MountShowStateHandler configures the mux to serve the "catalog" service
+// "show_state" endpoint.
+func MountShowStateHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/states/{id}", f)
 }

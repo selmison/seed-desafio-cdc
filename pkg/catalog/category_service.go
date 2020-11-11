@@ -35,6 +35,26 @@ func (s *service) CreateCategory(_ context.Context, dto *catalogGen.CreateCatego
 	}, nil
 }
 
+// ListCategories implements list_category.
+func (s *service) ListCategories(context.Context) (res []*catalogGen.CategoryDTO, err error) {
+	if err := s.logger.Log("info", fmt.Sprintf("categories.list_categories")); err != nil {
+		log.Printf("kit/log error: %v\n", err)
+	}
+	var categories []*Category
+	result := s.repo.Find(&categories)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	categoryDTOS := make([]*catalogGen.CategoryDTO, len(categories))
+	for i, category := range categories {
+		categoryDTOS[i] = &catalogGen.CategoryDTO{
+			ID:   category.ID,
+			Name: category.Name,
+		}
+	}
+	return categoryDTOS, nil
+}
+
 // ShowCategory implements show_category.
 func (s *service) ShowCategory(_ context.Context, dto *catalogGen.ShowByIDDTO) (res *catalogGen.CategoryDTO, err error) {
 	if err := s.logger.Log("info", fmt.Sprintf("catalog.show_category")); err != nil {

@@ -14,6 +14,20 @@ produces:
 - application/gob
 paths:
   /actors:
+    get:
+      tags:
+      - catalog
+      summary: list_actors catalog
+      operationId: catalog#list_actors
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActorDTOResponse'
+      schemes:
+      - http
     post:
       tags:
       - catalog
@@ -179,7 +193,6 @@ paths:
           required:
           - total
           - items
-          - customer_id
       responses:
         "201":
           description: Created response.
@@ -197,6 +210,20 @@ paths:
       schemes:
       - http
   /categories:
+    get:
+      tags:
+      - catalog
+      summary: list_categories catalog
+      operationId: catalog#list_categories
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CategoryDTOResponse'
+      schemes:
+      - http
     post:
       tags:
       - catalog
@@ -251,6 +278,20 @@ paths:
       schemes:
       - http
   /countries:
+    get:
+      tags:
+      - catalog
+      summary: list_countries catalog
+      operationId: catalog#list_countries
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CountryDTOResponse'
+      schemes:
+      - http
     post:
       tags:
       - catalog
@@ -276,6 +317,32 @@ paths:
           description: Bad Request response.
           schema:
             $ref: '#/definitions/CatalogCreateCountryInvalidFieldsResponseBody'
+      schemes:
+      - http
+  /countries/{id}:
+    get:
+      tags:
+      - catalog
+      summary: show_country catalog
+      operationId: catalog#show_country
+      parameters:
+      - name: id
+        in: path
+        description: ID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/CatalogShowCountryResponseBody'
+            required:
+            - id
+            - name
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/CatalogShowCountryNotFoundResponseBody'
       schemes:
       - http
   /coupons:
@@ -348,7 +415,51 @@ paths:
             $ref: '#/definitions/CatalogCreateCustomerInvalidFieldsResponseBody'
       schemes:
       - http
+  /purchases:
+    post:
+      tags:
+      - catalog
+      summary: create_purchase catalog
+      operationId: catalog#create_purchase
+      parameters:
+      - name: create_purchase_request_body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CatalogCreatePurchaseRequestBody'
+          required:
+          - customer
+          - cart
+      responses:
+        "201":
+          description: Created response.
+          schema:
+            $ref: '#/definitions/CatalogCreatePurchaseResponseBody'
+            required:
+            - id
+            - customer
+            - cart
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/CatalogCreatePurchaseInvalidFieldsResponseBody'
+      schemes:
+      - http
   /states:
+    get:
+      tags:
+      - catalog
+      summary: list_states catalog
+      operationId: catalog#list_states
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/StateDTOResponse'
+      schemes:
+      - http
     post:
       tags:
       - catalog
@@ -378,6 +489,33 @@ paths:
             $ref: '#/definitions/CatalogCreateStateInvalidFieldsResponseBody'
       schemes:
       - http
+  /states/{id}:
+    get:
+      tags:
+      - catalog
+      summary: show_state catalog
+      operationId: catalog#show_state
+      parameters:
+      - name: id
+        in: path
+        description: ID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/CatalogShowStateResponseBody'
+            required:
+            - id
+            - name
+            - country_id
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/CatalogShowStateNotFoundResponseBody'
+      schemes:
+      - http
   /swagger.json:
     get:
       tags:
@@ -392,41 +530,70 @@ paths:
       schemes:
       - http
 definitions:
+  ActorDTOResponse:
+    title: ActorDTOResponse
+    type: object
+    properties:
+      created_at:
+        type: string
+        example: Quas tempore suscipit est consequuntur.
+      description:
+        type: string
+        example: qu1
+        maxLength: 400
+      email:
+        type: string
+        example: freddy@littel.net
+        format: email
+      id:
+        type: string
+        example: Est aliquid similique quasi deleniti et.
+      name:
+        type: string
+        example: Consequatur corrupti deserunt.
+    description: Actor Type
+    example:
+      created_at: Voluptate impedit amet sed quidem dolorem.
+      description: as3
+      email: karine.larkin@connreynolds.org
+      id: Cupiditate repellat consequatur ea esse aspernatur placeat.
+      name: Et aut et quia a.
+    required:
+    - id
+    - name
+    - email
+    - description
+    - created_at
   AddressDTORequestBody:
     title: AddressDTORequestBody
     type: object
     properties:
       address:
         type: string
-        example: Beatae recusandae.
+        example: Qui et vel iure.
       cep:
         type: string
-        example: Vel nihil voluptatibus dolores.
+        example: Est velit minus.
       city:
         type: string
-        example: Libero odio.
+        example: Aut autem perferendis nesciunt eum voluptate.
       complement:
         type: string
-        example: Aut alias animi inventore.
-      country_id:
-        type: string
-        example: Sunt et repellat.
+        example: Et laborum non voluptate.
       state_id:
         type: string
-        example: Incidunt possimus tempore.
+        example: Mollitia porro impedit architecto.
     description: Address Type
     example:
-      address: Doloribus facilis voluptas est omnis laborum.
-      cep: Dolores minus placeat inventore delectus enim assumenda.
-      city: Distinctio autem est vel mollitia.
-      complement: Asperiores vel qui molestiae rerum maiores.
-      country_id: Odio voluptatem aut nostrum est.
-      state_id: Ratione voluptatum repudiandae.
+      address: Nihil labore optio pariatur.
+      cep: Eveniet quae repudiandae eos dolorem ullam.
+      city: Minima est aut expedita consequatur beatae autem.
+      complement: Nulla error natus.
+      state_id: Hic ducimus.
     required:
     - address
     - complement
     - city
-    - country_id
     - state_id
     - cep
   AddressDTOResponseBody:
@@ -435,35 +602,30 @@ definitions:
     properties:
       address:
         type: string
-        example: Et sit.
+        example: Qui officiis.
       cep:
         type: string
-        example: Quo accusamus quaerat.
+        example: Sapiente repellat hic est et veniam nihil.
       city:
         type: string
-        example: Officiis accusamus et.
+        example: Dolor ex quam aut optio.
       complement:
         type: string
-        example: Qui ea aut.
-      country_id:
-        type: string
-        example: Totam illum ab distinctio voluptatum sit.
+        example: Fuga ut.
       state_id:
         type: string
-        example: Quos molestiae aut ipsa.
+        example: Illum ea quos.
     description: Address Type
     example:
-      address: Deserunt nulla.
-      cep: Vel nemo est odio nostrum.
-      city: Quia voluptas.
-      complement: Aut consectetur aut harum debitis quis dolore.
-      country_id: Enim blanditiis sapiente voluptas molestiae.
-      state_id: Iusto iste nesciunt enim neque et at.
+      address: Quasi quo et exercitationem est temporibus et.
+      cep: Quas ipsum sed.
+      city: Velit ipsa.
+      complement: Repellat nobis sapiente molestias eos.
+      state_id: Nostrum et est adipisci ut.
     required:
     - address
     - complement
     - city
-    - country_id
     - state_id
     - cep
   BookDTOResponse:
@@ -474,63 +636,65 @@ definitions:
         type: array
         items:
           type: string
-          example: Necessitatibus nobis quod facere ut deserunt.
+          example: Quia labore omnis minus.
         example:
-        - Veritatis totam fugiat repellendus minus accusamus iste.
-        - Est facere saepe et nobis officia.
-        - Sunt repellendus qui voluptate.
+        - Accusantium nobis dolor.
+        - Consequatur modi omnis eligendi temporibus perferendis eius.
+        - Tempora ab dolor.
+        - Aut commodi in et quo.
       category_ids:
         type: array
         items:
           type: string
-          example: Aut aut ad.
+          example: Quo voluptas totam eos dolores nisi veniam.
         example:
-        - Laborum non et quibusdam veritatis sed est.
-        - Dolor non.
+        - Quae quae modi sint.
+        - Dignissimos sit eaque natus omnis.
       id:
         type: string
-        example: Delectus maiores culpa praesentium.
+        example: Dolor et aut aut aut.
       isbn:
         type: string
-        example: A iste.
+        example: Non nisi ipsa hic minima.
       issue:
         type: string
-        example: Qui sapiente sed.
+        example: Adipisci iste qui dolores.
       pages:
         type: integer
-        example: 1117424918426962505
+        example: 3595929484124140500
         minimum: 100
       price:
         type: number
-        example: 20.948599
+        example: 20.115246
         minimum: 20
       summary:
         type: string
-        example: Ea esse aspernatur placeat eius et.
+        example: Maxime odit quos numquam et.
       synopsis:
         type: string
-        example: 2wg
+        example: wx3
         maxLength: 500
       title:
         type: string
-        example: Omnis neque autem quas tempore suscipit est.
+        example: Hic ut ipsam corporis.
     description: Book Type
     example:
       actor_ids:
-      - Eveniet alias ut.
-      - Dolor in porro nisi.
+      - Nulla illum aut consectetur aut.
+      - Debitis quis dolore.
+      - Quia voluptas.
+      - Enim blanditiis sapiente voluptas molestiae.
       category_ids:
-      - Saepe quia.
-      - Qui nulla aut reprehenderit fugit quod ea.
-      - Occaecati aut ducimus et.
-      id: Amet sed quidem dolorem.
-      isbn: Temporibus sint ducimus.
-      issue: Deserunt labore.
-      pages: 7151367493422912785
-      price: 20.599949
-      summary: Nulla maxime deserunt rerum voluptas.
-      synopsis: hkf
-      title: Eos velit provident laborum dolorem fugiat natus.
+      - Voluptatum sit numquam quos molestiae aut ipsa.
+      - Quo accusamus quaerat.
+      id: Iusto quia.
+      isbn: Aut mollitia officiis accusamus.
+      issue: Qui totam illum.
+      pages: 451981201658507421
+      price: 20.11029
+      summary: Et sit.
+      synopsis: 53b
+      title: Cum illum saepe consequatur accusantium.
     required:
     - id
     - title
@@ -541,6 +705,50 @@ definitions:
     - issue
     - category_ids
     - actor_ids
+  CartDTOResponseBody:
+    title: CartDTOResponseBody
+    type: object
+    properties:
+      coupon_id:
+        type: string
+        example: Exercitationem vero temporibus alias fugiat rem.
+      customer_id:
+        type: string
+        example: Nam laboriosam sint iusto.
+      id:
+        type: string
+        example: In qui.
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ItemDTOResponseBody'
+        example:
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+      total:
+        type: number
+        example: 0.25248992
+        format: float
+    description: Cart Type
+    example:
+      coupon_id: Temporibus ab reprehenderit.
+      customer_id: Quo est est dolorum nemo.
+      id: Vel consequatur.
+      items:
+      - amount: 821791573
+        book_id: Eos ut repellat est praesentium nostrum excepturi.
+      - amount: 821791573
+        book_id: Eos ut repellat est praesentium nostrum excepturi.
+      - amount: 821791573
+        book_id: Eos ut repellat est praesentium nostrum excepturi.
+      total: 0.17473756
+    required:
+    - id
+    - total
+    - items
+    - customer_id
   CatalogCreateActorInvalidFieldsResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -564,7 +772,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -575,7 +783,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: false
     required:
     - name
@@ -590,19 +798,19 @@ definitions:
     properties:
       description:
         type: string
-        example: xv9
+        example: x1e
         maxLength: 400
       email:
         type: string
-        example: lilla.murray@keeling.org
+        example: patricia@powlowskigislason.name
         format: email
       name:
         type: string
-        example: Facere quo qui a sed est est.
+        example: Soluta eaque eveniet consequuntur accusantium suscipit.
     example:
-      description: pl6
-      email: mazie_o'connell@dickens.biz
-      name: Ut ut veritatis.
+      description: 8s9
+      email: hertha@kautzerwilderman.com
+      name: Hic dolorem minus harum eligendi nemo ut.
     required:
     - name
     - email
@@ -613,27 +821,27 @@ definitions:
     properties:
       created_at:
         type: string
-        example: Nam et distinctio voluptas tenetur.
+        example: Unde est ab dolor libero rerum quidem.
       description:
         type: string
-        example: smw
+        example: dfp
         maxLength: 400
       email:
         type: string
-        example: sydney@becker.info
+        example: liliana.koss@langosh.info
         format: email
       id:
         type: string
-        example: Officiis hic mollitia dolorem iusto dignissimos eaque.
+        example: Aliquam cum repellendus quia perspiciatis.
       name:
         type: string
-        example: Alias numquam facere eaque quam.
+        example: Aut ducimus quidem quia non.
     example:
-      created_at: Pariatur sequi eveniet.
-      description: pc8
-      email: mike@anderson.info
-      id: Vitae sit.
-      name: Porro et quas et.
+      created_at: Eius sunt laboriosam cumque labore excepturi.
+      description: vn0
+      email: josie.schmidt@keelingtreutel.name
+      id: Ipsa rerum dolor magni sunt.
+      name: Nobis nihil.
     required:
     - id
     - name
@@ -675,7 +883,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -691,61 +899,62 @@ definitions:
         type: array
         items:
           type: string
-          example: Dolorem minus harum eligendi nemo ut consectetur.
+          example: Eaque cum nihil.
         example:
-        - Nisi iusto ipsa.
-        - Exercitationem veritatis est id voluptatibus voluptatibus inventore.
-        - Eos molestiae ab aut quia necessitatibus odio.
-        - Voluptate ducimus facere iusto ipsam minus.
+        - Aut dolores ab ut quos culpa.
+        - Laudantium facilis non.
+        - Enim ut rem velit.
       category_ids:
         type: array
         items:
           type: string
-          example: Quia sed error.
+          example: Aut et sed perferendis molestias.
         example:
-        - Voluptatibus ipsum omnis est veniam.
-        - Aliquam ut quia.
-        - Ut cum aut earum et tempora.
+        - Similique nulla dolorem qui voluptatem voluptas ex.
+        - Quam numquam reiciendis ut sit.
+        - Nulla rerum maxime maiores.
+        - Ad voluptas et ipsa.
       isbn:
         type: string
-        example: Ab est.
+        example: Et laudantium nemo.
       issue:
         type: string
-        example: Consectetur autem suscipit qui rem molestiae quos.
+        example: Quasi ratione voluptatem.
       pages:
         type: integer
-        example: 5649942585428829105
+        example: 1299306171058865950
         minimum: 100
       price:
         type: number
-        example: 20.110325
+        example: 20.692587
         minimum: 20
       summary:
         type: string
-        example: Est illum doloremque ut esse quasi est.
+        example: Accusantium natus et laboriosam molestiae.
       synopsis:
         type: string
-        example: mgq
+        example: b28
         maxLength: 500
       title:
         type: string
-        example: Consequuntur accusantium suscipit quos aut alias.
+        example: Laborum aut.
     example:
       actor_ids:
-      - Maxime voluptatem distinctio velit delectus et eos.
-      - Dolores voluptas cumque iure et nisi qui.
+      - Rem fugiat qui dignissimos ut repellendus quae.
+      - Aspernatur fuga laudantium repellendus recusandae.
+      - Consequuntur est consequuntur eos pariatur eos nesciunt.
       category_ids:
-      - Deserunt sint et illum dolorem ut.
-      - Perferendis quos quis expedita sint ut qui.
-      - Minus voluptates.
-      - Voluptatem ipsum inventore omnis omnis officiis voluptatem.
-      isbn: Necessitatibus omnis repellat error nemo est.
-      issue: Similique quasi deleniti et natus.
-      pages: 4770033921065430718
-      price: 20.683641
-      summary: Quia eos.
-      synopsis: ynh
-      title: Odio ducimus et.
+      - Est commodi totam.
+      - Quia sit.
+      - Amet quidem nihil dolores minus omnis.
+      - Eos omnis ullam at rem.
+      isbn: Saepe et nostrum suscipit minus.
+      issue: Quae eos cumque inventore voluptates.
+      pages: 2744975767912742886
+      price: 20.27051
+      summary: Rem et placeat et.
+      synopsis: jri
+      title: Aut maxime sapiente ducimus est ipsum.
     required:
     - title
     - synopsis
@@ -763,64 +972,61 @@ definitions:
         type: array
         items:
           type: string
-          example: Culpa minima quod quia ea.
+          example: Aliquid ratione.
         example:
-        - Voluptatem nulla distinctio repudiandae et dolorem.
-        - Ut unde est ab dolor libero.
-        - Quidem aspernatur.
-        - Rerum dolor magni.
+        - Dolorem id quo quos ea.
+        - Non voluptates quia temporibus rerum atque sint.
       category_ids:
         type: array
         items:
           type: string
-          example: Voluptas porro labore aut atque.
+          example: Accusamus voluptatem quas cupiditate.
         example:
-        - Eaque omnis nemo sapiente ut.
-        - Omnis quia consequatur exercitationem sed est voluptatem.
+        - Officiis maiores eum.
+        - A reprehenderit.
       id:
         type: string
-        example: Qui consequatur enim culpa odit quibusdam.
+        example: Aspernatur aut.
       isbn:
         type: string
-        example: Est dolores occaecati.
+        example: Aliquid architecto nisi accusantium rerum velit.
       issue:
         type: string
-        example: Autem beatae maxime blanditiis.
+        example: Laboriosam id voluptas.
       pages:
         type: integer
-        example: 7563883152536984216
+        example: 2652908581717286023
         minimum: 100
       price:
         type: number
-        example: 20.901737
+        example: 20.908808
         minimum: 20
       summary:
         type: string
-        example: Ducimus quidem quia non sed.
+        example: Aut eum itaque natus voluptatem quia consequatur.
       synopsis:
         type: string
-        example: y42
+        example: 7do
         maxLength: 500
       title:
         type: string
-        example: Iusto facere eius aliquam cum.
+        example: Vero vero aut.
     example:
       actor_ids:
-      - Illo blanditiis corporis eum exercitationem temporibus.
-      - Sunt laboriosam.
-      - Labore excepturi.
-      - Magnam quia.
+      - Quia iure perspiciatis autem unde accusantium fugiat.
+      - Harum aperiam nobis sint debitis.
       category_ids:
-      - Mollitia et.
-      - Tempora sit laboriosam veritatis.
-      id: Et nobis nihil accusamus incidunt saepe.
-      isbn: A dolore aut cupiditate.
-      issue: Molestias totam dolor quis nam molestiae.
-      pages: 8908269406048476412
-      price: 20.379784
-      summary: Reiciendis doloremque minus eum provident.
-      synopsis: n2k
-      title: Consequatur quia velit.
+      - Facilis sequi dolore officia molestiae vel sed.
+      - Animi commodi nulla accusamus dolor.
+      - Earum enim.
+      id: Earum labore occaecati.
+      isbn: Doloremque quia est quidem.
+      issue: Cumque voluptatem.
+      pages: 3951358266477485325
+      price: 20.318954
+      summary: Quam adipisci explicabo quisquam quis est tenetur.
+      synopsis: 09l
+      title: Recusandae aliquid blanditiis et.
     required:
     - id
     - title
@@ -838,7 +1044,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -854,19 +1060,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: create_cart_invalid_fields_response_body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -878,76 +1084,83 @@ definitions:
     title: CatalogCreateCartRequestBody
     type: object
     properties:
+      coupon_id:
+        type: string
+        example: Asperiores vel qui molestiae rerum maiores.
       customer_id:
         type: string
-        example: Iure perspiciatis.
+        example: Doloribus facilis voluptas est omnis laborum.
       items:
         type: array
         items:
           $ref: '#/definitions/ItemDTORequestBody'
         example:
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
-        - amount: 1682166100
-          book_id: Occaecati quibusdam non.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
       total:
         type: number
-        example: 0.15330291
+        example: 0.7018658
         format: float
     example:
-      customer_id: Fugiat aliquid harum aperiam nobis.
+      coupon_id: Aut nostrum est non ratione voluptatum repudiandae.
+      customer_id: Est vel mollitia minima odio.
       items:
-      - amount: 1682166100
-        book_id: Occaecati quibusdam non.
-      - amount: 1682166100
-        book_id: Occaecati quibusdam non.
-      - amount: 1682166100
-        book_id: Occaecati quibusdam non.
-      - amount: 1682166100
-        book_id: Occaecati quibusdam non.
-      total: 0.9368649
+      - amount: 295474085
+        book_id: Eos accusamus.
+      - amount: 295474085
+        book_id: Eos accusamus.
+      - amount: 295474085
+        book_id: Eos accusamus.
+      total: 0.7968744
     required:
     - total
     - items
-    - customer_id
   CatalogCreateCartResponseBody:
     title: CatalogCreateCartResponseBody
     type: object
     properties:
+      coupon_id:
+        type: string
+        example: Debitis magni non aspernatur dolorum eum ut.
       customer_id:
         type: string
-        example: Id laborum quam.
+        example: Recusandae assumenda fuga quae.
       id:
         type: string
-        example: Tempore non voluptates quia temporibus rerum atque.
+        example: Aut ipsum repudiandae vel impedit ab provident.
       items:
         type: array
         items:
           $ref: '#/definitions/ItemDTOResponseBody'
         example:
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
-        - amount: 1496435812
-          book_id: Ut doloremque doloremque at nemo pariatur.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
       total:
         type: number
-        example: 0.9691147
+        example: 0.9018028
         format: float
     example:
-      customer_id: Dolorem tempora illum doloremque quia.
-      id: Explicabo quisquam.
+      coupon_id: Veritatis beatae.
+      customer_id: Neque laboriosam perferendis repellat voluptatem unde.
+      id: Placeat et.
       items:
-      - amount: 1496435812
-        book_id: Ut doloremque doloremque at nemo pariatur.
-      - amount: 1496435812
-        book_id: Ut doloremque doloremque at nemo pariatur.
-      - amount: 1496435812
-        book_id: Ut doloremque doloremque at nemo pariatur.
-      - amount: 1496435812
-        book_id: Ut doloremque doloremque at nemo pariatur.
-      total: 0.54007155
+      - amount: 821791573
+        book_id: Eos ut repellat est praesentium nostrum excepturi.
+      - amount: 821791573
+        book_id: Eos ut repellat est praesentium nostrum excepturi.
+      total: 0.38518783
     required:
     - id
     - total
@@ -976,14 +1189,14 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: create_category_invalid_fields_response_body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1002,9 +1215,9 @@ definitions:
     properties:
       name:
         type: string
-        example: Ratione voluptatem aspernatur aut et sed perferendis.
+        example: Repudiandae molestias saepe iusto consequuntur eius.
     example:
-      name: Et tempora.
+      name: Voluptas est et laudantium nihil.
     required:
     - name
   CatalogCreateCategoryResponseBody:
@@ -1013,13 +1226,13 @@ definitions:
     properties:
       id:
         type: string
-        example: Debitis et expedita velit.
+        example: Dolores minus placeat inventore delectus enim assumenda.
       name:
         type: string
-        example: Rerum temporibus accusantium laborum.
+        example: Qui sed tenetur libero numquam.
     example:
-      id: Quas nulla eius dolor vero.
-      name: Natus et laboriosam molestiae cum.
+      id: Quas qui aliquam nihil.
+      name: Est beatae nobis libero vitae.
     required:
     - id
     - name
@@ -1030,7 +1243,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1053,12 +1266,12 @@ definitions:
         example: true
     description: create_country_invalid_fields_response_body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
@@ -1072,9 +1285,9 @@ definitions:
     properties:
       name:
         type: string
-        example: Aliquid saepe.
+        example: Laboriosam corporis exercitationem eum.
     example:
-      name: Nostrum suscipit minus omnis quae eos cumque.
+      name: Consequatur corporis rerum possimus iste nam.
     required:
     - name
   CatalogCreateCountryResponseBody:
@@ -1083,17 +1296,17 @@ definitions:
     properties:
       id:
         type: string
-        example: Cum nihil.
+        example: Perferendis quis.
       name:
         type: string
-        example: Et aut dolores ab.
+        example: Neque in.
       state_ids:
         type: string
-        example: Quos culpa et laudantium facilis non.
+        example: Vitae dignissimos dolores.
     example:
-      id: Enim ut rem velit.
-      name: Aut maxime sapiente ducimus est ipsum.
-      state_ids: Et ipsum ullam.
+      id: Qui rerum asperiores.
+      name: Magni et natus dignissimos non eius dolorum.
+      state_ids: Delectus dolore nostrum illum omnis id unde.
     required:
     - id
     - name
@@ -1120,19 +1333,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: create_coupon_invalid_fields_response_body result type (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: false
+      temporary: false
+      timeout: true
     required:
     - name
     - id
@@ -1146,18 +1359,18 @@ definitions:
     properties:
       code:
         type: string
-        example: Nesciunt fugiat dolor et aut aut.
+        example: Quae deleniti quis porro ut.
       discount:
         type: number
-        example: 0.59577566
+        example: 0.4891231
         minimum: 0
       validity:
         type: string
-        example: Hic ut ipsam corporis.
+        example: Non aut.
     example:
-      code: Eligendi iusto esse praesentium maxime odit.
-      discount: 0.90319437
-      validity: Et sit maiores autem.
+      code: Autem recusandae qui ea est.
+      discount: 0.3882686
+      validity: Asperiores consectetur tempore quo.
     required:
     - code
     - discount
@@ -1168,22 +1381,22 @@ definitions:
     properties:
       code:
         type: string
-        example: Sit pariatur amet quidem nihil dolores.
+        example: Doloribus delectus culpa.
       discount:
         type: number
-        example: 0.37659055
+        example: 0.12625991
         minimum: 0
       id:
         type: string
-        example: Voluptates adipisci natus est commodi totam eaque.
+        example: Laborum veritatis iusto.
       validity:
         type: string
-        example: Nihil eos omnis ullam at rem.
+        example: Reprehenderit possimus adipisci accusantium rerum.
     example:
-      code: Dignissimos ut repellendus.
-      discount: 0.9826755
-      id: Aut rem fugiat.
-      validity: Aspernatur fuga laudantium repellendus recusandae.
+      code: Rerum porro quae molestias.
+      discount: 0.2939277
+      id: Aut est tenetur quibusdam est aut corporis.
+      validity: Maxime quidem velit.
     required:
     - id
     - code
@@ -1196,7 +1409,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1223,8 +1436,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -1242,43 +1455,43 @@ definitions:
         type: array
         items:
           type: string
-          example: Quas qui aliquam nihil.
+          example: Incidunt quibusdam commodi quasi doloremque voluptatem.
         example:
-        - Beatae nobis.
-        - Vitae incidunt maiores.
-        - Eveniet est est laudantium repudiandae.
+        - Enim tempore qui dolore architecto.
+        - Adipisci vero rerum rerum similique.
       document:
         type: string
-        example: Laboriosam perferendis repellat voluptatem unde voluptas.
+        example: Laboriosam dolore.
       email:
         type: string
-        example: khalid.medhurst@parker.info
+        example: marques@wisokysimonis.org
         format: email
       first_name:
         type: string
-        example: Laborum et dolor doloremque omnis ullam ullam.
+        example: Eius nihil doloremque recusandae voluptatum nulla dolor.
       last_name:
         type: string
-        example: Non dicta.
+        example: Facilis quasi optio ab aut qui velit.
       phone:
         type: string
-        example: Qui sed tenetur libero numquam.
+        example: Non aut recusandae.
     example:
       address:
-        address: Molestiae aut ut.
-        cep: Adipisci quas aut quis culpa dolor nam.
-        city: Nam facilis.
-        complement: Libero consequatur eveniet expedita dolore quod.
-        country_id: Libero ut culpa recusandae et rem.
-        state_id: Et dolore enim quia est nobis architecto.
+        address: Voluptates quia non.
+        cep: Itaque ipsa et quae dolorum.
+        city: Asperiores et inventore asperiores doloribus commodi.
+        complement: Totam dolor.
+        state_id: Ad veniam natus eaque recusandae.
       cart_ids:
-      - Similique perferendis.
-      - Adipisci neque in porro vitae dignissimos dolores.
-      document: Consequatur quia.
-      email: reyna.schaefer@botsfordcollins.org
-      first_name: Saepe iusto consequuntur eius minima.
-      last_name: Est et laudantium.
-      phone: Laudantium quidem enim.
+      - In nam sint non.
+      - Placeat distinctio rerum et.
+      - Rem laborum non sequi aut.
+      - Totam molestias.
+      document: Aut quidem quisquam.
+      email: barney@gottlieb.org
+      first_name: Corrupti nemo in.
+      last_name: Ex molestiae ducimus.
+      phone: Molestiae molestias facilis quia eos eum exercitationem.
     required:
     - first_name
     - last_name
@@ -1296,49 +1509,47 @@ definitions:
         type: array
         items:
           type: string
-          example: Sit porro illum.
+          example: Et odio.
         example:
-        - Magnam facilis voluptatem quia.
-        - Voluptatum provident in accusantium eum.
-        - Qui voluptatum eos earum commodi exercitationem.
-        - Eligendi deserunt modi eos dolorum.
+        - Commodi sint perferendis ut pariatur placeat.
+        - Ut ab quia et dolor.
+        - Numquam laboriosam suscipit.
+        - Itaque sequi omnis.
       document:
         type: string
-        example: Saepe consequatur accusantium quibusdam non facere fuga.
+        example: Mollitia accusamus sit blanditiis dolore.
       email:
         type: string
-        example: ernest_schowalter@mckenzie.name
+        example: jared.reichel@considine.net
         format: email
       first_name:
         type: string
-        example: Iste qui dolores quae quo.
+        example: Ratione ad.
       id:
         type: string
-        example: Nisi ipsa hic minima numquam.
+        example: Id consequatur.
       last_name:
         type: string
-        example: Totam eos dolores nisi veniam.
+        example: Ut quasi et ea asperiores cupiditate.
       phone:
         type: string
-        example: Veniam et.
+        example: Autem et magnam consectetur aperiam fugit ut.
     example:
       address:
-        address: Culpa omnis nihil.
-        cep: Itaque necessitatibus voluptatem.
-        city: Enim voluptatem deserunt.
-        complement: Corporis maiores labore autem occaecati eligendi fugit.
-        country_id: Minus quia nobis reprehenderit cupiditate quos.
-        state_id: Aliquid ipsam hic beatae.
+        address: Sint dignissimos.
+        cep: Sint qui id.
+        city: Perspiciatis et ducimus.
+        complement: Dolores qui doloremque provident id ut tenetur.
+        state_id: Laboriosam qui ea eius eos.
       cart_ids:
-      - Tempore id sapiente.
-      - Et non totam sed ducimus vel.
-      - At est molestiae quam sed magni tenetur.
-      document: Et officia voluptatem quae corrupti molestiae.
-      email: irwin_greenholt@oreilly.name
-      first_name: A et natus quidem doloremque adipisci.
-      id: Repellendus dolores quis voluptas.
-      last_name: Quibusdam et.
-      phone: Blanditiis repellat molestias.
+      - Quis id consequatur repudiandae.
+      - Velit quasi voluptatem.
+      document: Exercitationem ipsam consectetur velit.
+      email: teresa@veum.name
+      first_name: Velit dolore sunt earum.
+      id: Aut dolorem veritatis quis in libero perspiciatis.
+      last_name: Quia nam.
+      phone: Consectetur quasi voluptas animi non id nam.
     required:
     - id
     - first_name
@@ -1347,7 +1558,7 @@ definitions:
     - document
     - address
     - phone
-  CatalogCreateStateInvalidFieldsResponseBody:
+  CatalogCreatePurchaseInvalidFieldsResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1374,14 +1585,142 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
+    description: create_purchase_invalid_fields_response_body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  CatalogCreatePurchaseRequestBody:
+    title: CatalogCreatePurchaseRequestBody
+    type: object
+    properties:
+      cart:
+        $ref: '#/definitions/CreateCartDTORequestBody'
+      customer:
+        $ref: '#/definitions/CreateCustomerDTORequestBody'
+    example:
+      cart:
+        coupon_id: Minima ullam occaecati qui.
+        customer_id: Qui aut maxime asperiores et adipisci.
+        items:
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        total: 0.5975442
+      customer:
+        address:
+          address: Voluptates quia non.
+          cep: Itaque ipsa et quae dolorum.
+          city: Asperiores et inventore asperiores doloribus commodi.
+          complement: Totam dolor.
+          state_id: Ad veniam natus eaque recusandae.
+        cart_ids:
+        - A sed est est numquam est distinctio.
+        - Necessitatibus rerum modi earum non vel eos.
+        - Optio error et qui eaque.
+        - Sequi quos qui id consequatur tempora.
+        document: Pariatur sequi eveniet.
+        email: janick.schmeler@von.biz
+        first_name: Aliquam vitae sit odit porro.
+        last_name: Quas et non non.
+        phone: Et aperiam expedita voluptatibus reprehenderit error facere.
+    required:
+    - customer
+    - cart
+  CatalogCreatePurchaseResponseBody:
+    title: CatalogCreatePurchaseResponseBody
+    type: object
+    properties:
+      cart:
+        $ref: '#/definitions/CartDTOResponseBody'
+      customer:
+        $ref: '#/definitions/CustomerDTOResponseBody'
+      id:
+        type: string
+        example: Quam repellat qui est.
+    example:
+      cart:
+        coupon_id: Ut quia vero.
+        customer_id: Illo cupiditate placeat recusandae consequatur.
+        id: Ut quis odit eos amet.
+        items:
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        - amount: 821791573
+          book_id: Eos ut repellat est praesentium nostrum excepturi.
+        total: 0.38355023
+      customer:
+        address:
+          address: Sint dignissimos.
+          cep: Sint qui id.
+          city: Perspiciatis et ducimus.
+          complement: Dolores qui doloremque provident id ut tenetur.
+          state_id: Laboriosam qui ea eius eos.
+        cart_ids:
+        - Minus dolorum.
+        - Et alias amet molestiae.
+        - Doloribus modi impedit.
+        - Voluptatibus omnis.
+        document: Ipsam iure aliquid nisi qui nemo ab.
+        email: cameron.tremblay@wolf.biz
+        first_name: Eos temporibus ut ut veritatis dolore.
+        id: Voluptatibus excepturi aut numquam ea id.
+        last_name: Voluptatem est labore praesentium sint molestias officiis.
+        phone: Tempore praesentium repellendus pariatur.
+      id: Quod nostrum quaerat nemo eius.
+    required:
+    - id
+    - customer
+    - cart
+  CatalogCreateStateInvalidFieldsResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
     description: create_state_invalid_fields_response_body result type (default view)
     example:
       fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: false
     required:
     - name
@@ -1396,13 +1735,13 @@ definitions:
     properties:
       country_id:
         type: string
-        example: Nam voluptate est laboriosam consequatur atque voluptas.
+        example: Impedit eveniet ut praesentium voluptatem ipsum.
       name:
         type: string
-        example: Et et molestiae quas eum.
+        example: Ut cum ut.
     example:
-      country_id: Nostrum ut non.
-      name: Dolores sed.
+      country_id: Autem commodi.
+      name: Soluta quia voluptas debitis dolorem in.
     required:
     - name
     - country_id
@@ -1412,17 +1751,17 @@ definitions:
     properties:
       country_id:
         type: string
-        example: Delectus dolore nostrum illum omnis id unde.
+        example: Esse recusandae at mollitia blanditiis rem et.
       id:
         type: string
-        example: Qui rerum asperiores.
+        example: Molestias necessitatibus ea quisquam quo.
       name:
         type: string
-        example: Magni et natus dignissimos non eius dolorum.
+        example: Perspiciatis incidunt sed et.
     example:
-      country_id: Possimus iste.
-      id: Sunt ut numquam rerum blanditiis suscipit laboriosam.
-      name: Exercitationem eum sit consequatur corporis.
+      country_id: Dolorem necessitatibus praesentium deserunt consequuntur.
+      id: Consequatur cupiditate.
+      name: Qui provident.
     required:
     - id
     - name
@@ -1434,7 +1773,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1450,18 +1789,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: show_actor_not_found_response_body result type (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -1476,27 +1815,27 @@ definitions:
     properties:
       created_at:
         type: string
-        example: Et molestiae qui ducimus qui quae.
+        example: Laboriosam sunt itaque perferendis.
       description:
         type: string
-        example: 8rb
+        example: o1w
         maxLength: 400
       email:
         type: string
-        example: jon_pfeffer@windler.biz
+        example: clara@sporer.net
         format: email
       id:
         type: string
-        example: Hic modi cumque et libero quae ipsam.
+        example: Eos velit provident laborum dolorem fugiat natus.
       name:
         type: string
-        example: Aliquid nisi.
+        example: Illo sapiente.
     example:
-      created_at: Magni ab.
-      description: j72
-      email: meghan@volkman.net
-      id: Dicta sequi aliquid quaerat quaerat.
-      name: Quia id.
+      created_at: Iste ducimus esse qui.
+      description: eli
+      email: kaya.hartmann@gradytremblay.org
+      id: Ipsa praesentium dolor.
+      name: Ullam dolores et enim totam.
     required:
     - id
     - name
@@ -1526,7 +1865,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -1537,7 +1876,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -1554,62 +1893,64 @@ definitions:
         type: array
         items:
           type: string
-          example: Illum neque.
+          example: Quidem doloremque adipisci.
         example:
-        - Atque excepturi dolores.
-        - Voluptate enim nesciunt voluptatibus explicabo assumenda quo.
-        - Voluptate iste ducimus esse qui deleniti.
+        - Et dolorem.
+        - Eligendi facilis cumque quos veritatis recusandae quae.
       category_ids:
         type: array
         items:
           type: string
-          example: Eligendi sit et.
+          example: Eos earum commodi exercitationem id eligendi.
         example:
-        - Similique doloremque sint consequuntur id.
-        - Et molestias assumenda.
+        - Eos dolorum ea.
+        - Dolores quis.
+        - Doloremque a et.
       id:
         type: string
-        example: Qui illo sed.
+        example: Iusto iste nesciunt enim neque et at.
       isbn:
         type: string
-        example: Quia asperiores assumenda esse.
+        example: Voluptatem quia doloribus.
       issue:
         type: string
-        example: Sapiente similique rerum autem a suscipit omnis.
+        example: Provident in accusantium eum nemo qui.
       pages:
         type: integer
-        example: 7482955635243635932
+        example: 4827371087921011847
         minimum: 100
       price:
         type: number
-        example: 20.453564
+        example: 20.64625
         minimum: 20
       summary:
         type: string
-        example: Saepe ullam dolores et enim totam nam.
+        example: Porro illum at.
       synopsis:
         type: string
-        example: t8c
+        example: i5c
         maxLength: 500
       title:
         type: string
-        example: Qui laboriosam sunt itaque.
+        example: Vel nemo est odio nostrum.
     example:
       actor_ids:
-      - Unde qui officiis.
-      - Eum in a reprehenderit.
-      - Aliquid ratione.
+      - Est molestiae quam sed.
+      - Tenetur eveniet est delectus nisi est asperiores.
+      - Laborum et dolor doloremque omnis ullam ullam.
       category_ids:
-      - Velit voluptatem.
-      - Id voluptas qui accusamus voluptatem.
-      id: Ea facilis.
-      isbn: Natus voluptatem quia consequatur.
-      issue: Adipisci quo aliquid architecto nisi.
-      pages: 8712764700059410664
-      price: 20.330029
-      summary: Atque est ut repudiandae.
-      synopsis: cv3
-      title: Consequatur quia aspernatur aut.
+      - Officia voluptatem.
+      - Corrupti molestiae nisi blanditiis repellat molestias amet.
+      - Tempore id sapiente.
+      - Et non totam sed ducimus vel.
+      id: Eius qui rerum ut earum.
+      isbn: Eum vitae ipsam.
+      issue: Provident excepturi aliquid qui deleniti placeat.
+      pages: 6779128142329120362
+      price: 20.322887
+      summary: Magni nihil itaque mollitia at natus sequi.
+      synopsis: q86
+      title: Et non voluptates.
     required:
     - id
     - title
@@ -1643,18 +1984,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: show_category_not_found_response_body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -1669,31 +2010,351 @@ definitions:
     properties:
       id:
         type: string
-        example: Nulla dolorem.
+        example: Ut et eum est quia in.
       name:
         type: string
-        example: Voluptatem voluptas ex architecto quam numquam.
+        example: Sequi nulla voluptas autem optio enim.
     example:
-      id: Ut sit.
-      name: Nulla rerum maxime maiores.
+      id: At quaerat culpa.
+      name: Consequatur quia.
     required:
     - id
     - name
+  CatalogShowCountryNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: show_country_not_found_response_body result type (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  CatalogShowCountryResponseBody:
+    title: CatalogShowCountryResponseBody
+    type: object
+    properties:
+      id:
+        type: string
+        example: Est est et.
+      name:
+        type: string
+        example: Et excepturi sed quas quidem.
+      state_ids:
+        type: string
+        example: Autem aut quo quo.
+    example:
+      id: Dolor quos cupiditate.
+      name: Deserunt soluta omnis aut consequatur aperiam quasi.
+      state_ids: Molestias autem itaque quaerat illum.
+    required:
+    - id
+    - name
+  CatalogShowStateNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: show_state_not_found_response_body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  CatalogShowStateResponseBody:
+    title: CatalogShowStateResponseBody
+    type: object
+    properties:
+      country_id:
+        type: string
+        example: Blanditiis praesentium corporis.
+      id:
+        type: string
+        example: Dolores animi molestiae iure.
+      name:
+        type: string
+        example: Consectetur aut.
+    example:
+      country_id: Itaque praesentium laborum.
+      id: Corporis cum hic officiis atque in.
+      name: Deleniti consequatur.
+    required:
+    - id
+    - name
+    - country_id
+  CategoryDTOResponse:
+    title: CategoryDTOResponse
+    type: object
+    properties:
+      id:
+        type: string
+        example: Incidunt illo laudantium.
+      name:
+        type: string
+        example: Possimus libero optio corrupti optio quos.
+    description: Category Type
+    example:
+      id: Quidem inventore non et velit.
+      name: Enim aperiam quasi ullam inventore adipisci.
+    required:
+    - id
+    - name
+  CountryDTOResponse:
+    title: CountryDTOResponse
+    type: object
+    properties:
+      id:
+        type: string
+        example: Perspiciatis possimus culpa nulla repellendus.
+      name:
+        type: string
+        example: Et molestiae.
+      state_ids:
+        type: string
+        example: Eum quidem nam voluptate.
+    description: Country Type
+    example:
+      id: Laboriosam consequatur.
+      name: Voluptas commodi.
+      state_ids: Sed a nostrum ut non.
+    required:
+    - id
+    - name
+  CreateCartDTORequestBody:
+    title: CreateCartDTORequestBody
+    type: object
+    properties:
+      coupon_id:
+        type: string
+        example: Et natus autem dolorem.
+      customer_id:
+        type: string
+        example: Modi sed.
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ItemDTORequestBody'
+        example:
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+        - amount: 295474085
+          book_id: Eos accusamus.
+      total:
+        type: number
+        example: 0.38208878
+        format: float
+    description: Cart Type
+    example:
+      coupon_id: Accusamus aliquid molestiae.
+      customer_id: Qui et ullam odio consequuntur excepturi.
+      items:
+      - amount: 295474085
+        book_id: Eos accusamus.
+      - amount: 295474085
+        book_id: Eos accusamus.
+      - amount: 295474085
+        book_id: Eos accusamus.
+      - amount: 295474085
+        book_id: Eos accusamus.
+      total: 0.15886
+    required:
+    - total
+    - items
+  CreateCustomerDTORequestBody:
+    title: CreateCustomerDTORequestBody
+    type: object
+    properties:
+      address:
+        $ref: '#/definitions/AddressDTORequestBody'
+      cart_ids:
+        type: array
+        items:
+          type: string
+          example: Qui ut repellendus inventore adipisci velit.
+        example:
+        - Doloribus debitis enim temporibus.
+        - Architecto ipsum doloribus dolor non neque.
+      document:
+        type: string
+        example: Non iure aperiam.
+      email:
+        type: string
+        example: jeffrey_luettgen@kemmerweissnat.name
+        format: email
+      first_name:
+        type: string
+        example: Ipsum architecto.
+      last_name:
+        type: string
+        example: Omnis voluptatem.
+      phone:
+        type: string
+        example: Qui et minima eius eos omnis.
+    description: Customer Type
+    example:
+      address:
+        address: Voluptates quia non.
+        cep: Itaque ipsa et quae dolorum.
+        city: Asperiores et inventore asperiores doloribus commodi.
+        complement: Totam dolor.
+        state_id: Ad veniam natus eaque recusandae.
+      cart_ids:
+      - Ratione ducimus perspiciatis saepe cumque.
+      - Dolor deserunt inventore.
+      - Totam rerum perspiciatis doloribus consequatur illum.
+      document: Quibusdam vitae odio necessitatibus.
+      email: alfredo_tromp@lang.name
+      first_name: Ut rerum.
+      last_name: Dicta a in.
+      phone: Natus eligendi.
+    required:
+    - first_name
+    - last_name
+    - email
+    - document
+    - address
+    - phone
+  CustomerDTOResponseBody:
+    title: CustomerDTOResponseBody
+    type: object
+    properties:
+      address:
+        $ref: '#/definitions/AddressDTOResponseBody'
+      cart_ids:
+        type: array
+        items:
+          type: string
+          example: Iste nam ut provident magnam in.
+        example:
+        - Dolore qui recusandae veniam.
+        - Quibusdam repellendus.
+        - Quia quos sequi numquam et explicabo.
+      document:
+        type: string
+        example: Voluptate voluptatem sed nemo eius accusantium dolor.
+      email:
+        type: string
+        example: willa@oberbrunnerboyle.info
+        format: email
+      first_name:
+        type: string
+        example: Dolorem consequatur et aut.
+      id:
+        type: string
+        example: Dicta earum corporis quam.
+      last_name:
+        type: string
+        example: Voluptatem ducimus quae aut voluptatem quidem.
+      phone:
+        type: string
+        example: Libero est et quidem totam.
+    description: Customer Type
+    example:
+      address:
+        address: Sint dignissimos.
+        cep: Sint qui id.
+        city: Perspiciatis et ducimus.
+        complement: Dolores qui doloremque provident id ut tenetur.
+        state_id: Laboriosam qui ea eius eos.
+      cart_ids:
+      - Eum quaerat est excepturi.
+      - Officiis nihil.
+      document: Non sint velit repudiandae nam maxime quia.
+      email: juliet@fahey.name
+      first_name: Sit impedit expedita facilis porro.
+      id: Maiores impedit quod et.
+      last_name: Adipisci id.
+      phone: Voluptas consectetur occaecati.
+    required:
+    - id
+    - first_name
+    - last_name
+    - email
+    - document
+    - address
+    - phone
   ItemDTORequestBody:
     title: ItemDTORequestBody
     type: object
     properties:
       amount:
         type: integer
-        example: 636979083
-        format: int32
+        example: 865387854
+        minimum: 0
       book_id:
         type: string
-        example: Sequi dolore officia molestiae vel sed.
+        example: Odio dolore sunt et repellat esse.
     description: Item Type
     example:
-      amount: 251798694
-      book_id: Commodi nulla accusamus dolor dolores earum enim.
+      amount: 856172302
+      book_id: Tempore consectetur vel nihil.
     required:
     - book_id
     - amount
@@ -1703,15 +2364,37 @@ definitions:
     properties:
       amount:
         type: integer
-        example: 2012575304
-        format: int32
+        example: 429747030
+        minimum: 0
       book_id:
         type: string
-        example: Earum labore occaecati.
+        example: Asperiores maiores et officia cupiditate nisi.
     description: Item Type
     example:
-      amount: 1823008087
-      book_id: Aliquid blanditiis et.
+      amount: 941253941
+      book_id: Totam laudantium.
     required:
     - book_id
     - amount
+  StateDTOResponse:
+    title: StateDTOResponse
+    type: object
+    properties:
+      country_id:
+        type: string
+        example: Numquam eos.
+      id:
+        type: string
+        example: Dolore ut et atque error velit.
+      name:
+        type: string
+        example: Molestiae amet ut quos asperiores.
+    description: State Type
+    example:
+      country_id: Porro hic.
+      id: Corrupti excepturi voluptas est ullam.
+      name: Nam quaerat itaque libero dolores officia minus.
+    required:
+    - id
+    - name
+    - country_id

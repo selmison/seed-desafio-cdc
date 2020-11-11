@@ -17,6 +17,8 @@ import (
 type Service interface {
 	// CreateActor implements create_actor.
 	CreateActor(context.Context, *CreateActorDTO) (res *ActorDTO, err error)
+	// ListActors implements list_actors.
+	ListActors(context.Context) (res []*ActorDTO, err error)
 	// ShowActor implements show_actor.
 	ShowActor(context.Context, *ShowByIDDTO) (res *ActorDTO, err error)
 	// CreateBook implements create_book.
@@ -29,16 +31,28 @@ type Service interface {
 	CreateCart(context.Context, *CreateCartDTO) (res *CartDTO, err error)
 	// CreateCategory implements create_category.
 	CreateCategory(context.Context, *CreateCategoryDTO) (res *CategoryDTO, err error)
+	// ListCategories implements list_categories.
+	ListCategories(context.Context) (res []*CategoryDTO, err error)
 	// ShowCategory implements show_category.
 	ShowCategory(context.Context, *ShowByIDDTO) (res *CategoryDTO, err error)
 	// CreateCountry implements create_country.
 	CreateCountry(context.Context, *CreateCountryDTO) (res *CountryDTO, err error)
+	// ListCountries implements list_countries.
+	ListCountries(context.Context) (res []*CountryDTO, err error)
+	// ShowCountry implements show_country.
+	ShowCountry(context.Context, *ShowByIDDTO) (res *CountryDTO, err error)
 	// CreateCoupon implements create_coupon.
 	CreateCoupon(context.Context, *CreateCouponDTO) (res *CouponDTO, err error)
 	// CreateCustomer implements create_customer.
 	CreateCustomer(context.Context, *CreateCustomerDTO) (res *CustomerDTO, err error)
+	// CreatePurchase implements create_purchase.
+	CreatePurchase(context.Context, *CreatePurchaseDTO) (res *PurchaseDTO, err error)
 	// CreateState implements create_state.
 	CreateState(context.Context, *CreateStateDTO) (res *StateDTO, err error)
+	// ListStates implements list_states.
+	ListStates(context.Context) (res []*StateDTO, err error)
+	// ShowState implements show_state.
+	ShowState(context.Context, *ShowByIDDTO) (res *StateDTO, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -49,7 +63,7 @@ const ServiceName = "catalog"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [12]string{"create_actor", "show_actor", "create_book", "list_books", "show_book", "create_cart", "create_category", "show_category", "create_country", "create_coupon", "create_customer", "create_state"}
+var MethodNames = [19]string{"create_actor", "list_actors", "show_actor", "create_book", "list_books", "show_book", "create_cart", "create_category", "list_categories", "show_category", "create_country", "list_countries", "show_country", "create_coupon", "create_customer", "create_purchase", "create_state", "list_states", "show_state"}
 
 // CreateActorDTO is the payload type of the catalog service create_actor
 // method.
@@ -105,7 +119,8 @@ type BookDTO struct {
 type CreateCartDTO struct {
 	Total      float32
 	Items      []*ItemDTO
-	CustomerID string
+	CustomerID *string
+	CouponID   *string
 }
 
 // CartDTO is the result type of the catalog service create_cart method.
@@ -114,6 +129,7 @@ type CartDTO struct {
 	Total      float32
 	Items      []*ItemDTO
 	CustomerID string
+	CouponID   *string
 }
 
 // CreateCategoryDTO is the payload type of the catalog service create_category
@@ -181,6 +197,20 @@ type CustomerDTO struct {
 	CartIds   []string
 }
 
+// CreatePurchaseDTO is the payload type of the catalog service create_purchase
+// method.
+type CreatePurchaseDTO struct {
+	Customer *CreateCustomerDTO
+	Cart     *CreateCartDTO
+}
+
+// PurchaseDTO is the result type of the catalog service create_purchase method.
+type PurchaseDTO struct {
+	ID       string
+	Customer *CustomerDTO
+	Cart     *CartDTO
+}
+
 // CreateStateDTO is the payload type of the catalog service create_state
 // method.
 type CreateStateDTO struct {
@@ -206,7 +236,6 @@ type AddressDTO struct {
 	Address    string
 	Complement string
 	City       string
-	CountryID  string
 	StateID    string
 	Cep        string
 }

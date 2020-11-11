@@ -13,7 +13,7 @@ import (
 // Actor represents a single actor.
 type Actor struct {
 	gorm.Model
-	ID          string  `gorm:"primarykey"`
+	ID          string  `gorm:"primaryKey"`
 	Name        string  `validate:"required,not_blank"`
 	Email       string  `gorm:"unique" validate:"required,email"`
 	Description string  `validate:"required,not_blank,max=400"`
@@ -25,7 +25,7 @@ func (a *Actor) Validate() error {
 	if err != nil {
 		vErrs := err.(validator.ValidationErrors)
 		return catalogGen.MakeInvalidFields(
-			fmt.Errorf("the '%s' field %w", vErrs[0].StructField(), coreDomain.ErrIsNotValid),
+			fmt.Errorf("the '%s' field %w", vErrs[0].Namespace(), coreDomain.ErrIsNotValid),
 		)
 	}
 	return nil

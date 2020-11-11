@@ -16,6 +16,11 @@ func CreateActorCatalogPath() string {
 	return "/actors"
 }
 
+// ListActorsCatalogPath returns the URL path to the catalog service list_actors HTTP endpoint.
+func ListActorsCatalogPath() string {
+	return "/actors"
+}
+
 // ShowActorCatalogPath returns the URL path to the catalog service show_actor HTTP endpoint.
 func ShowActorCatalogPath(id string) string {
 	return fmt.Sprintf("/actors/%v", id)
@@ -46,6 +51,11 @@ func CreateCategoryCatalogPath() string {
 	return "/categories"
 }
 
+// ListCategoriesCatalogPath returns the URL path to the catalog service list_categories HTTP endpoint.
+func ListCategoriesCatalogPath() string {
+	return "/categories"
+}
+
 // ShowCategoryCatalogPath returns the URL path to the catalog service show_category HTTP endpoint.
 func ShowCategoryCatalogPath(id string) string {
 	return fmt.Sprintf("/categories/%v", id)
@@ -54,6 +64,16 @@ func ShowCategoryCatalogPath(id string) string {
 // CreateCountryCatalogPath returns the URL path to the catalog service create_country HTTP endpoint.
 func CreateCountryCatalogPath() string {
 	return "/countries"
+}
+
+// ListCountriesCatalogPath returns the URL path to the catalog service list_countries HTTP endpoint.
+func ListCountriesCatalogPath() string {
+	return "/countries"
+}
+
+// ShowCountryCatalogPath returns the URL path to the catalog service show_country HTTP endpoint.
+func ShowCountryCatalogPath(id string) string {
+	return fmt.Sprintf("/countries/%v", id)
 }
 
 // CreateCouponCatalogPath returns the URL path to the catalog service create_coupon HTTP endpoint.
@@ -66,7 +86,22 @@ func CreateCustomerCatalogPath() string {
 	return "/customers"
 }
 
+// CreatePurchaseCatalogPath returns the URL path to the catalog service create_purchase HTTP endpoint.
+func CreatePurchaseCatalogPath() string {
+	return "/purchases"
+}
+
 // CreateStateCatalogPath returns the URL path to the catalog service create_state HTTP endpoint.
 func CreateStateCatalogPath() string {
 	return "/states"
+}
+
+// ListStatesCatalogPath returns the URL path to the catalog service list_states HTTP endpoint.
+func ListStatesCatalogPath() string {
+	return "/states"
+}
+
+// ShowStateCatalogPath returns the URL path to the catalog service show_state HTTP endpoint.
+func ShowStateCatalogPath(id string) string {
+	return fmt.Sprintf("/states/%v", id)
 }

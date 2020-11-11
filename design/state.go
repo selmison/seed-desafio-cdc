@@ -13,6 +13,8 @@ var StateDTO = Type("StateDTO", func() {
 	Required("id", "name", "country_id")
 })
 
+var StatesDTO = ArrayOf(StateDTO)
+
 var CreateStateDTO = Type("CreateStateDTO", func() {
 	Description("New State Type")
 	Attribute("name", String)
