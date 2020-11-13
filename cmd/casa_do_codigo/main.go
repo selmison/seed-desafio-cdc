@@ -70,6 +70,7 @@ func main() {
 			&catalog.Cart{},
 			&catalog.Category{},
 			&catalog.Country{},
+			&catalog.Item{},
 			&catalog.State{},
 			&catalog.Address{},
 			&catalog.Purchase{},

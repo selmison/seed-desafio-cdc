@@ -40,7 +40,7 @@ func ValidationMiddleware(repo *gorm.DB) endpoint.Middleware {
 					return nil, err
 				}
 			case *catalogGen.CreatePurchaseDTO:
-				if err := CreateCustomerValidation(repo, dto.Customer); err != nil {
+				if err := CreatePurchaseValidation(repo, dto); err != nil {
 					return nil, err
 				}
 			case *catalogGen.CreateStateDTO:
@@ -132,6 +132,23 @@ func CreateCustomerValidation(repo *gorm.DB, dto *catalogGen.CreateCustomerDTO) 
 			Name:    "invalid_fields",
 			ID:      goa.NewErrorID(),
 			Message: fmt.Sprintf("the 'body.customer.address.state_id' is %v", coreDomain.ErrNotFound),
+		}
+	}
+	return nil
+}
+
+func CreatePurchaseValidation(repo *gorm.DB, dto *catalogGen.CreatePurchaseDTO) error {
+	if err := CreateCustomerValidation(repo, dto.Customer); err != nil {
+		return err
+	}
+	if dto.Cart.CouponID != nil && strings.TrimSpace(*dto.Cart.CouponID) != "" {
+		result := repo.Where("id = ?", dto.Cart.CouponID).First(&catalog.Coupon{})
+		if result.RowsAffected == 0 {
+			return &goa.ServiceError{
+				Name:    "invalid_fields",
+				ID:      goa.NewErrorID(),
+				Message: fmt.Sprintf("the 'body.cart.coupon_id' is %v", coreDomain.ErrNotFound),
+			}
 		}
 	}
 	return nil

@@ -34,6 +34,8 @@ func (c *Cart) Total() float32 {
 }
 
 type Item struct {
+	gorm.Model
+	ID     string `gorm:"primaryKey"`
 	BookID string `validate:"required,not_blank"`
 	Amount int32  `validate:"required,gt=0"`
 	CartID string

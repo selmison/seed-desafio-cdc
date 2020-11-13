@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 
 	catalogGen "github.com/selmison/seed-desafio-cdc/gen/catalog"
 )
@@ -24,12 +25,20 @@ func (s *service) CreatePurchase(ctx context.Context, dto *catalogGen.CreatePurc
 		CartID:     cart.ID,
 		Cart:       cart,
 	}
-	if err := purchase.Validate(); err != nil {
+	if err := s.repo.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&customer).Error; err != nil {
+			return err
+		}
+		if err := tx.Create(&purchase).Error; err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
 		return nil, err
 	}
-	if result := s.repo.Create(&purchase); result.Error != nil {
-		return nil, result.Error
-	}
+	//if result := s.repo.Create(&purchase); result.Error != nil {
+	//	return nil, result.Error
+	//}
 	return &catalogGen.PurchaseDTO{
 		ID:       purchase.ID,
 		Customer: mapCustomerToCustomerDTO(customer),
