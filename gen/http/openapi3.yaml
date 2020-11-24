@@ -403,11 +403,9 @@ paths:
               coupon_id: Amet consequatur.
               customer_id: Sed maiores qui incidunt rem rem quia.
               items:
-              - amount: 295474085
+              - amount: 295474086
                 book_id: Eos accusamus.
-              - amount: 295474085
-                book_id: Eos accusamus.
-              - amount: 295474085
+              - amount: 295474086
                 book_id: Eos accusamus.
               total: 0.9235589
       responses:
@@ -422,9 +420,9 @@ paths:
                 customer_id: Corrupti ut et.
                 id: Ratione facilis corrupti eos consectetur repellat animi.
                 items:
-                - amount: 821791573
+                - amount: 821791574
                   book_id: Eos ut repellat est praesentium nostrum excepturi.
-                - amount: 821791573
+                - amount: 821791574
                   book_id: Eos ut repellat est praesentium nostrum excepturi.
                 total: 0.9908139
         "400":
@@ -773,9 +771,7 @@ paths:
                 coupon_id: Minima ullam occaecati qui.
                 customer_id: Qui aut maxime asperiores et adipisci.
                 items:
-                - amount: 295474085
-                  book_id: Eos accusamus.
-                - amount: 295474085
+                - amount: 295474086
                   book_id: Eos accusamus.
                 total: 0.5975442
               customer:
@@ -808,11 +804,11 @@ paths:
                   customer_id: Illo cupiditate placeat recusandae consequatur.
                   id: Ut quis odit eos amet.
                   items:
-                  - amount: 821791573
+                  - amount: 821791574
                     book_id: Eos ut repellat est praesentium nostrum excepturi.
-                  - amount: 821791573
+                  - amount: 821791574
                     book_id: Eos ut repellat est praesentium nostrum excepturi.
-                  - amount: 821791573
+                  - amount: 821791574
                     book_id: Eos ut repellat est praesentium nostrum excepturi.
                   total: 0.38355023
                 customer:
@@ -1123,9 +1119,9 @@ components:
           items:
             $ref: '#/components/schemas/ItemDTO'
           example:
-          - amount: 821791573
+          - amount: 821791574
             book_id: Eos ut repellat est praesentium nostrum excepturi.
-          - amount: 821791573
+          - amount: 821791574
             book_id: Eos ut repellat est praesentium nostrum excepturi.
         total:
           type: number
@@ -1136,11 +1132,11 @@ components:
         customer_id: Ex aspernatur libero sed ut.
         id: Omnis aut.
         items:
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
         total: 0.31035373
       required:
@@ -1314,14 +1310,13 @@ components:
           items:
             $ref: '#/components/schemas/ItemDTO'
           example:
-          - amount: 295474085
+          - amount: 295474086
             book_id: Eos accusamus.
-          - amount: 295474085
+          - amount: 295474086
             book_id: Eos accusamus.
-          - amount: 295474085
+          - amount: 295474086
             book_id: Eos accusamus.
-          - amount: 295474085
-            book_id: Eos accusamus.
+          minItems: 1
         total:
           type: number
           example: 0.90209204
@@ -1330,11 +1325,9 @@ components:
         coupon_id: Maiores incidunt et cum ab.
         customer_id: Ab aperiam veritatis accusamus fugiat asperiores eligendi.
         items:
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
-          book_id: Eos accusamus.
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
         total: 0.92404485
       required:
@@ -1436,9 +1429,7 @@ components:
           coupon_id: Minima ullam occaecati qui.
           customer_id: Qui aut maxime asperiores et adipisci.
           items:
-          - amount: 295474085
-            book_id: Eos accusamus.
-          - amount: 295474085
+          - amount: 295474086
             book_id: Eos accusamus.
           total: 0.5975442
         customer:
@@ -1578,14 +1569,14 @@ components:
       properties:
         amount:
           type: integer
-          example: 1816822233
-          minimum: 0
+          example: 1816822234
+          minimum: 1
         book_id:
           type: string
           example: Repellendus quasi temporibus blanditiis dolorem ipsa.
       description: Item Type
       example:
-        amount: 149870523
+        amount: 149870524
         book_id: Corporis veniam in.
       required:
       - book_id
@@ -1606,11 +1597,11 @@ components:
           customer_id: Illo cupiditate placeat recusandae consequatur.
           id: Ut quis odit eos amet.
           items:
-          - amount: 821791573
+          - amount: 821791574
             book_id: Eos ut repellat est praesentium nostrum excepturi.
-          - amount: 821791573
+          - amount: 821791574
             book_id: Eos ut repellat est praesentium nostrum excepturi.
-          - amount: 821791573
+          - amount: 821791574
             book_id: Eos ut repellat est praesentium nostrum excepturi.
           total: 0.38355023
         customer:

@@ -723,9 +723,9 @@ definitions:
         items:
           $ref: '#/definitions/ItemDTOResponseBody'
         example:
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
       total:
         type: number
@@ -737,11 +737,11 @@ definitions:
       customer_id: Quo est est dolorum nemo.
       id: Vel consequatur.
       items:
-      - amount: 821791573
+      - amount: 821791574
         book_id: Eos ut repellat est praesentium nostrum excepturi.
-      - amount: 821791573
+      - amount: 821791574
         book_id: Eos ut repellat est praesentium nostrum excepturi.
-      - amount: 821791573
+      - amount: 821791574
         book_id: Eos ut repellat est praesentium nostrum excepturi.
       total: 0.17473756
     required:
@@ -1095,14 +1095,13 @@ definitions:
         items:
           $ref: '#/definitions/ItemDTORequestBody'
         example:
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
-          book_id: Eos accusamus.
+        minItems: 1
       total:
         type: number
         example: 0.7018658
@@ -1111,11 +1110,9 @@ definitions:
       coupon_id: Aut nostrum est non ratione voluptatum repudiandae.
       customer_id: Est vel mollitia minima odio.
       items:
-      - amount: 295474085
+      - amount: 295474086
         book_id: Eos accusamus.
-      - amount: 295474085
-        book_id: Eos accusamus.
-      - amount: 295474085
+      - amount: 295474086
         book_id: Eos accusamus.
       total: 0.7968744
     required:
@@ -1139,13 +1136,13 @@ definitions:
         items:
           $ref: '#/definitions/ItemDTOResponseBody'
         example:
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
       total:
         type: number
@@ -1156,9 +1153,9 @@ definitions:
       customer_id: Neque laboriosam perferendis repellat voluptatem unde.
       id: Placeat et.
       items:
-      - amount: 821791573
+      - amount: 821791574
         book_id: Eos ut repellat est praesentium nostrum excepturi.
-      - amount: 821791573
+      - amount: 821791574
         book_id: Eos ut repellat est praesentium nostrum excepturi.
       total: 0.38518783
     required:
@@ -1614,9 +1611,7 @@ definitions:
         coupon_id: Minima ullam occaecati qui.
         customer_id: Qui aut maxime asperiores et adipisci.
         items:
-        - amount: 295474085
-          book_id: Eos accusamus.
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
         total: 0.5975442
       customer:
@@ -1656,11 +1651,11 @@ definitions:
         customer_id: Illo cupiditate placeat recusandae consequatur.
         id: Ut quis odit eos amet.
         items:
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
-        - amount: 821791573
+        - amount: 821791574
           book_id: Eos ut repellat est praesentium nostrum excepturi.
         total: 0.38355023
       customer:
@@ -2200,12 +2195,11 @@ definitions:
         items:
           $ref: '#/definitions/ItemDTORequestBody'
         example:
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
+        - amount: 295474086
           book_id: Eos accusamus.
-        - amount: 295474085
-          book_id: Eos accusamus.
+        minItems: 1
       total:
         type: number
         example: 0.38208878
@@ -2215,13 +2209,11 @@ definitions:
       coupon_id: Accusamus aliquid molestiae.
       customer_id: Qui et ullam odio consequuntur excepturi.
       items:
-      - amount: 295474085
+      - amount: 295474086
         book_id: Eos accusamus.
-      - amount: 295474085
+      - amount: 295474086
         book_id: Eos accusamus.
-      - amount: 295474085
-        book_id: Eos accusamus.
-      - amount: 295474085
+      - amount: 295474086
         book_id: Eos accusamus.
       total: 0.15886
     required:
@@ -2346,14 +2338,14 @@ definitions:
     properties:
       amount:
         type: integer
-        example: 865387854
-        minimum: 0
+        example: 865387855
+        minimum: 1
       book_id:
         type: string
         example: Odio dolore sunt et repellat esse.
     description: Item Type
     example:
-      amount: 856172302
+      amount: 856172303
       book_id: Tempore consectetur vel nihil.
     required:
     - book_id
@@ -2364,14 +2356,14 @@ definitions:
     properties:
       amount:
         type: integer
-        example: 429747030
-        minimum: 0
+        example: 429747031
+        minimum: 1
       book_id:
         type: string
         example: Asperiores maiores et officia cupiditate nisi.
     description: Item Type
     example:
-      amount: 941253941
+      amount: 941253942
       book_id: Totam laudantium.
     required:
     - book_id

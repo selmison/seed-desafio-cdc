@@ -1966,8 +1966,8 @@ func ValidateBookDTOResponse(body *BookDTOResponse) (err error) {
 
 // ValidateItemDTORequestBody runs the validations defined on ItemDTORequestBody
 func ValidateItemDTORequestBody(body *ItemDTORequestBody) (err error) {
-	if body.Amount < 0 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("body.amount", body.Amount, 0, true))
+	if body.Amount < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError("body.amount", body.Amount, 1, true))
 	}
 	return
 }
@@ -1982,8 +1982,8 @@ func ValidateItemDTOResponseBody(body *ItemDTOResponseBody) (err error) {
 		err = goa.MergeErrors(err, goa.MissingFieldError("amount", "body"))
 	}
 	if body.Amount != nil {
-		if *body.Amount < 0 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("body.amount", *body.Amount, 0, true))
+		if *body.Amount < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.amount", *body.Amount, 1, true))
 		}
 	}
 	return
@@ -2049,6 +2049,9 @@ func ValidateCreateCustomerDTORequestBody(body *CreateCustomerDTORequestBody) (e
 func ValidateCreateCartDTORequestBody(body *CreateCartDTORequestBody) (err error) {
 	if body.Items == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("items", "body"))
+	}
+	if len(body.Items) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError("body.items", body.Items, len(body.Items), 1, true))
 	}
 	for _, e := range body.Items {
 		if e != nil {

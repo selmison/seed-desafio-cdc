@@ -435,15 +435,11 @@ Example:
       "customer_id": "Sed maiores qui incidunt rem rem quia.",
       "items": [
          {
-            "amount": 295474085,
+            "amount": 295474086,
             "book_id": "Eos accusamus."
          },
          {
-            "amount": 295474085,
-            "book_id": "Eos accusamus."
-         },
-         {
-            "amount": 295474085,
+            "amount": 295474086,
             "book_id": "Eos accusamus."
          }
       ],
@@ -577,11 +573,7 @@ Example:
          "customer_id": "Qui aut maxime asperiores et adipisci.",
          "items": [
             {
-               "amount": 295474085,
-               "book_id": "Eos accusamus."
-            },
-            {
-               "amount": 295474085,
+               "amount": 295474086,
                "book_id": "Eos accusamus."
             }
          ],

@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"sync"
 	"time"
 
-	"github.com/go-kit/kit/log"
+	kitLog "github.com/go-kit/kit/log"
 	kitHttp "github.com/go-kit/kit/transport/http"
 	goaHttp "goa.design/goa/v3/http"
 	httpMdlwr "goa.design/goa/v3/http/middleware"
@@ -21,7 +22,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalogGen.Endpoints, wg *sync.WaitGroup, errc chan error, logger log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalogGen.Endpoints, wg *sync.WaitGroup, errc chan error, logger kitLog.Logger, debug bool) {
 
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
@@ -204,7 +205,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler}
 	for _, m := range catalogServer.Mounts {
-		logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern))
+		if err := logger.Log("info", fmt.Sprintf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)); err != nil {
+			log.Printf("kit/log error: %v\n", err)
+		}
 	}
 
 	(*wg).Add(1)
@@ -213,12 +216,16 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 
 		// Start HTTP server in a separate goroutine.
 		go func() {
-			logger.Log("info", fmt.Sprintf("HTTP server listening on %q", u.Host))
+			if err := logger.Log("info", fmt.Sprintf("HTTP server listening on %q", u.Host)); err != nil {
+				log.Printf("kit/log error: %v\n", err)
+			}
 			errc <- srv.ListenAndServe()
 		}()
 
 		<-ctx.Done()
-		logger.Log("info", fmt.Sprintf("shutting down HTTP server at %q", u.Host))
+		if err := logger.Log("info", fmt.Sprintf("shutting down HTTP server at %q", u.Host)); err != nil {
+			log.Printf("kit/log error: %v\n", err)
+		}
 
 		// Shutdown gracefully with a 30s timeout.
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -231,10 +238,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 // errorHandler returns a function that writes and logs the given error.
 // The function also writes and logs the error unique ID so that it's possible
 // to correlate.
-func errorHandler(logger log.Logger) func(context.Context, http.ResponseWriter, error) {
+func errorHandler(logger kitLog.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
-		logger.Log("info", fmt.Sprintf("[%s] ERROR: %s", id, err.Error()))
+		if err := logger.Log("info", fmt.Sprintf("[%s] ERROR: %s", id, err.Error())); err != nil {
+			log.Printf("kit/log error: %v\n", err)
+		}
 	}
 }

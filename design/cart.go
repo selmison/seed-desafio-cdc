@@ -8,7 +8,9 @@ import (
 var CreateCartDTO = Type("CreateCartDTO", func() {
 	Description("Cart Type")
 	Attribute("total", Float32)
-	Attribute("items", ItemsDTO)
+	Attribute("items", ItemsDTO, func() {
+		MinLength(1)
+	})
 	Attribute("customer_id", String)
 	Attribute("coupon_id", String)
 	Required("total", "items")
@@ -30,7 +32,7 @@ var ItemDTO = Type("ItemDTO", func() {
 	Description("Item Type")
 	Attribute("book_id", String)
 	Attribute("amount", Int32, func() {
-		Minimum(0)
+		Minimum(1)
 	})
 	Required("book_id", "amount")
 })

@@ -131,7 +131,7 @@ func CreateCustomerValidation(repo *gorm.DB, dto *catalogGen.CreateCustomerDTO) 
 		return &goa.ServiceError{
 			Name:    "invalid_fields",
 			ID:      goa.NewErrorID(),
-			Message: fmt.Sprintf("the 'body.customer.address.state_id' is %v", coreDomain.ErrNotFound),
+			Message: fmt.Sprintf("the 'body.customer.address.state_id' was %v", coreDomain.ErrNotFound),
 		}
 	}
 	return nil
@@ -147,11 +147,28 @@ func CreatePurchaseValidation(repo *gorm.DB, dto *catalogGen.CreatePurchaseDTO) 
 			return &goa.ServiceError{
 				Name:    "invalid_fields",
 				ID:      goa.NewErrorID(),
-				Message: fmt.Sprintf("the 'body.cart.coupon_id' is %v", coreDomain.ErrNotFound),
+				Message: fmt.Sprintf("the 'body.cart.coupon_id' was %v", coreDomain.ErrNotFound),
 			}
 		}
 	}
-	return nil
+	if dto.Cart.Total <= 0 {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the 'body.cart.total' was %v", coreDomain.ErrIsNotValid),
+		}
+	}
+	for i, item := range dto.Cart.Items {
+		result := repo.Where("id = ?", item.BookID).First(&catalog.Book{})
+		if result.RowsAffected == 0 {
+			return &goa.ServiceError{
+				Name:    "invalid_fields",
+				ID:      goa.NewErrorID(),
+				Message: fmt.Sprintf("the 'body.cart.items[%d].book_id' was %v", i, coreDomain.ErrNotFound),
+			}
+		}
+	}
+	return TotalCartValidation(repo, dto.Cart)
 }
 
 func CreateStateValidation(repo *gorm.DB, dto *catalogGen.CreateStateDTO) error {
@@ -160,7 +177,35 @@ func CreateStateValidation(repo *gorm.DB, dto *catalogGen.CreateStateDTO) error 
 		return &goa.ServiceError{
 			Name:    "invalid_fields",
 			ID:      goa.NewErrorID(),
-			Message: fmt.Sprintf("the 'body.country_id' is %v", coreDomain.ErrNotFound),
+			Message: fmt.Sprintf("the 'body.country_id' was %v", coreDomain.ErrNotFound),
+		}
+	}
+	return nil
+}
+
+func TotalCartValidation(repo *gorm.DB, dto *catalogGen.CreateCartDTO) error {
+	totals := make([]float32, len(dto.Items))
+	for i, item := range dto.Items {
+		book := &catalog.Book{}
+		result := repo.Where("id = ?", item.BookID).First(book)
+		if result.RowsAffected == 0 {
+			return &goa.ServiceError{
+				Name:    "invalid_fields",
+				ID:      goa.NewErrorID(),
+				Message: fmt.Sprintf("the 'body.cart.item[%d].book_id' was %v", i, coreDomain.ErrNotFound),
+			}
+		}
+		totals[i] = float32(item.Amount) * book.Price
+	}
+	var total float32 = 0
+	for _, price := range totals {
+		total = total + price
+	}
+	if total != dto.Total {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the 'body.cart.total' (%f) should be equal the calculated total (%f)", dto.Total, total),
 		}
 	}
 	return nil

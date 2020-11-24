@@ -147,7 +147,7 @@ func main() {
 	cancel()
 
 	wg.Wait()
-	if err := logger.Log("info", fmt.Sprintf("exited")); err != nil {
+	if err := logger.Log("info", "exited"); err != nil {
 		log.Fatalf(coreDomain.FormatToErrKitLog, err)
 	}
 }

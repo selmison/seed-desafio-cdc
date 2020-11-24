@@ -132,10 +132,13 @@ func BuildCreateCartPayload(catalogCreateCartBody string) (*catalog.CreateCartDT
 	{
 		err = json.Unmarshal([]byte(catalogCreateCartBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"coupon_id\": \"Amet consequatur.\",\n      \"customer_id\": \"Sed maiores qui incidunt rem rem quia.\",\n      \"items\": [\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         },\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         },\n         {\n            \"amount\": 295474085,\n            \"book_id\": \"Eos accusamus.\"\n         }\n      ],\n      \"total\": 0.9235589\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"coupon_id\": \"Amet consequatur.\",\n      \"customer_id\": \"Sed maiores qui incidunt rem rem quia.\",\n      \"items\": [\n         {\n            \"amount\": 295474086,\n            \"book_id\": \"Eos accusamus.\"\n         },\n         {\n            \"amount\": 295474086,\n            \"book_id\": \"Eos accusamus.\"\n         }\n      ],\n      \"total\": 0.9235589\n   }'")
 		}
 		if body.Items == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("items", "body"))
+		}
+		if len(body.Items) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("body.items", body.Items, len(body.Items), 1, true))
 		}
 		for _, e := range body.Items {
 			if e != nil {
@@ -298,7 +301,7 @@ func BuildCreatePurchasePayload(catalogCreatePurchaseBody string) (*catalog.Crea
 	{
 		err = json.Unmarshal([]byte(catalogCreatePurchaseBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cart\": {\n         \"coupon_id\": \"Minima ullam occaecati qui.\",\n         \"customer_id\": \"Qui aut maxime asperiores et adipisci.\",\n         \"items\": [\n            {\n               \"amount\": 295474085,\n               \"book_id\": \"Eos accusamus.\"\n            },\n            {\n               \"amount\": 295474085,\n               \"book_id\": \"Eos accusamus.\"\n            }\n         ],\n         \"total\": 0.5975442\n      },\n      \"customer\": {\n         \"address\": {\n            \"address\": \"Voluptates quia non.\",\n            \"cep\": \"Itaque ipsa et quae dolorum.\",\n            \"city\": \"Asperiores et inventore asperiores doloribus commodi.\",\n            \"complement\": \"Totam dolor.\",\n            \"state_id\": \"Ad veniam natus eaque recusandae.\"\n         },\n         \"cart_ids\": [\n            \"A sed est est numquam est distinctio.\",\n            \"Necessitatibus rerum modi earum non vel eos.\",\n            \"Optio error et qui eaque.\",\n            \"Sequi quos qui id consequatur tempora.\"\n         ],\n         \"document\": \"Pariatur sequi eveniet.\",\n         \"email\": \"janick.schmeler@von.biz\",\n         \"first_name\": \"Aliquam vitae sit odit porro.\",\n         \"last_name\": \"Quas et non non.\",\n         \"phone\": \"Et aperiam expedita voluptatibus reprehenderit error facere.\"\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cart\": {\n         \"coupon_id\": \"Minima ullam occaecati qui.\",\n         \"customer_id\": \"Qui aut maxime asperiores et adipisci.\",\n         \"items\": [\n            {\n               \"amount\": 295474086,\n               \"book_id\": \"Eos accusamus.\"\n            }\n         ],\n         \"total\": 0.5975442\n      },\n      \"customer\": {\n         \"address\": {\n            \"address\": \"Voluptates quia non.\",\n            \"cep\": \"Itaque ipsa et quae dolorum.\",\n            \"city\": \"Asperiores et inventore asperiores doloribus commodi.\",\n            \"complement\": \"Totam dolor.\",\n            \"state_id\": \"Ad veniam natus eaque recusandae.\"\n         },\n         \"cart_ids\": [\n            \"A sed est est numquam est distinctio.\",\n            \"Necessitatibus rerum modi earum non vel eos.\",\n            \"Optio error et qui eaque.\",\n            \"Sequi quos qui id consequatur tempora.\"\n         ],\n         \"document\": \"Pariatur sequi eveniet.\",\n         \"email\": \"janick.schmeler@von.biz\",\n         \"first_name\": \"Aliquam vitae sit odit porro.\",\n         \"last_name\": \"Quas et non non.\",\n         \"phone\": \"Et aperiam expedita voluptatibus reprehenderit error facere.\"\n      }\n   }'")
 		}
 		if body.Customer == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("customer", "body"))

@@ -36,9 +36,6 @@ func (s *service) CreatePurchase(ctx context.Context, dto *catalogGen.CreatePurc
 	}); err != nil {
 		return nil, err
 	}
-	//if result := s.repo.Create(&purchase); result.Error != nil {
-	//	return nil, result.Error
-	//}
 	return &catalogGen.PurchaseDTO{
 		ID:       purchase.ID,
 		Customer: mapCustomerToCustomerDTO(customer),
