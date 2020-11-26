@@ -76,6 +76,11 @@ func ShowCountryCatalogPath(id string) string {
 	return fmt.Sprintf("/countries/%v", id)
 }
 
+// ApplyCouponCatalogPath returns the URL path to the catalog service apply_coupon HTTP endpoint.
+func ApplyCouponCatalogPath() string {
+	return "/apply_coupon"
+}
+
 // CreateCouponCatalogPath returns the URL path to the catalog service create_coupon HTTP endpoint.
 func CreateCouponCatalogPath() string {
 	return "/coupons"
@@ -89,6 +94,11 @@ func CreateCustomerCatalogPath() string {
 // CreatePurchaseCatalogPath returns the URL path to the catalog service create_purchase HTTP endpoint.
 func CreatePurchaseCatalogPath() string {
 	return "/purchases"
+}
+
+// ShowPurchaseCatalogPath returns the URL path to the catalog service show_purchase HTTP endpoint.
+func ShowPurchaseCatalogPath(id string) string {
+	return fmt.Sprintf("/purchases/%v", id)
 }
 
 // CreateStateCatalogPath returns the URL path to the catalog service create_state HTTP endpoint.

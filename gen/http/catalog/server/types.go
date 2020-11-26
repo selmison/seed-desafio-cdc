@@ -57,6 +57,13 @@ type CreateCountryRequestBody struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 }
 
+// ApplyCouponRequestBody is the type of the "catalog" service "apply_coupon"
+// endpoint HTTP request body.
+type ApplyCouponRequestBody struct {
+	Code       *string `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	PurchaseID *string `form:"purchase_id,omitempty" json:"purchase_id,omitempty" xml:"purchase_id,omitempty"`
+}
+
 // CreateCouponRequestBody is the type of the "catalog" service "create_coupon"
 // endpoint HTTP request body.
 type CreateCouponRequestBody struct {
@@ -152,11 +159,12 @@ type ShowBookResponseBody struct {
 // CreateCartResponseBody is the type of the "catalog" service "create_cart"
 // endpoint HTTP response body.
 type CreateCartResponseBody struct {
-	ID         string                 `form:"id" json:"id" xml:"id"`
-	Total      float32                `form:"total" json:"total" xml:"total"`
-	Items      []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
-	CustomerID string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
-	CouponID   *string                `form:"coupon_id,omitempty" json:"coupon_id,omitempty" xml:"coupon_id,omitempty"`
+	ID              string                 `form:"id" json:"id" xml:"id"`
+	Total           float32                `form:"total" json:"total" xml:"total"`
+	TotalWithCoupon *float32               `form:"total_with_coupon,omitempty" json:"total_with_coupon,omitempty" xml:"total_with_coupon,omitempty"`
+	Items           []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
+	CustomerID      string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
+	CouponID        *string                `form:"coupon_id,omitempty" json:"coupon_id,omitempty" xml:"coupon_id,omitempty"`
 }
 
 // CreateCategoryResponseBody is the type of the "catalog" service
@@ -222,6 +230,14 @@ type CreateCustomerResponseBody struct {
 // CreatePurchaseResponseBody is the type of the "catalog" service
 // "create_purchase" endpoint HTTP response body.
 type CreatePurchaseResponseBody struct {
+	ID       string                   `form:"id" json:"id" xml:"id"`
+	Customer *CustomerDTOResponseBody `form:"customer" json:"customer" xml:"customer"`
+	Cart     *CartDTOResponseBody     `form:"cart" json:"cart" xml:"cart"`
+}
+
+// ShowPurchaseResponseBody is the type of the "catalog" service
+// "show_purchase" endpoint HTTP response body.
+type ShowPurchaseResponseBody struct {
 	ID       string                   `form:"id" json:"id" xml:"id"`
 	Customer *CustomerDTOResponseBody `form:"customer" json:"customer" xml:"customer"`
 	Cart     *CartDTOResponseBody     `form:"cart" json:"cart" xml:"cart"`
@@ -409,6 +425,24 @@ type ShowCountryNotFoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// ApplyCouponInvalidFieldsResponseBody is the type of the "catalog" service
+// "apply_coupon" endpoint HTTP response body for the "invalid_fields" error.
+type ApplyCouponInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // CreateCouponInvalidFieldsResponseBody is the type of the "catalog" service
 // "create_coupon" endpoint HTTP response body for the "invalid_fields" error.
 type CreateCouponInvalidFieldsResponseBody struct {
@@ -448,6 +482,24 @@ type CreateCustomerInvalidFieldsResponseBody struct {
 // CreatePurchaseInvalidFieldsResponseBody is the type of the "catalog" service
 // "create_purchase" endpoint HTTP response body for the "invalid_fields" error.
 type CreatePurchaseInvalidFieldsResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// ShowPurchaseNotFoundResponseBody is the type of the "catalog" service
+// "show_purchase" endpoint HTTP response body for the "not_found" error.
+type ShowPurchaseNotFoundResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -564,11 +616,12 @@ type CustomerDTOResponseBody struct {
 
 // CartDTOResponseBody is used to define fields on response body types.
 type CartDTOResponseBody struct {
-	ID         string                 `form:"id" json:"id" xml:"id"`
-	Total      float32                `form:"total" json:"total" xml:"total"`
-	Items      []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
-	CustomerID string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
-	CouponID   *string                `form:"coupon_id,omitempty" json:"coupon_id,omitempty" xml:"coupon_id,omitempty"`
+	ID              string                 `form:"id" json:"id" xml:"id"`
+	Total           float32                `form:"total" json:"total" xml:"total"`
+	TotalWithCoupon *float32               `form:"total_with_coupon,omitempty" json:"total_with_coupon,omitempty" xml:"total_with_coupon,omitempty"`
+	Items           []*ItemDTOResponseBody `form:"items" json:"items" xml:"items"`
+	CustomerID      string                 `form:"customer_id" json:"customer_id" xml:"customer_id"`
+	CouponID        *string                `form:"coupon_id,omitempty" json:"coupon_id,omitempty" xml:"coupon_id,omitempty"`
 }
 
 // StateDTOResponse is used to define fields on response body types.
@@ -718,10 +771,11 @@ func NewShowBookResponseBody(res *catalog.BookDTO) *ShowBookResponseBody {
 // the "create_cart" endpoint of the "catalog" service.
 func NewCreateCartResponseBody(res *catalog.CartDTO) *CreateCartResponseBody {
 	body := &CreateCartResponseBody{
-		ID:         res.ID,
-		Total:      res.Total,
-		CustomerID: res.CustomerID,
-		CouponID:   res.CouponID,
+		ID:              res.ID,
+		Total:           res.Total,
+		TotalWithCoupon: res.TotalWithCoupon,
+		CustomerID:      res.CustomerID,
+		CouponID:        res.CouponID,
 	}
 	if res.Items != nil {
 		body.Items = make([]*ItemDTOResponseBody, len(res.Items))
@@ -833,6 +887,21 @@ func NewCreateCustomerResponseBody(res *catalog.CustomerDTO) *CreateCustomerResp
 // of the "create_purchase" endpoint of the "catalog" service.
 func NewCreatePurchaseResponseBody(res *catalog.PurchaseDTO) *CreatePurchaseResponseBody {
 	body := &CreatePurchaseResponseBody{
+		ID: res.ID,
+	}
+	if res.Customer != nil {
+		body.Customer = marshalCatalogCustomerDTOToCustomerDTOResponseBody(res.Customer)
+	}
+	if res.Cart != nil {
+		body.Cart = marshalCatalogCartDTOToCartDTOResponseBody(res.Cart)
+	}
+	return body
+}
+
+// NewShowPurchaseResponseBody builds the HTTP response body from the result of
+// the "show_purchase" endpoint of the "catalog" service.
+func NewShowPurchaseResponseBody(res *catalog.PurchaseDTO) *ShowPurchaseResponseBody {
+	body := &ShowPurchaseResponseBody{
 		ID: res.ID,
 	}
 	if res.Customer != nil {
@@ -1002,6 +1071,20 @@ func NewShowCountryNotFoundResponseBody(res *goa.ServiceError) *ShowCountryNotFo
 	return body
 }
 
+// NewApplyCouponInvalidFieldsResponseBody builds the HTTP response body from
+// the result of the "apply_coupon" endpoint of the "catalog" service.
+func NewApplyCouponInvalidFieldsResponseBody(res *goa.ServiceError) *ApplyCouponInvalidFieldsResponseBody {
+	body := &ApplyCouponInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewCreateCouponInvalidFieldsResponseBody builds the HTTP response body from
 // the result of the "create_coupon" endpoint of the "catalog" service.
 func NewCreateCouponInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCouponInvalidFieldsResponseBody {
@@ -1034,6 +1117,20 @@ func NewCreateCustomerInvalidFieldsResponseBody(res *goa.ServiceError) *CreateCu
 // from the result of the "create_purchase" endpoint of the "catalog" service.
 func NewCreatePurchaseInvalidFieldsResponseBody(res *goa.ServiceError) *CreatePurchaseInvalidFieldsResponseBody {
 	body := &CreatePurchaseInvalidFieldsResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewShowPurchaseNotFoundResponseBody builds the HTTP response body from the
+// result of the "show_purchase" endpoint of the "catalog" service.
+func NewShowPurchaseNotFoundResponseBody(res *goa.ServiceError) *ShowPurchaseNotFoundResponseBody {
+	body := &ShowPurchaseNotFoundResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -1174,6 +1271,16 @@ func NewShowCountryShowByIDDTO(id string) *catalog.ShowByIDDTO {
 	return v
 }
 
+// NewApplyCouponDTO builds a catalog service apply_coupon endpoint payload.
+func NewApplyCouponDTO(body *ApplyCouponRequestBody) *catalog.ApplyCouponDTO {
+	v := &catalog.ApplyCouponDTO{
+		Code:       *body.Code,
+		PurchaseID: *body.PurchaseID,
+	}
+
+	return v
+}
+
 // NewCreateCouponDTO builds a catalog service create_coupon endpoint payload.
 func NewCreateCouponDTO(body *CreateCouponRequestBody) *catalog.CreateCouponDTO {
 	v := &catalog.CreateCouponDTO{
@@ -1212,6 +1319,15 @@ func NewCreatePurchaseDTO(body *CreatePurchaseRequestBody) *catalog.CreatePurcha
 	v := &catalog.CreatePurchaseDTO{}
 	v.Customer = unmarshalCreateCustomerDTORequestBodyToCatalogCreateCustomerDTO(body.Customer)
 	v.Cart = unmarshalCreateCartDTORequestBodyToCatalogCreateCartDTO(body.Cart)
+
+	return v
+}
+
+// NewShowPurchaseShowByIDDTO builds a catalog service show_purchase endpoint
+// payload.
+func NewShowPurchaseShowByIDDTO(id string) *catalog.ShowByIDDTO {
+	v := &catalog.ShowByIDDTO{}
+	v.ID = id
 
 	return v
 }
@@ -1338,6 +1454,18 @@ func ValidateCreateCategoryRequestBody(body *CreateCategoryRequestBody) (err err
 func ValidateCreateCountryRequestBody(body *CreateCountryRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateApplyCouponRequestBody runs the validations defined on
+// apply_coupon_request_body
+func ValidateApplyCouponRequestBody(body *ApplyCouponRequestBody) (err error) {
+	if body.Code == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("code", "body"))
+	}
+	if body.PurchaseID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("purchase_id", "body"))
 	}
 	return
 }

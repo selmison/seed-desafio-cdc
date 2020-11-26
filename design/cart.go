@@ -22,6 +22,7 @@ var CartDTO = Type("CartDTO", func() {
 	Description("Cart Type")
 	Attribute("id", String)
 	Attribute("total", Float32)
+	Attribute("total_with_coupon", Float32)
 	Attribute("items", ItemsDTO)
 	Attribute("customer_id", String)
 	Attribute("coupon_id", String)

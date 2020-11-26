@@ -14,9 +14,11 @@ import (
 // Cart represents a single cart.
 type Cart struct {
 	gorm.Model
-	ID       string `gorm:"primaryKey"`
-	Items    []*Item
-	CouponID sql.NullString
+	ID              string `gorm:"primaryKey"`
+	Items           []*Item
+	total           float32
+	totalWithCoupon float32
+	CouponID        sql.NullString
 }
 
 func (c *Cart) Validate() error {

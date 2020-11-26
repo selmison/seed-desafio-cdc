@@ -1031,6 +1031,81 @@ func DecodeShowCountryResponse(decoder func(*http.Response) goahttp.Decoder, res
 	}
 }
 
+// BuildApplyCouponRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "apply_coupon" endpoint
+func (c *Client) BuildApplyCouponRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ApplyCouponCatalogPath()}
+	req, err := http.NewRequest("PATCH", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "apply_coupon", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeApplyCouponRequest returns an encoder for requests sent to the catalog
+// apply_coupon server.
+func EncodeApplyCouponRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*catalog.ApplyCouponDTO)
+		if !ok {
+			return goahttp.ErrInvalidType("catalog", "apply_coupon", "*catalog.ApplyCouponDTO", v)
+		}
+		body := NewApplyCouponRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("catalog", "apply_coupon", err)
+		}
+		return nil
+	}
+}
+
+// DecodeApplyCouponResponse returns a decoder for responses returned by the
+// catalog apply_coupon endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeApplyCouponResponse may return the following errors:
+//	- "invalid_fields" (type *goa.ServiceError): http.StatusBadRequest
+//	- error: internal error
+func DecodeApplyCouponResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusNoContent:
+			return nil, nil
+		case http.StatusBadRequest:
+			var (
+				body ApplyCouponInvalidFieldsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "apply_coupon", err)
+			}
+			err = ValidateApplyCouponInvalidFieldsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "apply_coupon", err)
+			}
+			return nil, NewApplyCouponInvalidFields(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "apply_coupon", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildCreateCouponRequest instantiates a HTTP request object with method and
 // path set to call the "catalog" service "create_coupon" endpoint
 func (c *Client) BuildCreateCouponRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -1291,6 +1366,88 @@ func DecodeCreatePurchaseResponse(decoder func(*http.Response) goahttp.Decoder, 
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("catalog", "create_purchase", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildShowPurchaseRequest instantiates a HTTP request object with method and
+// path set to call the "catalog" service "show_purchase" endpoint
+func (c *Client) BuildShowPurchaseRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		id string
+	)
+	{
+		p, ok := v.(*catalog.ShowByIDDTO)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("catalog", "show_purchase", "*catalog.ShowByIDDTO", v)
+		}
+		id = p.ID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowPurchaseCatalogPath(id)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("catalog", "show_purchase", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeShowPurchaseResponse returns a decoder for responses returned by the
+// catalog show_purchase endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeShowPurchaseResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
+func DecodeShowPurchaseResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ShowPurchaseResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_purchase", err)
+			}
+			err = ValidateShowPurchaseResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_purchase", err)
+			}
+			res := NewShowPurchasePurchaseDTOOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body ShowPurchaseNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("catalog", "show_purchase", err)
+			}
+			err = ValidateShowPurchaseNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("catalog", "show_purchase", err)
+			}
+			return nil, NewShowPurchaseNotFound(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("catalog", "show_purchase", resp.StatusCode, string(body))
 		}
 	}
 }
@@ -1773,10 +1930,11 @@ func unmarshalCustomerDTOResponseBodyToCatalogCustomerDTO(v *CustomerDTOResponse
 // *catalog.CartDTO from a value of type *CartDTOResponseBody.
 func unmarshalCartDTOResponseBodyToCatalogCartDTO(v *CartDTOResponseBody) *catalog.CartDTO {
 	res := &catalog.CartDTO{
-		ID:         *v.ID,
-		Total:      *v.Total,
-		CustomerID: *v.CustomerID,
-		CouponID:   v.CouponID,
+		ID:              *v.ID,
+		Total:           *v.Total,
+		TotalWithCoupon: v.TotalWithCoupon,
+		CustomerID:      *v.CustomerID,
+		CouponID:        v.CouponID,
 	}
 	res.Items = make([]*catalog.ItemDTO, len(v.Items))
 	for i, val := range v.Items {

@@ -41,12 +41,16 @@ type Service interface {
 	ListCountries(context.Context) (res []*CountryDTO, err error)
 	// ShowCountry implements show_country.
 	ShowCountry(context.Context, *ShowByIDDTO) (res *CountryDTO, err error)
+	// ApplyCoupon implements apply_coupon.
+	ApplyCoupon(context.Context, *ApplyCouponDTO) (err error)
 	// CreateCoupon implements create_coupon.
 	CreateCoupon(context.Context, *CreateCouponDTO) (res *CouponDTO, err error)
 	// CreateCustomer implements create_customer.
 	CreateCustomer(context.Context, *CreateCustomerDTO) (res *CustomerDTO, err error)
 	// CreatePurchase implements create_purchase.
 	CreatePurchase(context.Context, *CreatePurchaseDTO) (res *PurchaseDTO, err error)
+	// ShowPurchase implements show_purchase.
+	ShowPurchase(context.Context, *ShowByIDDTO) (res *PurchaseDTO, err error)
 	// CreateState implements create_state.
 	CreateState(context.Context, *CreateStateDTO) (res *StateDTO, err error)
 	// ListStates implements list_states.
@@ -63,7 +67,7 @@ const ServiceName = "catalog"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [19]string{"create_actor", "list_actors", "show_actor", "create_book", "list_books", "show_book", "create_cart", "create_category", "list_categories", "show_category", "create_country", "list_countries", "show_country", "create_coupon", "create_customer", "create_purchase", "create_state", "list_states", "show_state"}
+var MethodNames = [21]string{"create_actor", "list_actors", "show_actor", "create_book", "list_books", "show_book", "create_cart", "create_category", "list_categories", "show_category", "create_country", "list_countries", "show_country", "apply_coupon", "create_coupon", "create_customer", "create_purchase", "show_purchase", "create_state", "list_states", "show_state"}
 
 // CreateActorDTO is the payload type of the catalog service create_actor
 // method.
@@ -125,11 +129,12 @@ type CreateCartDTO struct {
 
 // CartDTO is the result type of the catalog service create_cart method.
 type CartDTO struct {
-	ID         string
-	Total      float32
-	Items      []*ItemDTO
-	CustomerID string
-	CouponID   *string
+	ID              string
+	Total           float32
+	TotalWithCoupon *float32
+	Items           []*ItemDTO
+	CustomerID      string
+	CouponID        *string
 }
 
 // CreateCategoryDTO is the payload type of the catalog service create_category
@@ -155,6 +160,13 @@ type CountryDTO struct {
 	ID       string
 	Name     string
 	StateIds *string
+}
+
+// ApplyCouponDTO is the payload type of the catalog service apply_coupon
+// method.
+type ApplyCouponDTO struct {
+	Code       string
+	PurchaseID string
 }
 
 // CreateCouponDTO is the payload type of the catalog service create_coupon

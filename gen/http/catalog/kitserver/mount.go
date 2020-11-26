@@ -169,6 +169,18 @@ func MountShowCountryHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/countries/{id}", f)
 }
 
+// MountApplyCouponHandler configures the mux to serve the "catalog" service
+// "apply_coupon" endpoint.
+func MountApplyCouponHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("PATCH", "/apply_coupon", f)
+}
+
 // MountCreateCouponHandler configures the mux to serve the "catalog" service
 // "create_coupon" endpoint.
 func MountCreateCouponHandler(mux goahttp.Muxer, h http.Handler) {
@@ -203,6 +215,18 @@ func MountCreatePurchaseHandler(mux goahttp.Muxer, h http.Handler) {
 		}
 	}
 	mux.Handle("POST", "/purchases", f)
+}
+
+// MountShowPurchaseHandler configures the mux to serve the "catalog" service
+// "show_purchase" endpoint.
+func MountShowPurchaseHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/purchases/{id}", f)
 }
 
 // MountCreateStateHandler configures the mux to serve the "catalog" service

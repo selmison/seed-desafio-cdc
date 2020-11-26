@@ -125,6 +125,15 @@ var _ = Service("catalog", func() {
 		})
 	})
 
+	Method("apply_coupon", func() {
+		Payload(ApplyCouponDTO)
+		HTTP(func() {
+			PATCH("/apply_coupon")
+			Response(StatusNoContent)
+			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
 	Method("create_coupon", func() {
 		Payload(CreateCouponDTO)
 		Result(CouponDTO)
@@ -152,6 +161,15 @@ var _ = Service("catalog", func() {
 			POST("/purchases")
 			Response(StatusCreated)
 			Response("invalid_fields", StatusBadRequest)
+		})
+	})
+
+	Method("show_purchase", func() {
+		Payload(ShowByIDDTO)
+		Result(PurchaseDTO)
+		HTTP(func() {
+			GET("/purchases/{id}")
+			Response("not_found", StatusNotFound)
 		})
 	})
 

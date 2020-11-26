@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"database/sql"
 	"strings"
 
 	"github.com/google/uuid"
@@ -42,10 +43,15 @@ func mapCreateBookDTOToBook(dto catalogGen.CreateBookDTO) Book {
 }
 
 func mapCreateCartDTOToCart(dto catalogGen.CreateCartDTO) Cart {
+	var couponID sql.NullString
+	if dto.CouponID != nil && *dto.CouponID != "" {
+		couponID = sql.NullString{String: *dto.CouponID, Valid: true}
+	}
 	id := uuid.New().String()
 	return Cart{
-		ID:    id,
-		Items: mapItemsDTOToItems(dto.Items, id),
+		ID:       id,
+		Items:    mapItemsDTOToItems(dto.Items, id),
+		CouponID: couponID,
 	}
 }
 
@@ -67,6 +73,7 @@ func mapItemsDTOToItems(dtos []*catalogGen.ItemDTO, cartID string) []*Item {
 	items := make([]*Item, len(dtos))
 	for i, dto := range dtos {
 		items[i] = &Item{
+			ID:     uuid.New().String(),
 			BookID: dto.BookID,
 			Amount: dto.Amount,
 			CartID: cartID,
@@ -127,11 +134,12 @@ func mapCartToCartDTO(cart Cart) *catalogGen.CartDTO {
 		}
 	}
 	return &catalogGen.CartDTO{
-		ID:         cart.ID,
-		Total:      cart.Total(),
-		Items:      itemDTOs,
-		CustomerID: "",
-		CouponID:   nil,
+		ID:              cart.ID,
+		Total:           cart.total,
+		TotalWithCoupon: &cart.totalWithCoupon,
+		Items:           itemDTOs,
+		CustomerID:      "",
+		CouponID:        &cart.CouponID.String,
 	}
 }
 

@@ -28,16 +28,18 @@ type Client struct {
 	CreateCountryEndpoint  endpoint.Endpoint
 	ListCountriesEndpoint  endpoint.Endpoint
 	ShowCountryEndpoint    endpoint.Endpoint
+	ApplyCouponEndpoint    endpoint.Endpoint
 	CreateCouponEndpoint   endpoint.Endpoint
 	CreateCustomerEndpoint endpoint.Endpoint
 	CreatePurchaseEndpoint endpoint.Endpoint
+	ShowPurchaseEndpoint   endpoint.Endpoint
 	CreateStateEndpoint    endpoint.Endpoint
 	ListStatesEndpoint     endpoint.Endpoint
 	ShowStateEndpoint      endpoint.Endpoint
 }
 
 // NewClient initializes a "catalog" service client given the endpoints.
-func NewClient(createActor, listActors, showActor, createBook, listBooks, showBook, createCart, createCategory, listCategories, showCategory, createCountry, listCountries, showCountry, createCoupon, createCustomer, createPurchase, createState, listStates, showState endpoint.Endpoint) *Client {
+func NewClient(createActor, listActors, showActor, createBook, listBooks, showBook, createCart, createCategory, listCategories, showCategory, createCountry, listCountries, showCountry, applyCoupon, createCoupon, createCustomer, createPurchase, showPurchase, createState, listStates, showState endpoint.Endpoint) *Client {
 	return &Client{
 		CreateActorEndpoint:    createActor,
 		ListActorsEndpoint:     listActors,
@@ -52,9 +54,11 @@ func NewClient(createActor, listActors, showActor, createBook, listBooks, showBo
 		CreateCountryEndpoint:  createCountry,
 		ListCountriesEndpoint:  listCountries,
 		ShowCountryEndpoint:    showCountry,
+		ApplyCouponEndpoint:    applyCoupon,
 		CreateCouponEndpoint:   createCoupon,
 		CreateCustomerEndpoint: createCustomer,
 		CreatePurchaseEndpoint: createPurchase,
+		ShowPurchaseEndpoint:   showPurchase,
 		CreateStateEndpoint:    createState,
 		ListStatesEndpoint:     listStates,
 		ShowStateEndpoint:      showState,
@@ -191,6 +195,12 @@ func (c *Client) ShowCountry(ctx context.Context, p *ShowByIDDTO) (res *CountryD
 	return ires.(*CountryDTO), nil
 }
 
+// ApplyCoupon calls the "apply_coupon" endpoint of the "catalog" service.
+func (c *Client) ApplyCoupon(ctx context.Context, p *ApplyCouponDTO) (err error) {
+	_, err = c.ApplyCouponEndpoint(ctx, p)
+	return
+}
+
 // CreateCoupon calls the "create_coupon" endpoint of the "catalog" service.
 func (c *Client) CreateCoupon(ctx context.Context, p *CreateCouponDTO) (res *CouponDTO, err error) {
 	var ires interface{}
@@ -215,6 +225,16 @@ func (c *Client) CreateCustomer(ctx context.Context, p *CreateCustomerDTO) (res 
 func (c *Client) CreatePurchase(ctx context.Context, p *CreatePurchaseDTO) (res *PurchaseDTO, err error) {
 	var ires interface{}
 	ires, err = c.CreatePurchaseEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*PurchaseDTO), nil
+}
+
+// ShowPurchase calls the "show_purchase" endpoint of the "catalog" service.
+func (c *Client) ShowPurchase(ctx context.Context, p *ShowByIDDTO) (res *PurchaseDTO, err error) {
+	var ires interface{}
+	ires, err = c.ShowPurchaseEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

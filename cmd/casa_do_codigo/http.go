@@ -45,6 +45,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
+		catalogApplyCouponHandler    *kitHttp.Server
 		catalogCreateActorHandler    *kitHttp.Server
 		catalogListActorsHandler     *kitHttp.Server
 		catalogShowActorHandler      *kitHttp.Server
@@ -61,12 +62,19 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 		catalogCreateCouponHandler   *kitHttp.Server
 		catalogCreateCustomerHandler *kitHttp.Server
 		catalogCreatePurchaseHandler *kitHttp.Server
+		catalogShowPurchaseHandler   *kitHttp.Server
 		catalogCreateStateHandler    *kitHttp.Server
 		catalogListStatesHandler     *kitHttp.Server
 		catalogServer                *catalogSvr.Server
 	)
 	{
 		eh := errorHandler(logger)
+		catalogApplyCouponHandler = kitHttp.NewServer(
+			catalogEndpoints.ApplyCoupon,
+			catalogKitSvr.DecodeApplyCouponRequest(mux, dec),
+			catalogKitSvr.EncodeApplyCouponResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeApplyCouponError(enc, nil)),
+		)
 		catalogCreateActorHandler = kitHttp.NewServer(
 			catalogEndpoints.CreateActor,
 			catalogKitSvr.DecodeCreateActorRequest(mux, dec),
@@ -159,6 +167,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 			catalogKitSvr.EncodeCreatePurchaseResponse(enc),
 			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeCreatePurchaseError(enc, nil)),
 		)
+		catalogShowPurchaseHandler = kitHttp.NewServer(
+			catalogEndpoints.ShowPurchase,
+			catalogKitSvr.DecodeShowPurchaseRequest(mux, dec),
+			catalogKitSvr.EncodeShowPurchaseResponse(enc),
+			kitHttp.ServerErrorEncoder(catalogKitSvr.EncodeShowPurchaseError(enc, nil)),
+		)
 		catalogCreateStateHandler = kitHttp.NewServer(
 			catalogEndpoints.CreateState,
 			catalogKitSvr.DecodeCreateStateRequest(mux, dec),
@@ -174,6 +188,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	}
 
 	// Configure the mux.
+	catalogKitSvr.MountApplyCouponHandler(mux, catalogApplyCouponHandler)
 	catalogKitSvr.MountCreateActorHandler(mux, catalogCreateActorHandler)
 	catalogKitSvr.MountListActorsHandler(mux, catalogListActorsHandler)
 	catalogKitSvr.MountShowActorHandler(mux, catalogShowActorHandler)
@@ -190,6 +205,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, catalogEndpoints *catalog
 	catalogKitSvr.MountCreateCouponHandler(mux, catalogCreateCouponHandler)
 	catalogKitSvr.MountCreateCustomerHandler(mux, catalogCreateCustomerHandler)
 	catalogKitSvr.MountCreatePurchaseHandler(mux, catalogCreatePurchaseHandler)
+	catalogKitSvr.MountShowPurchaseHandler(mux, catalogShowPurchaseHandler)
 	catalogKitSvr.MountCreateStateHandler(mux, catalogCreateStateHandler)
 	catalogKitSvr.MountListStatesHandler(mux, catalogListStatesHandler)
 

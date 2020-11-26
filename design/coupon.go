@@ -5,6 +5,13 @@ import (
 	_ "goa.design/plugins/v3/goakit"
 )
 
+var ApplyCouponDTO = Type("ApplyCouponDTO", func() {
+	Description("Apply Coupon Type")
+	Attribute("code", String)
+	Attribute("purchase_id", String)
+	Required("code", "purchase_id")
+})
+
 var CouponDTO = Type("CouponDTO", func() {
 	Description("Coupon Type")
 	Attribute("id", String)

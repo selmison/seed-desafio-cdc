@@ -33,9 +33,11 @@ type Server struct {
 	CreateCountry  http.Handler
 	ListCountries  http.Handler
 	ShowCountry    http.Handler
+	ApplyCoupon    http.Handler
 	CreateCoupon   http.Handler
 	CreateCustomer http.Handler
 	CreatePurchase http.Handler
+	ShowPurchase   http.Handler
 	CreateState    http.Handler
 	ListStates     http.Handler
 	ShowState      http.Handler
@@ -87,9 +89,11 @@ func New(
 			{"CreateCountry", "POST", "/countries"},
 			{"ListCountries", "GET", "/countries"},
 			{"ShowCountry", "GET", "/countries/{id}"},
+			{"ApplyCoupon", "PATCH", "/apply_coupon"},
 			{"CreateCoupon", "POST", "/coupons"},
 			{"CreateCustomer", "POST", "/customers"},
 			{"CreatePurchase", "POST", "/purchases"},
+			{"ShowPurchase", "GET", "/purchases/{id}"},
 			{"CreateState", "POST", "/states"},
 			{"ListStates", "GET", "/states"},
 			{"ShowState", "GET", "/states/{id}"},
@@ -107,9 +111,11 @@ func New(
 		CreateCountry:  NewCreateCountryHandler(e.CreateCountry, mux, decoder, encoder, errhandler, formatter),
 		ListCountries:  NewListCountriesHandler(e.ListCountries, mux, decoder, encoder, errhandler, formatter),
 		ShowCountry:    NewShowCountryHandler(e.ShowCountry, mux, decoder, encoder, errhandler, formatter),
+		ApplyCoupon:    NewApplyCouponHandler(e.ApplyCoupon, mux, decoder, encoder, errhandler, formatter),
 		CreateCoupon:   NewCreateCouponHandler(e.CreateCoupon, mux, decoder, encoder, errhandler, formatter),
 		CreateCustomer: NewCreateCustomerHandler(e.CreateCustomer, mux, decoder, encoder, errhandler, formatter),
 		CreatePurchase: NewCreatePurchaseHandler(e.CreatePurchase, mux, decoder, encoder, errhandler, formatter),
+		ShowPurchase:   NewShowPurchaseHandler(e.ShowPurchase, mux, decoder, encoder, errhandler, formatter),
 		CreateState:    NewCreateStateHandler(e.CreateState, mux, decoder, encoder, errhandler, formatter),
 		ListStates:     NewListStatesHandler(e.ListStates, mux, decoder, encoder, errhandler, formatter),
 		ShowState:      NewShowStateHandler(e.ShowState, mux, decoder, encoder, errhandler, formatter),
@@ -134,9 +140,11 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreateCountry = m(s.CreateCountry)
 	s.ListCountries = m(s.ListCountries)
 	s.ShowCountry = m(s.ShowCountry)
+	s.ApplyCoupon = m(s.ApplyCoupon)
 	s.CreateCoupon = m(s.CreateCoupon)
 	s.CreateCustomer = m(s.CreateCustomer)
 	s.CreatePurchase = m(s.CreatePurchase)
+	s.ShowPurchase = m(s.ShowPurchase)
 	s.CreateState = m(s.CreateState)
 	s.ListStates = m(s.ListStates)
 	s.ShowState = m(s.ShowState)
@@ -157,9 +165,11 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreateCountryHandler(mux, h.CreateCountry)
 	MountListCountriesHandler(mux, h.ListCountries)
 	MountShowCountryHandler(mux, h.ShowCountry)
+	MountApplyCouponHandler(mux, h.ApplyCoupon)
 	MountCreateCouponHandler(mux, h.CreateCoupon)
 	MountCreateCustomerHandler(mux, h.CreateCustomer)
 	MountCreatePurchaseHandler(mux, h.CreatePurchase)
+	MountShowPurchaseHandler(mux, h.ShowPurchase)
 	MountCreateStateHandler(mux, h.CreateState)
 	MountListStatesHandler(mux, h.ListStates)
 	MountShowStateHandler(mux, h.ShowState)
@@ -800,6 +810,57 @@ func NewShowCountryHandler(
 	})
 }
 
+// MountApplyCouponHandler configures the mux to serve the "catalog" service
+// "apply_coupon" endpoint.
+func MountApplyCouponHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("PATCH", "/apply_coupon", f)
+}
+
+// NewApplyCouponHandler creates a HTTP handler which loads the HTTP request
+// and calls the "catalog" service "apply_coupon" endpoint.
+func NewApplyCouponHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeApplyCouponRequest(mux, decoder)
+		encodeResponse = EncodeApplyCouponResponse(encoder)
+		encodeError    = EncodeApplyCouponError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "apply_coupon")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
 // MountCreateCouponHandler configures the mux to serve the "catalog" service
 // "create_coupon" endpoint.
 func MountCreateCouponHandler(mux goahttp.Muxer, h http.Handler) {
@@ -932,6 +993,57 @@ func NewCreatePurchaseHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create_purchase")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountShowPurchaseHandler configures the mux to serve the "catalog" service
+// "show_purchase" endpoint.
+func MountShowPurchaseHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/purchases/{id}", f)
+}
+
+// NewShowPurchaseHandler creates a HTTP handler which loads the HTTP request
+// and calls the "catalog" service "show_purchase" endpoint.
+func NewShowPurchaseHandler(
+	endpoint endpoint.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeShowPurchaseRequest(mux, decoder)
+		encodeResponse = EncodeShowPurchaseResponse(encoder)
+		encodeError    = EncodeShowPurchaseError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "show_purchase")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "catalog")
 		payload, err := decodeRequest(r)
 		if err != nil {

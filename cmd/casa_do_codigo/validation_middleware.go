@@ -19,6 +19,10 @@ func ValidationMiddleware(repo *gorm.DB) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (interface{}, error) {
 			switch dto := request.(type) {
+			case *catalogGen.ApplyCouponDTO:
+				if err := ApplyCouponValidation(repo, dto); err != nil {
+					return nil, err
+				}
 			case *catalogGen.CreateActorDTO:
 				if err := CreateActorValidation(repo, dto); err != nil {
 					return nil, err
@@ -51,6 +55,26 @@ func ValidationMiddleware(repo *gorm.DB) endpoint.Middleware {
 			return next(ctx, request)
 		}
 	}
+}
+
+func ApplyCouponValidation(repo *gorm.DB, dto *catalogGen.ApplyCouponDTO) error {
+	result := repo.Where("code = ?", dto.Code).First(&catalog.Coupon{})
+	if result.RowsAffected == 0 {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the 'body.code' was %v", coreDomain.ErrNotFound),
+		}
+	}
+	result = repo.Where("id = ?", dto.PurchaseID).First(&catalog.Purchase{})
+	if result.RowsAffected == 0 {
+		return &goa.ServiceError{
+			Name:    "invalid_fields",
+			ID:      goa.NewErrorID(),
+			Message: fmt.Sprintf("the 'body.purchase_id' was %v", coreDomain.ErrNotFound),
+		}
+	}
+	return nil
 }
 
 func CreateActorValidation(repo *gorm.DB, dto *catalogGen.CreateActorDTO) error {
@@ -184,7 +208,7 @@ func CreateStateValidation(repo *gorm.DB, dto *catalogGen.CreateStateDTO) error 
 }
 
 func TotalCartValidation(repo *gorm.DB, dto *catalogGen.CreateCartDTO) error {
-	totals := make([]float32, len(dto.Items))
+	var total float32 = 0
 	for i, item := range dto.Items {
 		book := &catalog.Book{}
 		result := repo.Where("id = ?", item.BookID).First(book)
@@ -195,11 +219,7 @@ func TotalCartValidation(repo *gorm.DB, dto *catalogGen.CreateCartDTO) error {
 				Message: fmt.Sprintf("the 'body.cart.item[%d].book_id' was %v", i, coreDomain.ErrNotFound),
 			}
 		}
-		totals[i] = float32(item.Amount) * book.Price
-	}
-	var total float32 = 0
-	for _, price := range totals {
-		total = total + price
+		total = total + (float32(item.Amount) * book.Price)
 	}
 	if total != dto.Total {
 		return &goa.ServiceError{

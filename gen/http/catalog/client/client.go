@@ -69,6 +69,10 @@ type Client struct {
 	// show_country endpoint.
 	ShowCountryDoer goahttp.Doer
 
+	// ApplyCoupon Doer is the HTTP client used to make requests to the
+	// apply_coupon endpoint.
+	ApplyCouponDoer goahttp.Doer
+
 	// CreateCoupon Doer is the HTTP client used to make requests to the
 	// create_coupon endpoint.
 	CreateCouponDoer goahttp.Doer
@@ -80,6 +84,10 @@ type Client struct {
 	// CreatePurchase Doer is the HTTP client used to make requests to the
 	// create_purchase endpoint.
 	CreatePurchaseDoer goahttp.Doer
+
+	// ShowPurchase Doer is the HTTP client used to make requests to the
+	// show_purchase endpoint.
+	ShowPurchaseDoer goahttp.Doer
 
 	// CreateState Doer is the HTTP client used to make requests to the
 	// create_state endpoint.
@@ -126,9 +134,11 @@ func NewClient(
 		CreateCountryDoer:   doer,
 		ListCountriesDoer:   doer,
 		ShowCountryDoer:     doer,
+		ApplyCouponDoer:     doer,
 		CreateCouponDoer:    doer,
 		CreateCustomerDoer:  doer,
 		CreatePurchaseDoer:  doer,
+		ShowPurchaseDoer:    doer,
 		CreateStateDoer:     doer,
 		ListStatesDoer:      doer,
 		ShowStateDoer:       doer,
@@ -412,6 +422,30 @@ func (c *Client) ShowCountry() endpoint.Endpoint {
 	}
 }
 
+// ApplyCoupon returns an endpoint that makes HTTP requests to the catalog
+// service apply_coupon server.
+func (c *Client) ApplyCoupon() endpoint.Endpoint {
+	var (
+		encodeRequest  = EncodeApplyCouponRequest(c.encoder)
+		decodeResponse = DecodeApplyCouponResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildApplyCouponRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ApplyCouponDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "apply_coupon", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
 // CreateCoupon returns an endpoint that makes HTTP requests to the catalog
 // service create_coupon server.
 func (c *Client) CreateCoupon() endpoint.Endpoint {
@@ -479,6 +513,25 @@ func (c *Client) CreatePurchase() endpoint.Endpoint {
 		resp, err := c.CreatePurchaseDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("catalog", "create_purchase", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ShowPurchase returns an endpoint that makes HTTP requests to the catalog
+// service show_purchase server.
+func (c *Client) ShowPurchase() endpoint.Endpoint {
+	var (
+		decodeResponse = DecodeShowPurchaseResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildShowPurchaseRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ShowPurchaseDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("catalog", "show_purchase", err)
 		}
 		return decodeResponse(resp)
 	}

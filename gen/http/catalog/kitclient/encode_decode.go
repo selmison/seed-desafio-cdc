@@ -178,6 +178,24 @@ func DecodeShowCountryResponse(decoder func(*http.Response) goahttp.Decoder) kit
 	}
 }
 
+// EncodeApplyCouponRequest returns a go-kit EncodeRequestFunc suitable for
+// encoding catalog apply_coupon requests.
+func EncodeApplyCouponRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
+	enc := client.EncodeApplyCouponRequest(encoder)
+	return func(_ context.Context, r *http.Request, v interface{}) error {
+		return enc(r, v)
+	}
+}
+
+// DecodeApplyCouponResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog apply_coupon responses.
+func DecodeApplyCouponResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeApplyCouponResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
 // EncodeCreateCouponRequest returns a go-kit EncodeRequestFunc suitable for
 // encoding catalog create_coupon requests.
 func EncodeCreateCouponRequest(encoder func(*http.Request) goahttp.Encoder) kithttp.EncodeRequestFunc {
@@ -227,6 +245,15 @@ func EncodeCreatePurchaseRequest(encoder func(*http.Request) goahttp.Encoder) ki
 // for decoding catalog create_purchase responses.
 func DecodeCreatePurchaseResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
 	dec := client.DecodeCreatePurchaseResponse(decoder, false)
+	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
+		return dec(resp)
+	}
+}
+
+// DecodeShowPurchaseResponse returns a go-kit DecodeResponseFunc suitable for
+// decoding catalog show_purchase responses.
+func DecodeShowPurchaseResponse(decoder func(*http.Response) goahttp.Decoder) kithttp.DecodeResponseFunc {
+	dec := client.DecodeShowPurchaseResponse(decoder, false)
 	return func(ctx context.Context, resp *http.Response) (interface{}, error) {
 		return dec(resp)
 	}

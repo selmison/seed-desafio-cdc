@@ -614,6 +614,68 @@ func EncodeShowCountryError(encoder func(context.Context, http.ResponseWriter) g
 	}
 }
 
+// EncodeApplyCouponResponse returns an encoder for responses returned by the
+// catalog apply_coupon endpoint.
+func EncodeApplyCouponResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+}
+
+// DecodeApplyCouponRequest returns a decoder for requests sent to the catalog
+// apply_coupon endpoint.
+func DecodeApplyCouponRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body ApplyCouponRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateApplyCouponRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewApplyCouponDTO(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeApplyCouponError returns an encoder for errors returned by the
+// apply_coupon catalog endpoint.
+func EncodeApplyCouponError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_fields":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewApplyCouponInvalidFieldsResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_fields")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeCreateCouponResponse returns an encoder for responses returned by the
 // catalog create_coupon endpoint.
 func EncodeCreateCouponResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -802,6 +864,62 @@ func EncodeCreatePurchaseError(encoder func(context.Context, http.ResponseWriter
 			}
 			w.Header().Set("goa-error", "invalid_fields")
 			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeShowPurchaseResponse returns an encoder for responses returned by the
+// catalog show_purchase endpoint.
+func EncodeShowPurchaseResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*catalog.PurchaseDTO)
+		enc := encoder(ctx, w)
+		body := NewShowPurchaseResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeShowPurchaseRequest returns a decoder for requests sent to the catalog
+// show_purchase endpoint.
+func DecodeShowPurchaseRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			id string
+
+			params = mux.Vars(r)
+		)
+		id = params["id"]
+		payload := NewShowPurchaseShowByIDDTO(id)
+
+		return payload, nil
+	}
+}
+
+// EncodeShowPurchaseError returns an encoder for errors returned by the
+// show_purchase catalog endpoint.
+func EncodeShowPurchaseError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewShowPurchaseNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", "not_found")
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -1124,10 +1242,11 @@ func marshalCatalogCustomerDTOToCustomerDTOResponseBody(v *catalog.CustomerDTO) 
 // *CartDTOResponseBody from a value of type *catalog.CartDTO.
 func marshalCatalogCartDTOToCartDTOResponseBody(v *catalog.CartDTO) *CartDTOResponseBody {
 	res := &CartDTOResponseBody{
-		ID:         v.ID,
-		Total:      v.Total,
-		CustomerID: v.CustomerID,
-		CouponID:   v.CouponID,
+		ID:              v.ID,
+		Total:           v.Total,
+		TotalWithCoupon: v.TotalWithCoupon,
+		CustomerID:      v.CustomerID,
+		CouponID:        v.CouponID,
 	}
 	if v.Items != nil {
 		res.Items = make([]*ItemDTOResponseBody, len(v.Items))

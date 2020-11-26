@@ -28,9 +28,11 @@ type Endpoints struct {
 	CreateCountry  endpoint.Endpoint
 	ListCountries  endpoint.Endpoint
 	ShowCountry    endpoint.Endpoint
+	ApplyCoupon    endpoint.Endpoint
 	CreateCoupon   endpoint.Endpoint
 	CreateCustomer endpoint.Endpoint
 	CreatePurchase endpoint.Endpoint
+	ShowPurchase   endpoint.Endpoint
 	CreateState    endpoint.Endpoint
 	ListStates     endpoint.Endpoint
 	ShowState      endpoint.Endpoint
@@ -52,9 +54,11 @@ func NewEndpoints(s Service) *Endpoints {
 		CreateCountry:  NewCreateCountryEndpoint(s),
 		ListCountries:  NewListCountriesEndpoint(s),
 		ShowCountry:    NewShowCountryEndpoint(s),
+		ApplyCoupon:    NewApplyCouponEndpoint(s),
 		CreateCoupon:   NewCreateCouponEndpoint(s),
 		CreateCustomer: NewCreateCustomerEndpoint(s),
 		CreatePurchase: NewCreatePurchaseEndpoint(s),
+		ShowPurchase:   NewShowPurchaseEndpoint(s),
 		CreateState:    NewCreateStateEndpoint(s),
 		ListStates:     NewListStatesEndpoint(s),
 		ShowState:      NewShowStateEndpoint(s),
@@ -76,9 +80,11 @@ func (e *Endpoints) Use(m func(endpoint.Endpoint) endpoint.Endpoint) {
 	e.CreateCountry = m(e.CreateCountry)
 	e.ListCountries = m(e.ListCountries)
 	e.ShowCountry = m(e.ShowCountry)
+	e.ApplyCoupon = m(e.ApplyCoupon)
 	e.CreateCoupon = m(e.CreateCoupon)
 	e.CreateCustomer = m(e.CreateCustomer)
 	e.CreatePurchase = m(e.CreatePurchase)
+	e.ShowPurchase = m(e.ShowPurchase)
 	e.CreateState = m(e.CreateState)
 	e.ListStates = m(e.ListStates)
 	e.ShowState = m(e.ShowState)
@@ -197,6 +203,15 @@ func NewShowCountryEndpoint(s Service) endpoint.Endpoint {
 	}
 }
 
+// NewApplyCouponEndpoint returns an endpoint function that calls the method
+// "apply_coupon" of service "catalog".
+func NewApplyCouponEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*ApplyCouponDTO)
+		return nil, s.ApplyCoupon(ctx, p)
+	}
+}
+
 // NewCreateCouponEndpoint returns an endpoint function that calls the method
 // "create_coupon" of service "catalog".
 func NewCreateCouponEndpoint(s Service) endpoint.Endpoint {
@@ -221,6 +236,15 @@ func NewCreatePurchaseEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*CreatePurchaseDTO)
 		return s.CreatePurchase(ctx, p)
+	}
+}
+
+// NewShowPurchaseEndpoint returns an endpoint function that calls the method
+// "show_purchase" of service "catalog".
+func NewShowPurchaseEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*ShowByIDDTO)
+		return s.ShowPurchase(ctx, p)
 	}
 }
 
